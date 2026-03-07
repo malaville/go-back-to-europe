@@ -88,7 +88,11 @@ export async function POST(request: NextRequest) {
       departMonth,
     });
 
-    return NextResponse.json(routes, { status: 200 });
+    // Return with no-cache headers to ensure fresh data
+    const response = NextResponse.json(routes, { status: 200 });
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    response.headers.set("Pragma", "no-cache");
+    return response;
   } catch (error) {
     console.error("[search] Route search failed:", error);
     return NextResponse.json([], { status: 200 });
