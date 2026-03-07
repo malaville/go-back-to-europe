@@ -1205,6 +1205,34 @@ function buildRouteFromEdges(
     return null;
   }
 
+  // Check date coherence between flight legs. The Aviasales cached API returns independent
+  // "cheapest ever" dates per edge, so dates may not align. Flag incoherent routes.
+  let dateIncoherent = false;
+  const flightLegsWithDates = legs.filter(l => l.transport === "flight" && l.departDate);
+  for (let i = 1; i < flightLegsWithDates.length; i++) {
+    const prevDate = flightLegsWithDates[i - 1].departDate!;
+    const currDate = flightLegsWithDates[i].departDate!;
+    const prevMs = new Date(prevDate).getTime();
+    const currMs = new Date(currDate).getTime();
+    const diffDays = (currMs - prevMs) / (1000 * 60 * 60 * 24);
+    if (diffDays < 0 || diffDays > 7) {
+      dateIncoherent = true;
+      break;
+    }
+  }
+
+  if (dateIncoherent) {
+    warnings.push(
+      "Dates shown are approximate — book each leg separately and verify actual departure times."
+    );
+    // Clear misleading dates from non-first legs so UI doesn't show impossible itineraries
+    for (let i = 1; i < legs.length; i++) {
+      if (legs[i].transport === "flight") {
+        legs[i].departDate = undefined;
+      }
+    }
+  }
+
   return {
     id,
     legs,
