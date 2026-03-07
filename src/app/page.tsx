@@ -1,21 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
 import RouteResults from "@/components/RouteResults";
 import type { RouteOption } from "@/data/mock-routes";
 
-export default function Home() {
+export default function Page() {
+  return (
+    <Suspense>
+      <Home />
+    </Suspense>
+  );
+}
+
+function useSearchState() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const getInitialData = useCallback((): SearchFormData | null => {
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
+    const nat = searchParams.get("nat");
+    const date = searchParams.get("date");
+    const flex = searchParams.get("flex");
+    if (!from || !date) return null;
+    return {
+      fromCity: from,
+      targetCity: to || "",
+      nationality: nat || "FR",
+      deadlineDate: date,
+      flexDays: flex ? Number(flex) : 7,
+    };
+  }, [searchParams]);
+
+  const setParams = useCallback((data: SearchFormData) => {
+    const params = new URLSearchParams();
+    params.set("from", data.fromCity);
+    if (data.targetCity) params.set("to", data.targetCity);
+    params.set("nat", data.nationality);
+    params.set("date", data.deadlineDate);
+    params.set("flex", String(data.flexDays));
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [router]);
+
+  const clearParams = useCallback(() => {
+    router.replace("/", { scroll: false });
+  }, [router]);
+
+  return { getInitialData, setParams, clearParams };
+}
+
+function Home() {
+  const { getInitialData, setParams, clearParams } = useSearchState();
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [searchData, setSearchData] = useState<SearchFormData | null>(null);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
 
+  // Re-run search from URL params on mount
+  useEffect(() => {
+    const initial = getInitialData();
+    if (initial && !hasSearched && !isSearching) {
+      handleSearch(initial);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSearch = async (data: SearchFormData) => {
     setIsSearching(true);
     setSearchData(data);
     setSearchError(null);
+    setParams(data);
 
     try {
       const res = await fetch("/api/search", {
@@ -75,6 +132,7 @@ export default function Home() {
             onClick={() => {
               setHasSearched(false);
               setSearchData(null);
+              clearParams();
             }}
             className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 mb-4 transition-colors"
           >
@@ -88,7 +146,7 @@ export default function Home() {
         {/* Search Form */}
         {!hasSearched && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <SearchForm onSearch={handleSearch} isSearching={isSearching} />
+            <SearchForm onSearch={handleSearch} isSearching={isSearching} initialData={getInitialData()} />
           </div>
         )}
 

@@ -15,14 +15,15 @@ export type SearchFormData = {
 type SearchFormProps = {
   onSearch: (data: SearchFormData) => void;
   isSearching: boolean;
+  initialData?: SearchFormData | null;
 };
 
-export default function SearchForm({ onSearch, isSearching }: SearchFormProps) {
-  const [fromCity, setFromCity] = useState("");
-  const [targetCity, setTargetCity] = useState("");
-  const [nationality, setNationality] = useState("FR");
-  const [deadlineDate, setDeadlineDate] = useState("");
-  const [flexDays, setFlexDays] = useState(7);
+export default function SearchForm({ onSearch, isSearching, initialData }: SearchFormProps) {
+  const [fromCity, setFromCity] = useState(initialData?.fromCity ?? "");
+  const [targetCity, setTargetCity] = useState(initialData?.targetCity ?? "");
+  const [nationality, setNationality] = useState(initialData?.nationality ?? "FR");
+  const [deadlineDate, setDeadlineDate] = useState(initialData?.deadlineDate ?? "");
+  const [flexDays, setFlexDays] = useState(initialData?.flexDays ?? 7);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
