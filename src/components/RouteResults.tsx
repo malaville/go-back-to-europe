@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { RouteOption, RouteLeg } from "@/data/route-types";
 import { activeAdvisories } from "@/data/advisories";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
@@ -176,7 +177,7 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }:
   );
 }
 
-function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
+function RouteCard({ route, rank, isHighlighted }: { route: RouteOption; rank: number; isHighlighted?: boolean }) {
   const lastLeg = route.legs[route.legs.length - 1];
   const isRecommended = route.tags.includes("Recommended");
 
@@ -194,9 +195,15 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
     ? "Tomorrow"
     : departDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
+  const isExtended = route.tier === "extended";
+
   return (
     <div className={`rounded-2xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
-      isRecommended ? "border-emerald-300 ring-2 ring-emerald-100" : "border-slate-200"
+      isHighlighted
+        ? "border-emerald-300 ring-2 ring-emerald-100"
+        : isRecommended
+        ? "border-emerald-300 ring-2 ring-emerald-100"
+        : "border-slate-200"
     }`}>
       {/* Header */}
       <div className={`flex items-center justify-between px-5 py-3 border-b ${
@@ -277,6 +284,15 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
         </div>
       )}
 
+      {/* Extended tier label */}
+      {isExtended && (
+        <div className="mx-5 mb-2 mt-1">
+          <span className="inline-flex items-center rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-medium text-amber-700">
+            Longer ground travel than requested
+          </span>
+        </div>
+      )}
+
       {/* Pricing note */}
       <div className="px-5 pb-4 pt-1">
         <p className="text-[10px] text-slate-400 text-center">
@@ -324,11 +340,14 @@ function CrisisBanner() {
 
 type RouteResultsProps = {
   routes: RouteOption[];
+  highlighted?: RouteOption[];
   fromCity: string;
   targetCity: string;
 };
 
-export default function RouteResults({ routes, fromCity, targetCity }: RouteResultsProps) {
+export default function RouteResults({ routes, highlighted = [], fromCity, targetCity }: RouteResultsProps) {
+  const [showAll, setShowAll] = useState(false);
+
   if (routes.length === 0) {
     return (
       <div className="text-center py-12">
@@ -338,6 +357,10 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
       </div>
     );
   }
+
+  const highlightedIds = new Set(highlighted.map(r => r.id));
+  const remainingRoutes = routes.filter(r => !highlightedIds.has(r.id));
+  const hasMore = remainingRoutes.length > 0;
 
   return (
     <div className="space-y-4">
@@ -352,8 +375,28 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
         </p>
       </div>
 
-      {routes.map((route, i) => (
-        <RouteCard key={route.id} route={route} rank={i + 1} />
+      {/* Highlighted routes — shown prominently */}
+      {highlighted.length > 0 && (
+        <div className="space-y-4">
+          {highlighted.map((route, i) => (
+            <RouteCard key={route.id} route={route} rank={i + 1} isHighlighted />
+          ))}
+        </div>
+      )}
+
+      {/* Show more button */}
+      {hasMore && !showAll && (
+        <button
+          onClick={() => setShowAll(true)}
+          className="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors text-sm font-medium text-slate-600"
+        >
+          Show {remainingRoutes.length} more route{remainingRoutes.length !== 1 ? "s" : ""}
+        </button>
+      )}
+
+      {/* Remaining routes */}
+      {showAll && remainingRoutes.map((route, i) => (
+        <RouteCard key={route.id} route={route} rank={highlighted.length + i + 1} />
       ))}
 
       <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 mt-2">

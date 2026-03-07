@@ -27,6 +27,7 @@ export type RouteOption = {
   warnings: string[];
   tags: string[]; // e.g., "Cheapest", "Fastest", "Recommended"
   departureDate: string; // ISO date of first departure, e.g., "2026-03-25"
+  tier: "preferred" | "extended"; // preferred = matches flex/land, extended = outside comfort zone
 };
 
 // Mock routes are no longer used — all routes come from the route engine.

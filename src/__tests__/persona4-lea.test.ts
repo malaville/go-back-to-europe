@@ -10,11 +10,11 @@ describe("Lea — Da Lat→Paris, flex=7", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Da Lat", fromAirport: "DLI", targetCity: "Paris", targetAirport: "PAR",
       nationality: "FR",
       deadlineDate: "2026-03-25", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes", () => {
@@ -77,17 +77,23 @@ describe("Lea — Da Lat→Paris, flex=7", () => {
     );
     expect(hasGroundLeg).toBe(true);
   });
+
+  it("every route has a tier (preferred or extended)", () => {
+    for (const route of routes) {
+      expect(["preferred", "extended"]).toContain(route.tier);
+    }
+  });
 });
 
 describe("Lea — flex=3 (not very flexible, but desperate)", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Da Lat", fromAirport: "DLI", targetCity: "Paris", targetAirport: "PAR",
       nationality: "FR",
       deadlineDate: "2026-03-25", flexDays: 3, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("still returns routes (engine helps desperate users)", () => {
@@ -111,7 +117,7 @@ xdescribe("Lea — land toggle (GIVEN: long ground legs exist)", () => {
   let withoutLand: RouteOption[];
 
   beforeAll(async () => {
-    [withLand, withoutLand] = await Promise.all([
+    const [resLand, resNoLand] = await Promise.all([
       searchRoutes({
         fromCity: "Da Lat", fromAirport: "DLI", targetCity: "Paris", targetAirport: "PAR",
         nationality: "FR",
@@ -123,6 +129,8 @@ xdescribe("Lea — land toggle (GIVEN: long ground legs exist)", () => {
         deadlineDate: "2026-03-25", flexDays: 7, longLandTransport: false, today: "2026-03-07",
       }),
     ]);
+    withLand = resLand.routes;
+    withoutLand = resNoLand.routes;
   });
 
   // GIVEN: land=1 returns routes with ground legs over 16h
@@ -150,7 +158,7 @@ describe("Lea — gateway comparison BKK vs SIN", () => {
   let sin: RouteOption[];
 
   beforeAll(async () => {
-    [bkk, sin] = await Promise.all([
+    const [resBkk, resSin] = await Promise.all([
       searchRoutes({
         fromCity: "Bangkok", fromAirport: "BKK", targetCity: "Paris", targetAirport: "PAR",
         nationality: "FR",
@@ -162,6 +170,8 @@ describe("Lea — gateway comparison BKK vs SIN", () => {
         deadlineDate: "2026-03-25", flexDays: 7, longLandTransport: false, today: "2026-03-07",
       }),
     ]);
+    bkk = resBkk.routes;
+    sin = resSin.routes;
   });
 
   it("both gateways return routes", () => {
@@ -180,11 +190,11 @@ describe("Lea — anywhere with land=1 (maximum flexibility)", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Da Lat", fromAirport: "DLI", targetCity: "Anywhere in Europe", targetAirport: "",
       nationality: "FR",
       deadlineDate: "2026-03-25", flexDays: 7, longLandTransport: true, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes to multiple European cities", () => {

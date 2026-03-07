@@ -92,6 +92,7 @@ function Home() {
   const [hasSearched, setHasSearched] = useState(false);
   const [searchData, setSearchData] = useState<SearchFormData | null>(null);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
+  const [highlighted, setHighlighted] = useState<RouteOption[]>([]);
   const [explainTrace, setExplainTrace] = useState<ExplainTrace | null>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
 
@@ -134,7 +135,9 @@ function Home() {
           body: JSON.stringify(data),
         });
         if (!searchRes.ok) throw new Error("Search failed");
-        setRoutes(await searchRes.json());
+        const searchJson = await searchRes.json();
+        setRoutes(searchJson.routes ?? searchJson);
+        setHighlighted(searchJson.highlighted ?? []);
       } else {
         const res = await fetch("/api/search", {
           method: "POST",
@@ -142,11 +145,14 @@ function Home() {
           body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error("Search failed");
-        setRoutes(await res.json());
+        const json = await res.json();
+        setRoutes(json.routes ?? json);
+        setHighlighted(json.highlighted ?? []);
       }
     } catch {
       setSearchError("Could not search routes. Please try again.");
       setRoutes([]);
+      setHighlighted([]);
       setExplainTrace(null);
     }
 
@@ -224,6 +230,7 @@ function Home() {
                 )}
                 <RouteResults
                   routes={routes}
+                  highlighted={highlighted}
                   fromCity={searchData.fromCity}
                   targetCity={searchData.targetCity}
                 />

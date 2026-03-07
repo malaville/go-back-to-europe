@@ -11,11 +11,11 @@ describe("Anna — Koh Tao→Berlin, flex=7", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Koh Tao", fromAirport: "USM", targetCity: "Berlin", targetAirport: "BER",
       nationality: "DE",
       deadlineDate: "2026-03-22", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes", () => {
@@ -78,17 +78,23 @@ describe("Anna — Koh Tao→Berlin, flex=7", () => {
       }
     }
   });
+
+  it("every route has a tier (preferred or extended)", () => {
+    for (const route of routes) {
+      expect(["preferred", "extended"]).toContain(route.tier);
+    }
+  });
 });
 
 describe("Anna — anywhere in Europe", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Koh Tao", fromAirport: "USM", targetCity: "Anywhere in Europe", targetAirport: "",
       nationality: "DE",
       deadlineDate: "2026-03-22", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes to multiple European cities", () => {

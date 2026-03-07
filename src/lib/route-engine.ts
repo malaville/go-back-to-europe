@@ -7,9 +7,8 @@
 
 import type { RouteOption, RouteLeg } from "@/data/route-types";
 import {
-  getCheapestFlight,
-  getLatestOneWayPrice,
   airlineName,
+  AviasalesClient,
 } from "./aviasales";
 import { visaRules } from "@/data/visa-rules";
 import { cities } from "@/data/cities";
@@ -675,7 +674,7 @@ async function fetchSegmentPrice(
   departMonth?: string
 ): Promise<SegmentPriceResult | null> {
   // Try the monthly cache first — skip ME-hub airlines
-  const cheap = await getCheapestFlight(from, to, departMonth, MIDDLE_EAST_HUB_AIRLINES);
+  const cheap = await AviasalesClient.getCheapest(from, to, departMonth, MIDDLE_EAST_HUB_AIRLINES);
   if (cheap) {
     return {
       price: cheap.price,
@@ -686,7 +685,7 @@ async function fetchSegmentPrice(
   }
 
   // Fallback: latest one-way prices — also skip ME-hub airlines
-  const latest = await getLatestOneWayPrice(from, to, MIDDLE_EAST_HUB_AIRLINES);
+  const latest = await AviasalesClient.getLatest(from, to, MIDDLE_EAST_HUB_AIRLINES);
   if (latest) {
     return {
       price: latest.price,
@@ -708,7 +707,7 @@ async function fetchNonstopPrice(
   from: string,
   to: string,
 ): Promise<SegmentPriceResult | null> {
-  const latest = await getLatestOneWayPrice(from, to, MIDDLE_EAST_HUB_AIRLINES, 0);
+  const latest = await AviasalesClient.getLatest(from, to, MIDDLE_EAST_HUB_AIRLINES, 0);
   if (latest) {
     return {
       price: latest.price,
@@ -744,6 +743,7 @@ async function fetchPriceWithFallback(
   const fifth = FIFTH_FREEDOM_ROUTES[key] ?? FIFTH_FREEDOM_ROUTES[revKey];
   if (fifth) {
     if (isDev) console.log(`[price] ${from}->${to}: 5th freedom → ${fifth.airline} (${airlineName(fifth.airline)}) €${fifth.price}`);
+    AviasalesClient.recordFallbackHit();
     return {
       price: fifth.price,
       airline: fifth.airline,
@@ -755,6 +755,7 @@ async function fetchPriceWithFallback(
   const fb = FALLBACK_FLIGHT_PRICES[key] ?? FALLBACK_FLIGHT_PRICES[revKey];
   if (fb) {
     if (isDev) console.log(`[price] ${from}->${to}: fallback → €${fb.price}`);
+    AviasalesClient.recordFallbackHit();
     return {
       price: fb.price,
       airline: "??",
@@ -979,6 +980,7 @@ type CandidatePath = {
   groundTotalMinutes: number;
   groundTotalPrice: number;
   flightEdges: FlightEdge[];
+  tier: "preferred" | "extended";
 };
 
 function buildRouteFromEdges(
@@ -1215,6 +1217,7 @@ function buildRouteFromEdges(
     warnings,
     tags,
     departureDate,
+    tier: path.tier,
   };
 }
 
@@ -1241,6 +1244,7 @@ function scoreAndSort(routes: RouteOption[]): RouteOption[] {
     const hasConflict = route.warnings.some(w => w.includes("conflict"));
     const allVisaFree = route.legs.every(l => l.visaStatus === "free" || l.visaStatus === "none");
     const isNonstop = route.tags.includes("Nonstop");
+    const isPreferred = route.tier === "preferred";
 
     // Normalized 0-1 scores (higher = better)
     const priceScore = 1 - (route.totalPrice - minPrice) / priceRange;           // 25%
@@ -1253,7 +1257,7 @@ function scoreAndSort(routes: RouteOption[]): RouteOption[] {
     const ticketScore = route.ticketType === "single-carrier" ? 1
       : route.ticketType === "alliance" ? 0.5 : 0;                                // 5%
 
-    const score =
+    let score =
       priceScore * 0.25 +
       timeScore * 0.20 +
       safetyScore * 0.15 +
@@ -1262,6 +1266,9 @@ function scoreAndSort(routes: RouteOption[]): RouteOption[] {
       nonstopScore * 0.10 +
       hiddenScore * 0.05 +
       ticketScore * 0.05;
+
+    // Tier bonus: preferred routes get a boost
+    if (isPreferred) score += 0.15;
 
     return { route, score };
   });
@@ -1300,15 +1307,14 @@ function scoreAndSort(routes: RouteOption[]): RouteOption[] {
     }
   }
 
-  // Adventure = most legs, only if 3+
-  const adventure = sorted.reduce((best, r) => r.legs.length > best.legs.length ? r : best);
+  // Simplest = fewest total legs (flights + ground)
+  const simplest = sorted.reduce((best, r) => r.legs.length < best.legs.length ? r : best);
   if (
-    adventure.legs.length > 2 &&
-    !adventure.tags.includes("Cheapest") &&
-    !adventure.tags.includes("Fastest") &&
-    !adventure.tags.includes("Recommended")
+    !simplest.tags.includes("Recommended") &&
+    !simplest.tags.includes("Cheapest") &&
+    !simplest.tags.includes("Fastest")
   ) {
-    adventure.tags.push("Adventure route");
+    simplest.tags.push("Simplest");
   }
 
   return sorted;
@@ -1336,6 +1342,24 @@ export type ExplainStep = {
   data?: unknown;
 };
 
+// ── Search metadata ──────────────────────────────────────────────────────
+
+export type SearchMetadata = {
+  wallTimeMs: number;
+  uniqueEdges: number;
+  edgesPriced: number;
+  edgesMissing: number;
+  candidatePaths: number;
+  routesAssembled: number;
+  routesReturned: number;
+  apiCalls: number;       // total HTTP calls to Travelpayouts (cheap + latest)
+  cheapCalls: number;     // /v1/prices/cheap calls
+  latestCalls: number;    // /v2/prices/latest calls
+  fallbackHits: number;   // prices from hardcoded fallbacks (no API call)
+  preferredCount: number;
+  extendedCount: number;
+};
+
 // ── Main search function ─────────────────────────────────────────────────
 
 type SearchParams = {
@@ -1350,18 +1374,19 @@ type SearchParams = {
   today?: string; // ISO date override for "today" (defaults to actual today) — useful for deterministic tests
 };
 
-export async function searchRoutes(params: SearchParams): Promise<RouteOption[]> {
-  const { routes } = await _searchRoutesInternal(params, false);
-  return routes;
+export async function searchRoutes(params: SearchParams): Promise<{ routes: RouteOption[]; metadata: SearchMetadata }> {
+  const { routes, metadata } = await _searchRoutesInternal(params, false);
+  return { routes, metadata: metadata! };
 }
 
-export async function searchRoutesWithExplain(params: SearchParams): Promise<{ routes: RouteOption[]; explain: ExplainTrace }> {
-  return _searchRoutesInternal(params, true) as Promise<{ routes: RouteOption[]; explain: ExplainTrace }>;
+export async function searchRoutesWithExplain(params: SearchParams): Promise<{ routes: RouteOption[]; explain: ExplainTrace; metadata: SearchMetadata }> {
+  return _searchRoutesInternal(params, true) as Promise<{ routes: RouteOption[]; explain: ExplainTrace; metadata: SearchMetadata }>;
 }
 
-async function _searchRoutesInternal(params: SearchParams, explain: boolean): Promise<{ routes: RouteOption[]; explain?: ExplainTrace }> {
+async function _searchRoutesInternal(params: SearchParams, explain: boolean): Promise<{ routes: RouteOption[]; explain?: ExplainTrace; metadata: SearchMetadata }> {
   const { fromAirport, targetAirport, nationality, deadlineDate, flexDays, longLandTransport, today: todayOverride } = params;
   const todayStr = todayOverride ?? new Date().toISOString().split("T")[0];
+  AviasalesClient.reset();
   // Compute departMonth internally — Travelpayouts API only accepts YYYY-MM
   const earliest = new Date(deadlineDate);
   earliest.setDate(earliest.getDate() - flexDays);
@@ -1402,51 +1427,55 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
     destinations: [...destApiCodes],
   });
 
-  // ── Step 2: Ground reachability — find all start airports ──────────────
-  let effectiveGroundMinutes = maxGroundMinutes;
-  let { paths: groundPaths, filtered: groundFiltered } = computeGroundReachable(fromAirport, effectiveGroundMinutes);
+  // ── Step 2: Two-pass ground reachability ─────────────────────────────
+  // Pass 1: user's flex preference → "preferred" tier
+  // Pass 2: full ground cap → "extended" tier (only if pass 1 is thin)
 
-  // Desperate case: origin has no ground-reachable airports and few flight options.
-  // Retry with relaxed budget (up to groundCapMinutes) to unlock more gateways.
-  if (groundPaths.length === 0) {
-    const flightNeighborCount = getFlightNeighbors(fromAirport).length;
-    if (flightNeighborCount <= 5) {
-      effectiveGroundMinutes = groundCapMinutes;
-      const retry = computeGroundReachable(fromAirport, effectiveGroundMinutes);
-      groundPaths = retry.paths;
-      groundFiltered = retry.filtered;
-      trace("2_ground_retry", `Desperate case: 0 ground airports + ${flightNeighborCount} flight neighbors. Retrying with ${Math.round(effectiveGroundMinutes / 60)}h ground budget. Found ${groundPaths.length} airports.`, {
-        originalBudgetH: Math.round(maxGroundMinutes / 60),
-        expandedBudgetH: Math.round(effectiveGroundMinutes / 60),
-        newGroundPaths: groundPaths.map(gp => `${gp.airport} (${AIRPORT_CITY[gp.airport] ?? gp.airport}, ${Math.round(gp.totalMinutes / 60)}h)`),
-      });
-    }
+  const { paths: preferredGroundPaths, filtered: groundFiltered } = computeGroundReachable(fromAirport, maxGroundMinutes);
+
+  // Extended pass: use full groundCapMinutes for routes outside user's comfort zone
+  let extendedGroundPaths: GroundPath[] = [];
+  if (maxGroundMinutes < groundCapMinutes) {
+    const extended = computeGroundReachable(fromAirport, groundCapMinutes);
+    // Only keep paths NOT already in preferred set
+    const preferredAirports = new Set(preferredGroundPaths.map(gp => gp.airport));
+    extendedGroundPaths = extended.paths.filter(gp => !preferredAirports.has(gp.airport));
   }
 
-  // Start airports: origin itself + all ground-reachable airports
+  // Start airports: origin + preferred ground + extended ground
   type StartPoint = {
     airport: string;
     groundLegs: GroundConnection[];
     groundMinutes: number;
     groundPrice: number;
+    tier: "preferred" | "extended";
   };
 
   const startPoints: StartPoint[] = [
-    { airport: fromAirport, groundLegs: [], groundMinutes: 0, groundPrice: 0 },
-    ...groundPaths.map(gp => ({
+    { airport: fromAirport, groundLegs: [], groundMinutes: 0, groundPrice: 0, tier: "preferred" },
+    ...preferredGroundPaths.map(gp => ({
       airport: gp.airport,
       groundLegs: gp.legs,
       groundMinutes: gp.totalMinutes,
       groundPrice: gp.totalPrice,
+      tier: "preferred" as const,
+    })),
+    ...extendedGroundPaths.map(gp => ({
+      airport: gp.airport,
+      groundLegs: gp.legs,
+      groundMinutes: gp.totalMinutes,
+      groundPrice: gp.totalPrice,
+      tier: "extended" as const,
     })),
   ];
 
-  trace("2_ground_reachability", `Origin ${fromAirport} (${AIRPORT_CITY[fromAirport] ?? fromAirport}). Ground budget: ${Math.round(maxGroundMinutes / 60)}h. Found ${groundPaths.length} ground-reachable airports.`, {
+  trace("2_ground_reachability", `Origin ${fromAirport} (${AIRPORT_CITY[fromAirport] ?? fromAirport}). Ground budget: ${Math.round(maxGroundMinutes / 60)}h preferred, ${Math.round(groundCapMinutes / 60)}h extended. Found ${preferredGroundPaths.length} preferred + ${extendedGroundPaths.length} extended ground airports.`, {
     origin: fromAirport,
     originCountry: AIRPORT_COUNTRY[fromAirport],
     startAirports: startPoints.map(sp => ({
       airport: sp.airport,
       city: AIRPORT_CITY[sp.airport] ?? sp.airport,
+      tier: sp.tier,
       groundRoute: sp.groundLegs.map(g => `${g.fromCode}→${g.toCode} (${g.transport}, ${formatDuration(g.durationMinutes)}, $${g.price}${g.note.startsWith("Estimated") ? " — estimated" : ""})`),
       totalGroundMinutes: sp.groundMinutes,
       totalGroundPrice: sp.groundPrice,
@@ -1488,6 +1517,7 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
           groundTotalMinutes: sp.groundMinutes,
           groundTotalPrice: sp.groundPrice,
           flightEdges: [{ from: sp.airport, to: neighbor }],
+          tier: sp.tier,
         });
       }
 
@@ -1540,6 +1570,7 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
               { from: sp.airport, to: hub1 },
               { from: hub1, to: neighbor },
             ],
+            tier: sp.tier,
           });
         }
       }
@@ -1595,6 +1626,7 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
               { from: hub1, to: hub2 },
               { from: hub2, to: neighbor },
             ],
+            tier: sp.tier,
           });
         }
       }
@@ -1693,6 +1725,7 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
       price: r.totalPrice,
       time: r.estimatedTotalDuration,
       tags: r.tags,
+      tier: r.tier,
       departureDate: r.departureDate,
     })),
   });
@@ -1711,6 +1744,23 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
   }
 
   const wallTimeMs = Date.now() - t0;
+  const apiStats = AviasalesClient.stats;
+
+  const metadata: SearchMetadata = {
+    wallTimeMs,
+    uniqueEdges: edgeArray.length,
+    edgesPriced: priceMap.size,
+    edgesMissing: missingEdges.length,
+    candidatePaths: candidatePaths.length,
+    routesAssembled: routes.length,
+    routesReturned: final.length,
+    apiCalls: apiStats.totalCalls,
+    fallbackHits: apiStats.fallbackHits,
+    cheapCalls: apiStats.cheapCalls,
+    latestCalls: apiStats.latestCalls,
+    preferredCount: final.filter(r => r.tier === "preferred").length,
+    extendedCount: final.filter(r => r.tier === "extended").length,
+  };
 
   const explainTrace: ExplainTrace | undefined = explain ? {
     steps,
@@ -1726,5 +1776,5 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
     },
   } : undefined;
 
-  return { routes: final, explain: explainTrace };
+  return { routes: final, explain: explainTrace, metadata };
 }

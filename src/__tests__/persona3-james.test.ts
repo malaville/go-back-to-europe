@@ -10,11 +10,11 @@ describe("James — Bangkok→London, flex=7", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Bangkok", fromAirport: "BKK", targetCity: "London", targetAirport: "LON",
       nationality: "GB",
       deadlineDate: "2026-03-20", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes", () => {
@@ -88,17 +88,23 @@ describe("James — Bangkok→London, flex=7", () => {
       }
     }
   });
+
+  it("every route has a tier (preferred or extended)", () => {
+    for (const route of routes) {
+      expect(["preferred", "extended"]).toContain(route.tier);
+    }
+  });
 });
 
 describe("James — GB passport visa rules differ from EU", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Bangkok", fromAirport: "BKK", targetCity: "Anywhere in Europe", targetAirport: "",
       nationality: "GB",
       deadlineDate: "2026-03-20", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes to multiple European cities", () => {

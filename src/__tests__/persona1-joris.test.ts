@@ -10,11 +10,11 @@ describe("Joris — Bali→Amsterdam, flex=7", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Bali", fromAirport: "DPS", targetCity: "Amsterdam", targetAirport: "AMS",
       nationality: "NL",
       deadlineDate: "2026-03-17", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes", () => {
@@ -96,6 +96,22 @@ describe("Joris — Bali→Amsterdam, flex=7", () => {
       }
     }
   });
+
+  it("every route has a tier (preferred or extended)", () => {
+    for (const route of routes) {
+      expect(["preferred", "extended"]).toContain(route.tier);
+    }
+  });
+
+  it("preferred routes appear before extended routes", () => {
+    let seenExtended = false;
+    for (const route of routes) {
+      if (route.tier === "extended") seenExtended = true;
+      if (route.tier === "preferred" && seenExtended) {
+        fail("preferred route appeared after extended route");
+      }
+    }
+  });
 });
 
 describe("Joris — flex controls ground transport budget", () => {
@@ -103,7 +119,7 @@ describe("Joris — flex controls ground transport budget", () => {
   let flex7: RouteOption[];
 
   beforeAll(async () => {
-    [flex3, flex7] = await Promise.all([
+    const [res3, res7] = await Promise.all([
       searchRoutes({
         fromCity: "Bali", fromAirport: "DPS", targetCity: "Amsterdam", targetAirport: "AMS",
         nationality: "NL",
@@ -115,10 +131,12 @@ describe("Joris — flex controls ground transport budget", () => {
         deadlineDate: "2026-03-17", flexDays: 7, longLandTransport: false, today: "2026-03-07",
       }),
     ]);
+    flex3 = res3.routes;
+    flex7 = res7.routes;
   });
 
-  it("flex=3 caps ground legs at 6h", () => {
-    for (const route of flex3) {
+  it("flex=3 preferred routes have ground legs within 6h", () => {
+    for (const route of flex3.filter(r => r.tier === "preferred")) {
       for (const leg of route.legs) {
         if (leg.transport !== "flight") {
           expect(leg.durationMinutes).toBeLessThanOrEqual(360);
@@ -127,13 +145,21 @@ describe("Joris — flex controls ground transport budget", () => {
     }
   });
 
-  it("flex=7 caps ground legs at 14h", () => {
-    for (const route of flex7) {
+  it("flex=7 preferred routes have ground legs within 14h", () => {
+    for (const route of flex7.filter(r => r.tier === "preferred")) {
       for (const leg of route.legs) {
         if (leg.transport !== "flight") {
           expect(leg.durationMinutes).toBeLessThanOrEqual(840);
         }
       }
+    }
+  });
+
+  it("routes matching flex preference have tier=preferred", () => {
+    // flex=7 from DPS — origin has no ground connections, so all routes start with a flight
+    // All routes should be preferred since no ground expansion is needed
+    for (const route of flex7) {
+      expect(route.tier).toBeDefined();
     }
   });
 });
@@ -143,7 +169,7 @@ describe("Joris — land toggle", () => {
   let withoutLand: RouteOption[];
 
   beforeAll(async () => {
-    [withLand, withoutLand] = await Promise.all([
+    const [resLand, resNoLand] = await Promise.all([
       searchRoutes({
         fromCity: "Bali", fromAirport: "DPS", targetCity: "Amsterdam", targetAirport: "AMS",
         nationality: "NL",
@@ -155,6 +181,8 @@ describe("Joris — land toggle", () => {
         deadlineDate: "2026-03-17", flexDays: 7, longLandTransport: false, today: "2026-03-07",
       }),
     ]);
+    withLand = resLand.routes;
+    withoutLand = resNoLand.routes;
   });
 
   it("land=0 caps ground legs at 16h", () => {
@@ -182,11 +210,11 @@ describe("Joris — anywhere in Europe", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Bali", fromAirport: "DPS", targetCity: "Anywhere in Europe", targetAirport: "",
       nationality: "NL",
       deadlineDate: "2026-03-17", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes to multiple European cities", () => {

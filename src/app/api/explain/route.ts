@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
       time: r.estimatedTotalDuration,
       departure: r.departureDate,
       tags: r.tags,
+      tier: r.tier,
       warnings: r.warnings,
     })),
   });

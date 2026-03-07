@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const routes = await searchRoutes({
+  const { routes, metadata } = await searchRoutes({
     fromCity,
     fromAirport,
     targetCity: isAnywhere ? "Anywhere in Europe" : targetCity,
@@ -78,6 +78,7 @@ export async function GET(request: NextRequest) {
   const results = routes.map((route, i) => ({
     rank: i + 1,
     tags: route.tags,
+    tier: route.tier,
     price: `€${route.totalPrice}`,
     travelTime: route.estimatedTotalDuration,
     flyingTime: route.totalDuration,
@@ -103,11 +104,15 @@ export async function GET(request: NextRequest) {
     })),
   }));
 
+  // Pick top 2 highlighted routes
+  const highlighted = results.slice(0, 2);
+
   ddlog("info", "query", { from: fromCity, to: isAnywhere ? "Anywhere" : targetCity, nat: nationality, date: deadlineDate, flex: flexDays, routeCount: results.length });
   await ddflush();
 
   const response = NextResponse.json({
     query: { from: fromCity, to: isAnywhere ? "Anywhere in Europe" : targetCity, nat: nationality, date: deadlineDate, flex: flexDays },
+    highlighted,
     count: results.length,
     routes: results,
   });

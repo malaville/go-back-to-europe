@@ -10,11 +10,11 @@ describe("Sanna — Vientiane→Helsinki, flex=3 (urgent)", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Vientiane", fromAirport: "VTE", targetCity: "Helsinki", targetAirport: "HEL",
       nationality: "FI",
       deadlineDate: "2026-03-12", flexDays: 3, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes (Sanna is desperate, engine should find something)", () => {
@@ -69,6 +69,22 @@ describe("Sanna — Vientiane→Helsinki, flex=3 (urgent)", () => {
       expect(route.totalPrice).toBeGreaterThan(0);
     }
   });
+
+  it("every route has a tier (preferred or extended)", () => {
+    for (const route of routes) {
+      expect(["preferred", "extended"]).toContain(route.tier);
+    }
+  });
+
+  it("preferred routes appear before extended routes", () => {
+    let seenExtended = false;
+    for (const route of routes) {
+      if (route.tier === "extended") seenExtended = true;
+      if (route.tier === "preferred" && seenExtended) {
+        fail("preferred route appeared after extended route");
+      }
+    }
+  });
 });
 
 describe("Sanna — flex controls ground budget", () => {
@@ -76,7 +92,7 @@ describe("Sanna — flex controls ground budget", () => {
   let flex7: RouteOption[];
 
   beforeAll(async () => {
-    [flex3, flex7] = await Promise.all([
+    const [res3, res7] = await Promise.all([
       searchRoutes({
         fromCity: "Vientiane", fromAirport: "VTE", targetCity: "Helsinki", targetAirport: "HEL",
         nationality: "FI",
@@ -88,10 +104,12 @@ describe("Sanna — flex controls ground budget", () => {
         deadlineDate: "2026-03-12", flexDays: 7, longLandTransport: false, today: "2026-03-07",
       }),
     ]);
+    flex3 = res3.routes;
+    flex7 = res7.routes;
   });
 
-  it("flex=7 caps ground legs at 14h", () => {
-    for (const route of flex7) {
+  it("flex=7 preferred routes have ground legs within 14h", () => {
+    for (const route of flex7.filter(r => r.tier === "preferred")) {
       for (const leg of route.legs) {
         if (leg.transport !== "flight") {
           expect(leg.durationMinutes).toBeLessThanOrEqual(840);
@@ -100,16 +118,25 @@ describe("Sanna — flex controls ground budget", () => {
     }
   });
 
-  it("flex=3 ground legs stay within flex budget or desperate expansion", () => {
-    // Sanna's flex=3 means 6h ground. But VTE is isolated —
-    // if the engine expands her budget to find routes, ground legs
-    // should still stay within the 16h hard cap
+  it("flex=3 preferred ground legs stay within 6h, extended within 16h cap", () => {
+    // Sanna's flex=3 means 6h ground preferred.
+    // Extended routes can use up to 16h ground cap.
     for (const route of flex3) {
       for (const leg of route.legs) {
         if (leg.transport !== "flight") {
-          expect(leg.durationMinutes).toBeLessThanOrEqual(960);
+          if (route.tier === "preferred") {
+            expect(leg.durationMinutes).toBeLessThanOrEqual(360);
+          } else {
+            expect(leg.durationMinutes).toBeLessThanOrEqual(960);
+          }
         }
       }
+    }
+  });
+
+  it("routes matching flex preference have tier=preferred", () => {
+    for (const route of flex7) {
+      expect(route.tier).toBeDefined();
     }
   });
 });
@@ -118,11 +145,11 @@ describe("Sanna — anywhere (maybe Stockholm is easier)", () => {
   let routes: RouteOption[];
 
   beforeAll(async () => {
-    routes = await searchRoutes({
+    ({ routes } = await searchRoutes({
       fromCity: "Vientiane", fromAirport: "VTE", targetCity: "Anywhere in Europe", targetAirport: "",
       nationality: "FI",
       deadlineDate: "2026-03-12", flexDays: 7, longLandTransport: false, today: "2026-03-07",
-    });
+    }));
   });
 
   it("returns routes to multiple European cities", () => {

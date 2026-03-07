@@ -259,3 +259,57 @@ export async function getLatestOneWayPrice(
     return null;
   }
 }
+
+// ── API call tracking client ─────────────────────────────────────────────
+
+export type ApiCallStats = {
+  cheapCalls: number;      // /v1/prices/cheap requests
+  latestCalls: number;     // /v2/prices/latest requests
+  totalCalls: number;      // cheapCalls + latestCalls
+  fallbackHits: number;    // prices served from FALLBACK_FLIGHT_PRICES or FIFTH_FREEDOM (no API call)
+};
+
+export class AviasalesClient {
+  static cheapCalls = 0;
+  static latestCalls = 0;
+  static fallbackHits = 0;
+
+  static reset() {
+    AviasalesClient.cheapCalls = 0;
+    AviasalesClient.latestCalls = 0;
+    AviasalesClient.fallbackHits = 0;
+  }
+
+  static get stats(): ApiCallStats {
+    return {
+      cheapCalls: AviasalesClient.cheapCalls,
+      latestCalls: AviasalesClient.latestCalls,
+      totalCalls: AviasalesClient.cheapCalls + AviasalesClient.latestCalls,
+      fallbackHits: AviasalesClient.fallbackHits,
+    };
+  }
+
+  static async getCheapest(
+    origin: string,
+    destination: string,
+    departMonth?: string,
+    excludeAirlines?: Set<string>,
+  ): Promise<CheapestFlightResult | null> {
+    AviasalesClient.cheapCalls++;
+    return getCheapestFlight(origin, destination, departMonth, excludeAirlines);
+  }
+
+  static async getLatest(
+    origin: string,
+    destination: string,
+    excludeAirlines?: Set<string>,
+    maxChanges?: number,
+  ): Promise<LatestPriceResult | null> {
+    AviasalesClient.latestCalls++;
+    return getLatestOneWayPrice(origin, destination, excludeAirlines, maxChanges);
+  }
+
+  static recordFallbackHit() {
+    AviasalesClient.fallbackHits++;
+  }
+}

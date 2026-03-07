@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Search routes
-    const routes = await searchRoutes({
+    const { routes, metadata } = await searchRoutes({
       fromCity,
       fromAirport,
       targetCity: isAnywhere ? "Anywhere in Europe" : targetCity,
@@ -81,8 +81,26 @@ export async function POST(request: NextRequest) {
     ddlog("info", "search", { fromCity, targetCity: isAnywhere ? "Anywhere" : targetCity, nationality, deadlineDate, flexDays, routeCount: routes.length });
     await ddflush();
 
+    // Pick top 2 highlighted routes: cheapest + simplest (fewest legs)
+    const highlighted: typeof routes = [];
+    if (routes.length > 0) {
+      const cheapest = routes.reduce((min, r) => r.totalPrice < min.totalPrice ? r : min);
+      highlighted.push(cheapest);
+      const simplest = routes
+        .filter(r => r.id !== cheapest.id)
+        .reduce((best, r) => r.legs.length < best.legs.length ? r : best, routes.find(r => r.id !== cheapest.id) ?? cheapest);
+      if (simplest.id !== cheapest.id) {
+        highlighted.push(simplest);
+      }
+    }
+
     // Return with no-cache headers to ensure fresh data
-    const response = NextResponse.json(routes, { status: 200 });
+    const response = NextResponse.json({
+      highlighted,
+      count: routes.length,
+      routes,
+      metadata,
+    }, { status: 200 });
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
     response.headers.set("Pragma", "no-cache");
     return response;
@@ -90,6 +108,6 @@ export async function POST(request: NextRequest) {
     ddlog("error", "search failed", { error: String(error) });
     await ddflush();
     console.error("[search] Route search failed:", error);
-    return NextResponse.json([], { status: 200 });
+    return NextResponse.json({ highlighted: [], count: 0, routes: [] }, { status: 200 });
   }
 }
