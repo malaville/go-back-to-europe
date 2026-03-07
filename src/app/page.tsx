@@ -1,65 +1,135 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import SearchForm, { type SearchFormData } from "@/components/SearchForm";
+import RouteResults from "@/components/RouteResults";
+import { mockRoutes } from "@/data/mock-routes";
 
 export default function Home() {
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [searchData, setSearchData] = useState<SearchFormData | null>(null);
+
+  const handleSearch = async (data: SearchFormData) => {
+    setIsSearching(true);
+    setSearchData(data);
+
+    // Simulate API delay — will be replaced with real flight search
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setHasSearched(true);
+    setIsSearching(false);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-100">
+        <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 text-white shadow-sm">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path d="M12 19V5m0 0l-4 4m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-slate-900 leading-tight">
+              Go Back to Europe
+            </h1>
+            <p className="text-xs text-slate-500">Safe, cheap routes home</p>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6">
+        {/* Hero — only before search */}
+        {!hasSearched && (
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 leading-snug">
+              Need to get back to Europe?
+            </h2>
+            <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-sm mx-auto">
+              We find safe, affordable multi-leg routes from Southeast Asia
+              to anywhere in Europe. Visa checks and cost estimates included.
+            </p>
+          </div>
+        )}
+
+        {/* Back button when showing results */}
+        {hasSearched && (
+          <button
+            onClick={() => {
+              setHasSearched(false);
+              setSearchData(null);
+            }}
+            className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 mb-4 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="M19 12H5m0 0l4-4m-4 4l4 4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            New search
+          </button>
+        )}
+
+        {/* Search Form */}
+        {!hasSearched && (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+            <SearchForm onSearch={handleSearch} isSearching={isSearching} />
+          </div>
+        )}
+
+        {/* Results */}
+        {hasSearched && searchData && (
+          <RouteResults
+            routes={mockRoutes}
+            fromCity={searchData.fromCity}
+            targetCity={searchData.targetCity}
+          />
+        )}
+
+        {/* Trust signals */}
+        {!hasSearched && (
+          <div className="mt-8 grid grid-cols-3 gap-3 text-center">
+            <div className="rounded-xl bg-white border border-slate-100 p-3">
+              <div className="text-blue-600 flex justify-center mb-1">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <p className="text-xs font-medium text-slate-700">Safety checked</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Avoids conflict zones</p>
+            </div>
+            <div className="rounded-xl bg-white border border-slate-100 p-3">
+              <div className="text-blue-600 flex justify-center mb-1">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <p className="text-xs font-medium text-slate-700">Budget-friendly</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Multi-leg savings</p>
+            </div>
+            <div className="rounded-xl bg-white border border-slate-100 p-3">
+              <div className="text-blue-600 flex justify-center mb-1">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <p className="text-xs font-medium text-slate-700">Visa-aware</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Per-country checks</p>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-100 bg-white py-4">
+        <div className="max-w-lg mx-auto px-4 text-center">
+          <p className="text-xs text-slate-400">
+            Go Back to Europe is a community tool. Always verify travel information
+            with official sources before booking.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }
