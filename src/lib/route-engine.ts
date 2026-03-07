@@ -712,8 +712,16 @@ export async function searchRoutes(params: {
   targetAirport: string;
   nationality: string;
   departMonth: string; // YYYY-MM
+  deadlineDate: string; // ISO date for calculating departure date
+  flexDays: number; // days of flexibility before deadline
 }): Promise<RouteOption[]> {
-  const { fromCity, fromAirport, targetCity, targetAirport, nationality, departMonth } = params;
+  const { fromCity, fromAirport, targetCity, targetAirport, nationality, departMonth, deadlineDate, flexDays } = params;
+
+  // Calculate earliest departure date (deadline minus flex window)
+  const deadline = new Date(deadlineDate);
+  const departDate = new Date(deadline);
+  departDate.setDate(departDate.getDate() - flexDays);
+  const departureDateStr = departDate.toISOString().split("T")[0];
 
   // Determine which EU airports to search
   const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN", "MAD", "LIS", "WAW", "VIE", "PRG", "BUD", "HEL", "ATH", "ARN", "CPH", "DUB", "OTP"];
@@ -928,6 +936,7 @@ export async function searchRoutes(params: {
       ticketType,
       warnings,
       tags,
+      departureDate: departureDateStr,
     };
   });
 

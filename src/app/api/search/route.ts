@@ -86,6 +86,8 @@ export async function POST(request: NextRequest) {
       targetAirport,
       nationality: nationality || "FR",
       departMonth,
+      deadlineDate,
+      flexDays: flexDays ?? 7,
     });
 
     // Return with no-cache headers to ensure fresh data
