@@ -8,6 +8,15 @@ The user provides:
 
 ## Workflow
 
+### Step 0: Record the case and ask for source
+
+**Before doing anything else:**
+
+1. **Ask for the URL or source** if not already provided. Ask: "Where did this come from? (Reddit URL, DM screenshot, email, etc.)" — you need this for the report.
+2. **Create the report file immediately** at `/docs/improvement-real-use-cases/YYYYMMDD-HHmm-origin-dest.md` with the situation section filled in. This ensures the case is documented even if work is interrupted. Use the template from Step 7 and fill in what you know so far (Situation, source URL). Leave other sections as TODO placeholders.
+
+This step is mandatory — do NOT skip to research or querying before the case file exists.
+
 ### Step 1: Parse the situation
 
 Extract:
@@ -17,6 +26,7 @@ Extract:
 - **Deadline**: when they MUST arrive
 - **Constraints**: kids, budget, cancelled flights, visa issues
 - **What they actually need**: the core problem to solve
+- **Source**: URL or description of where this request came from (Reddit thread, DM, email, etc.)
 
 ### Step 2: Research the real-world best solution
 
@@ -110,14 +120,26 @@ Report template:
 ```markdown
 # Real Use Case: [Origin]→[Destination] — [date]
 
+## Source
+[URL or description: Reddit thread link, DM screenshot path, email, etc.]
+
 ## Situation
 [Paste the original request]
 
-## What the app returned BEFORE
-[Routes, prices, issues]
+## 1. Before fix
+[App results BEFORE any code changes — routes, prices, issues, or "0 routes" if broken]
+
+## 2. After fix
+[App results AFTER code changes — routes, prices, should match or beat researched solution]
+
+## 3. Crawl discovery
+[Results from /crawl-discover on key booking sites for this route — actual prices, airlines, availability found by automated scraping. Leave as TODO until crawl is run.]
+
+## 4. Crawl discovery + human
+[Results after human reviews crawl output and manually checks links — confirmed bookable options, corrected prices, notes on what's actually available vs what scrapers found. Leave as TODO until human review.]
 
 ## Real-world best solution (researched)
-[What we found manually]
+[What we found via web search]
 
 ## Gaps identified
 - [ ] Gap 1
@@ -125,9 +147,6 @@ Report template:
 
 ## Changes made
 - `file:line` — description
-
-## What the app returns AFTER
-[Routes, prices — should match or beat the researched solution]
 
 ## Frontend URL
 `https://skipthegulf.com/?from=...`

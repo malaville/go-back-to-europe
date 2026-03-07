@@ -336,7 +336,8 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "DPS-HKG": 210, "DPS-CAN": 240,
   // Manila (MNL)
   "MNL-HKG": 135, "MNL-SIN": 210, "MNL-BKK": 210,
-  "MNL-CAN": 180, "MNL-TPE": 90,
+  "MNL-CAN": 180, "MNL-TPE": 90, "MNL-LON": 810,
+  "MNL-ICN": 240, "MNL-NRT": 270,
   // Phnom Penh (PNH)
   "PNH-BKK": 65, "PNH-SIN": 120, "PNH-SGN": 75,
   "PNH-HKG": 150,
@@ -1218,10 +1219,16 @@ function buildRouteFromEdges(
   const legCodes = legs.map((l) => l.fromCode).join("-") + "-" + legs[legs.length - 1].toCode;
   const id = `route-${legCodes}-${totalPrice}`;
 
-  // Departure date: use real API date from first flight, fallback to deadline - 2 days
-  const departureDate = firstFlightDepartDate || fallbackDepartDate;
+  // Departure date: use real API date from first flight if within window,
+  // otherwise fall back to computed date. Cached API prices return the
+  // cheapest-of-month date which may be outside the user's travel window —
+  // we still want to show the route with an approximate price.
+  let departureDate = firstFlightDepartDate;
+  if (!departureDate || departureDate > deadlineDate || departureDate < todayStr) {
+    departureDate = fallbackDepartDate;
+  }
 
-  // Reject routes that depart after the deadline or before today
+  // Reject routes only if even the fallback date is outside the window
   if (departureDate > deadlineDate || departureDate < todayStr) {
     return null;
   }
