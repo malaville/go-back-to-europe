@@ -2,6 +2,7 @@
 
 import type { RouteOption, RouteLeg } from "@/data/route-types";
 import { activeAdvisories } from "@/data/advisories";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 function transportIcon(transport: RouteLeg["transport"]) {
   switch (transport) {
@@ -78,15 +79,7 @@ function ticketTypeBadge(type: RouteOption["ticketType"]) {
   return null;
 }
 
-/** Build a Google Flights one-way search URL for a given leg */
-function googleFlightsUrl(leg: RouteLeg): string {
-  // City names work better than airport codes in Google Flights query
-  const from = encodeURIComponent(leg.from);
-  const to = encodeURIComponent(leg.to);
-  return `https://www.google.com/travel/flights?q=Flights+to+${to}+from+${from}+oneway&curr=EUR`;
-}
-
-function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
+function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string }) {
   return (
     <div className="relative">
       <div className="flex items-start gap-3">
@@ -134,7 +127,7 @@ function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
             )}
             {leg.transport === "flight" && (
               <a
-                href={googleFlightsUrl(leg)}
+                href={googleFlightsUrl(leg.fromCode, leg.toCode, departureDate)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
@@ -218,7 +211,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
       {/* Legs */}
       <div className="px-5 pt-3 pb-2">
         {route.legs.map((leg, i) => (
-          <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} />
+          <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} />
         ))}
 
         {/* Final destination dot */}

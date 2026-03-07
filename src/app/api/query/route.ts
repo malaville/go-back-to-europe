@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutes } from "@/lib/route-engine";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 function lookupAirportCode(cityName: string): string {
   if (!cityName) return "";
@@ -103,7 +104,7 @@ export async function GET(request: NextRequest) {
       visa: leg.visaStatus,
       visaNote: leg.visaNote ?? null,
       verifyUrl: leg.transport === "flight"
-        ? `https://www.google.com/travel/flights?q=Flights+to+${leg.toCode}+from+${leg.fromCode}+oneway&curr=EUR`
+        ? googleFlightsUrl(leg.fromCode, leg.toCode, route.departureDate)
         : null,
     })),
   }));
