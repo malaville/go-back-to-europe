@@ -109,6 +109,7 @@ export async function GET(request: NextRequest) {
       verifyUrl: leg.transport === "flight"
         ? googleFlightsUrl(leg.fromCode, leg.toCode, route.departureDate)
         : null,
+      bookUrl: leg.searchUrl ?? null,
     })),
   }));
 

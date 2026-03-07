@@ -126,14 +126,26 @@ function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolea
               <p className="text-xs text-slate-400">{leg.visaNote}</p>
             )}
             {leg.transport === "flight" && (
-              <a
-                href={googleFlightsUrl(leg.fromCode, leg.toCode, departureDate)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
-              >
-                Verify price
-              </a>
+              <>
+                <a
+                  href={googleFlightsUrl(leg.fromCode, leg.toCode, departureDate)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
+                >
+                  Verify price
+                </a>
+                {leg.searchUrl && (
+                  <a
+                    href={leg.searchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-orange-500 hover:text-orange-600 hover:underline shrink-0"
+                  >
+                    Book this leg
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -239,18 +251,10 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
         </div>
       )}
 
-      {/* Book / search button */}
+      {/* Pricing note */}
       <div className="px-5 pb-4 pt-1">
-        <a
-          href={route.searchUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 transition-colors"
-        >
-          Search this route on Aviasales
-        </a>
-        <p className="text-[10px] text-slate-400 text-center mt-1.5">
-          Compare through-ticket prices — often cheaper than segment estimates
+        <p className="text-[10px] text-slate-400 text-center">
+          Prices are estimates based on recent cached fares — verify and book each leg separately above
         </p>
       </div>
     </div>

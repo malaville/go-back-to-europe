@@ -12,6 +12,7 @@ export type RouteLeg = {
   price: number; // USD
   visaStatus: "free" | "evisa" | "warning" | "easy" | "hard" | "none";
   visaNote?: string;
+  searchUrl?: string; // Per-leg Aviasales booking link
 };
 
 export type RouteOption = {

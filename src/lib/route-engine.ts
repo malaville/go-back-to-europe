@@ -542,6 +542,18 @@ function apiCode(airportCode: string): string {
   return AIRPORT_TO_API_CODE[airportCode] ?? airportCode;
 }
 
+/** Build an Aviasales one-way search URL for a single leg */
+function aviasalesLegUrl(from: string, to: string, departDate?: string): string {
+  let ddmm = "1503"; // fallback: 15th of March
+  if (departDate) {
+    const d = new Date(departDate);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    ddmm = `${day}${month}`;
+  }
+  return `https://www.aviasales.com/search/${from}${ddmm}${to}1?marker=708661`;
+}
+
 // ── Reverse API code mapping ─────────────────────────────────────────────
 // API/city codes → primary airport code
 
@@ -1012,6 +1024,7 @@ function buildRouteFromEdges(
       price: priceResult.price,
       visaStatus: visa.status,
       visaNote: visa.note,
+      searchUrl: aviasalesLegUrl(edge.from, edge.to, priceResult.departDate),
     });
   }
 
