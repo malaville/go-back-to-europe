@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SGN": {
+        "1": {
+          "airline": "CZ",
+          "departure_at": "2026-03-14T16:30:00+08:00",
+          "return_at": "2026-03-26T08:00:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 175,
+          "flight_number": 3454,
+          "duration": 1035,
+          "duration_to": 335,
+          "duration_back": 345
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

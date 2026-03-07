@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "TBS": {
+        "3": {
+          "airline": "CA",
+          "departure_at": "2026-03-16T14:00:00+08:00",
+          "return_at": "2026-03-23T12:50:00+04:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 921,
+          "flight_number": 1210,
+          "duration": 5665,
+          "duration_to": 720,
+          "duration_back": 465
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

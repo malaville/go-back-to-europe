@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SHA": {
+        "1": {
+          "airline": "CZ",
+          "departure_at": "2026-03-20T08:20:00+08:00",
+          "return_at": "2026-03-28T22:50:00+08:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 151,
+          "flight_number": 3078,
+          "duration": 2060,
+          "duration_to": 300,
+          "duration_back": 325
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

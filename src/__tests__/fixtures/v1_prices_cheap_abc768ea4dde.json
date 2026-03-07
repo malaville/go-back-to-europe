@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ALA": {
+        "0": {
+          "airline": "KC",
+          "departure_at": "2026-03-31T12:40:00+08:00",
+          "return_at": "2026-04-21T06:40:00+06:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 273,
+          "flight_number": 688,
+          "duration": 215,
+          "duration_to": 110,
+          "duration_back": 105
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

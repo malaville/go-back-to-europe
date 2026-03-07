@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HKT": {
+        "0": {
+          "airline": "SL",
+          "departure_at": "2026-03-24T16:40:00+08:00",
+          "return_at": "2026-03-30T13:15:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 84,
+          "flight_number": 103,
+          "duration": 245,
+          "duration_to": 105,
+          "duration_back": 140
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

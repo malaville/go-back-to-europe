@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SGN": {
+        "1": {
+          "airline": "6E",
+          "departure_at": "2026-03-13T05:15:00+05:30",
+          "return_at": "2026-03-20T04:00:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 287,
+          "flight_number": 5014,
+          "duration": 2070,
+          "duration_to": 355,
+          "duration_back": 360
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "IST": {
+        "2": {
+          "airline": "AK",
+          "departure_at": "2026-03-09T01:10:00+08:00",
+          "return_at": "2026-03-10T21:20:00+03:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 684,
+          "flight_number": 585,
+          "duration": 4705,
+          "duration_to": 980,
+          "duration_back": 840
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

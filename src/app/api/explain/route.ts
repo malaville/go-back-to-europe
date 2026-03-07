@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutesWithExplain } from "@/lib/route-engine";
 import { lookupAirportByCity } from "@/lib/travelpayouts-data";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 async function lookupAirportCode(cityName: string): Promise<string> {
   if (!cityName) return "";
@@ -75,6 +76,18 @@ export async function GET(request: NextRequest) {
       tags: r.tags,
       tier: r.tier,
       warnings: r.warnings,
+      legs: r.legs.map(l => ({
+        from: l.fromCode,
+        to: l.toCode,
+        transport: l.transport,
+        price: `€${l.price}`,
+        duration: l.duration,
+        departDate: l.departDate ?? null,
+        airline: l.airlineCode ?? null,
+        verifyUrl: l.transport === "flight"
+          ? googleFlightsUrl(l.fromCode, l.toCode, r.departureDate)
+          : null,
+      })),
     })),
   });
 

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "USM": {
+        "1": {
+          "airline": "UO",
+          "departure_at": "2026-03-19T07:25:00+08:00",
+          "return_at": "2026-03-29T19:50:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 403,
+          "flight_number": 724,
+          "duration": 2210,
+          "duration_to": 285,
+          "duration_back": 245
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

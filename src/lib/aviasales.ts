@@ -123,6 +123,7 @@ export type CheapestFlightResult = {
   airlineName: string;
   departureAt: string;
   returnAt: string | null;
+  flightNumber: string | null; // e.g. "112" → combine with airline "5J" → "5J 112"
 };
 
 export type LatestPriceResult = {
@@ -188,6 +189,7 @@ export async function getCheapestFlight(
           airlineName: airlineName(t.airline),
           departureAt: t.departure_at ?? "",
           returnAt: t.return_at ?? null,
+          flightNumber: t.flight_number ? String(t.flight_number) : null,
         };
       }
     }

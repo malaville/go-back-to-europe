@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SEL": {
+        "1": {
+          "airline": "CX",
+          "departure_at": "2026-03-09T08:00:00+08:00",
+          "return_at": "2026-03-13T15:00:00+09:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 172,
+          "flight_number": 912,
+          "duration": 1755,
+          "duration_to": 360,
+          "duration_back": 380
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

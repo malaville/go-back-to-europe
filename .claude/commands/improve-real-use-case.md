@@ -98,23 +98,25 @@ After each fix, re-query localhost to verify improvement.
 
 Create `/docs/improvement-real-use-cases/YYYYMMDD-HHmm-summary.md`.
 
-When generating Google Flights verification links, use `src/lib/google-flights-url.ts`:
-```ts
-import { googleFlightsUrl } from "@/lib/google-flights-url";
-// googleFlightsUrl("BKK", "MUC", "2026-03-09") → proper protobuf-encoded Google Flights URL
-```
+**Google Flights links and dates come from the API.** The `/api/explain` endpoint returns per-leg data including:
+- `departure` — the route's departure date
+- `legs[].departDate` — per-leg departure date (from API or null)
+- `legs[].verifyUrl` — Google Flights verification link (protobuf-encoded, ready to use)
 
-Write a small inline script to generate the URLs:
+Extract these directly from the API response when building the report:
 ```bash
-npx tsx -e "
-import { googleFlightsUrl } from './src/lib/google-flights-url';
-console.log('BKK→MUC Mar 9:', googleFlightsUrl('BKK', 'MUC', '2026-03-09'));
-console.log('BKK→MUC Mar 10:', googleFlightsUrl('BKK', 'MUC', '2026-03-10'));
-// etc.
+curl -s "https://skipthegulf.com/api/explain?from=CITY&to=CITY&nat=XX&date=YYYY-MM-DD&flex=7" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+for r in d['routes'][:5]:
+    print(f'Route: {r[\"path\"]} | {r[\"price\"]} | depart={r[\"departure\"]}')
+    for l in r.get('legs', []):
+        if l.get('verifyUrl'):
+            print(f'  [{l[\"from\"]}→{l[\"to\"]} {r[\"departure\"]}]({l[\"verifyUrl\"]})')
 "
 ```
 
-Use these proper URLs in the report markdown instead of plain Google search links.
+Use the `verifyUrl` links directly in the report — do NOT manually generate Google Flights URLs.
 
 Report template:
 ```markdown
@@ -152,7 +154,7 @@ Report template:
 `https://skipthegulf.com/?from=...`
 
 ## Google Flights verification
-[Generated via googleFlightsUrl() — proper protobuf-encoded links]
+[Extracted from API `legs[].verifyUrl` — include departure dates and per-leg links]
 
 ## Rules learned
 [Any new rules or contradictions discovered — these feed back into the engine]

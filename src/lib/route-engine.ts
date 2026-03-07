@@ -10,6 +10,7 @@ import {
   airlineName,
   AviasalesClient,
 } from "./aviasales";
+import { correctPrice } from "./price-correction";
 import { visaRules } from "@/data/visa-rules";
 import { cities } from "@/data/cities";
 
@@ -48,6 +49,7 @@ const AIRLINE_HUBS: Record<string, string[]> = {
   AI: ["DEL", "BOM"], // Air India → Delhi/Mumbai
   SU: ["SVO"],     // Aeroflot → Moscow
   KC: ["ALA"],     // Air Astana → Almaty
+  BI: ["BWN"],     // Royal Brunei → Bandar Seri Begawan
 };
 
 // ── Airline alliances ────────────────────────────────────────────────────
@@ -85,6 +87,11 @@ const MIN_CONNECTION_MINUTES: Record<string, number> = {
   IST: 180,  // Istanbul — huge
   BKK: 150,  // Suvarnabhumi
   KUL: 150,  // KLIA
+  CTU: 180,  // Chengdu Tianfu — large, TWOV processing
+  URC: 180,  // Ürümqi — TWOV processing
+  XIY: 180,  // Xi'an Xianyang — TWOV processing
+  GYD: 150,  // Baku Heydar Aliyev — small, fast
+  PEK: 210,  // Beijing Capital — massive, TWOV customs
 };
 const DEFAULT_CONNECTION_MINUTES = 180;
 
@@ -173,6 +180,67 @@ const GROUND_CONNECTIONS: GroundConnection[] = [
     durationMinutes: 300, // 5h
     price: 10,
     note: "Express bus SG→KL",
+  },
+  // China high-speed rail (Silk Road connections)
+  {
+    fromCode: "XIY",
+    fromCity: "Xi'an",
+    toCode: "CTU",
+    toCity: "Chengdu",
+    transport: "train",
+    durationMinutes: 180, // 3h HSR
+    price: 30,
+    note: "Xi'an–Chengdu high-speed rail, ~3h",
+  },
+  {
+    fromCode: "CTU",
+    fromCity: "Chengdu",
+    toCode: "XIY",
+    toCity: "Xi'an",
+    transport: "train",
+    durationMinutes: 180, // 3h HSR
+    price: 30,
+    note: "Chengdu–Xi'an high-speed rail, ~3h",
+  },
+  {
+    fromCode: "XIY",
+    fromCity: "Xi'an",
+    toCode: "PEK",
+    toCity: "Beijing",
+    transport: "train",
+    durationMinutes: 270, // 4h30 HSR
+    price: 50,
+    note: "Xi'an–Beijing high-speed rail, ~4h30",
+  },
+  {
+    fromCode: "PEK",
+    fromCity: "Beijing",
+    toCode: "XIY",
+    toCity: "Xi'an",
+    transport: "train",
+    durationMinutes: 270, // 4h30 HSR
+    price: 50,
+    note: "Beijing–Xi'an high-speed rail, ~4h30",
+  },
+  {
+    fromCode: "XIY",
+    fromCity: "Xi'an",
+    toCode: "URC",
+    toCity: "Ürümqi",
+    transport: "train",
+    durationMinutes: 780, // ~13h HSR (Lanxin line)
+    price: 70,
+    note: "Xi'an–Ürümqi high-speed rail via Lanzhou, ~13h",
+  },
+  {
+    fromCode: "URC",
+    fromCity: "Ürümqi",
+    toCode: "XIY",
+    toCity: "Xi'an",
+    transport: "train",
+    durationMinutes: 780, // ~13h HSR (Lanxin line)
+    price: 70,
+    note: "Ürümqi–Xi'an high-speed rail via Lanzhou, ~13h",
   },
 ];
 
@@ -309,6 +377,97 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "PVG-WAW": 600, "PVG-VIE": 630, "PVG-PRG": 630, "PVG-BUD": 630,
   "CAN-WAW": 630, "CAN-VIE": 660, "CAN-PRG": 660, "CAN-BUD": 660,
 
+  // ── Chengdu (CTU) — cheap BKK→Europe stepping stone ──
+  // SEA → CTU
+  "BKK-CTU": 180, // ~3h nonstop (Sichuan Airlines, China Eastern)
+  "MNL-CTU": 240, // ~4h (Sichuan Airlines, via?)
+  "SIN-CTU": 300, // ~5h
+  "KUL-CTU": 300, // ~5h
+  "SGN-CTU": 240, // ~4h
+  "HKG-CTU": 180, // ~3h
+  // CTU → Europe (1-stop via PVG/PEK on Chinese carriers)
+  "CTU-PAR": 780, "CTU-LON": 750, "CTU-AMS": 720,
+  "CTU-BER": 690, "CTU-ROM": 720, "CTU-BCN": 750,
+  "CTU-BUD": 660, "CTU-VIE": 690, "CTU-PRG": 690,
+  "CTU-WAW": 660, "CTU-MIL": 720, "CTU-MAD": 750,
+  "CTU-HEL": 690, "CTU-ATH": 750,
+  // CTU → Caucasus/Central Asia
+  "CTU-GYD": 420, // ~7h (China Southern via URC)
+
+  // ── Ürümqi (URC) — hidden gateway hub ──
+  // SEA → URC
+  "BKK-URC": 360, // ~6h (Shanghai Airlines via PVG)
+  "MNL-URC": 420, // ~7h (via PVG)
+  "SGN-URC": 360, // ~6h
+  // URC → Caucasus/Central Asia (non-Gulf connectors)
+  "URC-TBS": 315, // ~5h15 (China Southern nonstop)
+  "URC-GYD": 300, // ~5h (China Southern / Air Astana)
+  "URC-ALA": 180, // ~3h (Air Astana nonstop)
+  "URC-TAS": 210, // ~3h30
+  "URC-IST": 420, // ~7h (via? — verify non-Gulf)
+
+  // ── Xi'an (XIY) — Silk Road gateway ──
+  // SEA → XIY
+  "BKK-XIY": 240, // ~4h (Air China, China Eastern)
+  "MNL-XIY": 240, // ~4h (China Eastern)
+  "HKG-XIY": 180, // ~3h
+  "SIN-XIY": 330, // ~5h30
+  "SGN-XIY": 270, // ~4h30
+  // XIY → Caucasus/Central Asia
+  "XIY-GYD": 390, // ~6h30 (Hainan Airlines nonstop)
+  "XIY-TBS": 420, // ~7h
+  "XIY-ALA": 240, // ~4h
+  "XIY-IST": 540, // ~9h (1 stop)
+  // XIY → Europe (1-stop via PEK/PVG)
+  "XIY-PAR": 720, "XIY-LON": 690, "XIY-AMS": 660,
+  "XIY-BER": 630, "XIY-ROM": 660, "XIY-VIE": 630,
+  "XIY-BUD": 600, "XIY-WAW": 600, "XIY-PRG": 600,
+  "XIY-MIL": 660, "XIY-HEL": 630,
+
+  // ── Baku (GYD) — Caucasus bridge to Europe ──
+  // GYD → Europe (Wizz Air, Pegasus, Turkish, Lufthansa)
+  "GYD-LON": 360, // ~6h (Wizz Air nonstop to LGW)
+  "GYD-PAR": 360, // ~6h
+  "GYD-BER": 330, // ~5h30
+  "GYD-ROM": 300, // ~5h
+  "GYD-MIL": 330, // ~5h30
+  "GYD-VIE": 300, // ~5h
+  "GYD-WAW": 300, // ~5h
+  "GYD-PRG": 300, // ~5h
+  "GYD-BUD": 270, // ~4h30
+  "GYD-IST": 210, // ~3h30 (Turkish, Pegasus, AZAL)
+  "GYD-ATH": 270, // ~4h30
+  "GYD-MUC": 330, // ~5h30
+  "GYD-BCN": 360, // ~6h
+  "GYD-AMS": 360, // ~6h
+  "GYD-HEL": 300, // ~5h
+  // GYD → Central Asia
+  "GYD-TBS": 60,  // ~1h (AZAL nonstop, very frequent)
+  "GYD-ALA": 210, // ~3h30
+  "GYD-TAS": 180, // ~3h
+
+  // ── Beijing (PEK) — connecting hub for Chinese carriers ──
+  // SEA → PEK
+  "BKK-PEK": 300, // ~5h
+  "SIN-PEK": 360, // ~6h
+  "SGN-PEK": 300, // ~5h
+  "HKG-PEK": 210, // ~3h30
+  // PEK → Europe
+  "PEK-PAR": 660, "PEK-LON": 630, "PEK-AMS": 600,
+  "PEK-BER": 570, "PEK-ROM": 600, "PEK-BCN": 660,
+  "PEK-MAD": 690, "PEK-VIE": 570, "PEK-BUD": 570,
+  "PEK-WAW": 540, "PEK-PRG": 570, "PEK-MIL": 600,
+  "PEK-HEL": 510, "PEK-ATH": 600, "PEK-MUC": 600,
+  "PEK-CPH": 570, "PEK-ARN": 540,
+
+  // ── Geneva (GVA) — from existing hubs ──
+  "IST-GVA": 195, "TBS-GVA": 270, "GYD-GVA": 330,
+  "DEL-GVA": 510, "BOM-GVA": 510,
+  "ADD-GVA": 450, "ALA-GVA": 390, "TAS-GVA": 360,
+  "CTU-GVA": 720, "PVG-GVA": 690, "CAN-GVA": 720,
+  "XIY-GVA": 660, "PEK-GVA": 630,
+  "HKG-GVA": 720, "SEL-GVA": 720, "TYO-GVA": 750,
+
   // Munich (MUC) — from major hubs
   "BKK-MUC": 675, // Thai Airways direct, ~11h 15m
   "SIN-MUC": 750, // ~12h 30m
@@ -326,6 +485,9 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "TPE-MUC": 750, // ~12h 30m
   "CAN-MUC": 690, // ~11h 30m
   "PVG-MUC": 660, // ~11h
+  "CTU-MUC": 690, // ~11h30 (1 stop via PVG/PEK)
+  "XIY-MUC": 660, // ~11h
+  "URC-MUC": 540, // ~9h (via TBS or GYD)
 
   // ── Small SEA origins → transit hubs ──
   // Hanoi (HAN)
@@ -338,6 +500,8 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "MNL-HKG": 135, "MNL-SIN": 210, "MNL-BKK": 210,
   "MNL-CAN": 180, "MNL-TPE": 90, "MNL-LON": 810,
   "MNL-ICN": 240, "MNL-NRT": 270,
+  "MNL-DEL": 360, "MNL-IST": 660, "MNL-PEK": 270,
+  "MNL-PVG": 240, // ~4h (Cebu Pacific, China Eastern)
   // Phnom Penh (PNH)
   "PNH-BKK": 65, "PNH-SIN": 120, "PNH-SGN": 75,
   "PNH-HKG": 150,
@@ -439,6 +603,11 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   CMB: "LK",
   CAN: "CN",
   PVG: "CN",
+  CTU: "CN",
+  URC: "CN",
+  XIY: "CN",
+  PEK: "CN",
+  GYD: "AZ",
   DPS: "ID",
   MNL: "PH",
   VTE: "LA",
@@ -474,6 +643,8 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   DUB: "IE",
   OTP: "RO",
   MUC: "DE",
+  GVA: "CH",
+  ZRH: "CH",
 };
 
 // EU / EEA / Schengen country codes — transit visa always "none"
@@ -512,6 +683,11 @@ const AIRPORT_CITY: Record<string, string> = {
   CMB: "Colombo",
   CAN: "Guangzhou",
   PVG: "Shanghai",
+  CTU: "Chengdu",
+  URC: "Ürümqi",
+  XIY: "Xi'an",
+  PEK: "Beijing",
+  GYD: "Baku",
   DPS: "Bali",
   MNL: "Manila",
   VTE: "Vientiane",
@@ -548,6 +724,8 @@ const AIRPORT_CITY: Record<string, string> = {
   DUB: "Dublin",
   OTP: "Bucharest",
   MUC: "Munich",
+  GVA: "Geneva",
+  ZRH: "Zürich",
 };
 
 // Airport code → city code used by the Aviasales API
@@ -623,14 +801,14 @@ const FIFTH_FREEDOM_ROUTES: Record<string, { airline: string; price: number }> =
 // ── Warning airport sets ─────────────────────────────────────────────────
 
 const CONFLICT_ADJACENT_AIRPORTS = new Set(["IST"]);
-const VISA_WARNING_AIRPORTS = new Set(["DEL", "BOM"]);
+const VISA_WARNING_AIRPORTS = new Set(["DEL", "BOM", "GYD"]);
 
 // ── EU search airports (module level) ────────────────────────────────────
 
 const EU_SEARCH_AIRPORTS = [
   "CDG", "AMS", "LHR", "BER", "FCO", "MXP", "BCN", "MAD", "LIS",
   "WAW", "VIE", "PRG", "BUD", "HEL", "ATH", "ARN", "CPH", "DUB", "OTP",
-  "MUC",
+  "MUC", "GVA",
 ];
 
 const EU_AIRPORT_SET = new Set(EU_SEARCH_AIRPORTS);
@@ -682,6 +860,8 @@ type SegmentPriceResult = {
   airline: string;
   airlineFullName: string;
   departDate?: string;
+  departTime?: string; // local departure time e.g. "15:15"
+  flightNumber?: string; // full flight number e.g. "5J 112"
   numberOfChanges?: number; // from /v2/prices/latest — undefined means unknown
 };
 
@@ -696,19 +876,36 @@ async function fetchSegmentPrice(
   departMonth?: string
 ): Promise<SegmentPriceResult | null> {
   // Try the monthly cache first — skip ME-hub airlines
+  const isDev = process.env.NODE_ENV === "development";
+  // Try the monthly cache first — has flight numbers + full timestamps
   const cheap = await AviasalesClient.getCheapest(from, to, departMonth, MIDDLE_EAST_HUB_AIRLINES);
   if (cheap) {
+    // Extract local departure time from ISO timestamp (e.g. "2026-03-18T15:15:00+08:00" → "15:15")
+    let departTime: string | undefined;
+    if (cheap.departureAt && cheap.departureAt.includes("T")) {
+      const timePart = cheap.departureAt.split("T")[1];
+      if (timePart) departTime = timePart.slice(0, 5); // "15:15"
+    }
+    const flightNum = cheap.flightNumber ? `${cheap.airline} ${cheap.flightNumber}` : undefined;
+    if (isDev) {
+      console.log(`[price] ${from}->${to}: /v1/cheap → ${cheap.airline} €${cheap.price}${flightNum ? ` flight=${flightNum}` : ""} depart=${cheap.departureAt || "?"}`);
+    }
     return {
       price: cheap.price,
       airline: cheap.airline,
       airlineFullName: cheap.airlineName,
       departDate: cheap.departureAt ? cheap.departureAt.split("T")[0] : undefined,
+      departTime,
+      flightNumber: flightNum,
     };
   }
 
-  // Fallback: latest one-way prices — also skip ME-hub airlines
+  // Fallback: latest one-way prices — no flight numbers or times available
   const latest = await AviasalesClient.getLatest(from, to, MIDDLE_EAST_HUB_AIRLINES);
   if (latest) {
+    if (isDev) {
+      console.log(`[price] ${from}->${to}: /v2/latest → ${latest.airline} €${latest.price} (no flight number or time)`);
+    }
     return {
       price: latest.price,
       airline: latest.airline,
@@ -750,13 +947,9 @@ async function fetchPriceWithFallback(
   departMonth?: string
 ): Promise<SegmentPriceResult | null> {
   const isDev = process.env.NODE_ENV === "development";
-  if (isDev) console.log(`\n[price] Fetching ${from}->${to} (month=${departMonth})`);
 
   const apiResult = await fetchSegmentPrice(from, to, departMonth);
-  if (apiResult) {
-    if (isDev) console.log(`[price] ${from}->${to}: API hit → ${apiResult.airline} (${apiResult.airlineFullName}) €${apiResult.price} depart=${apiResult.departDate ?? "?"}`);
-    return apiResult;
-  }
+  if (apiResult) return apiResult;
   if (isDev) console.log(`[price] ${from}->${to}: API miss, trying fallbacks...`);
 
   // Check fifth freedom routes
@@ -1034,6 +1227,7 @@ function buildRouteFromEdges(
 
   // Flight legs
   let firstFlightDepartDate: string | undefined;
+  let maxCorrectionRatio = 1;
   for (const edge of path.flightEdges) {
     const edgeKey = `${apiCode(edge.from)}-${apiCode(edge.to)}`;
     const priceResult = priceMap.get(edgeKey);
@@ -1051,6 +1245,21 @@ function buildRouteFromEdges(
     const visa = resolveVisaStatus(edge.to, nationality);
     const hiddenStop = detectHiddenStop(priceResult.airline, edge.from, edge.to, duration);
 
+    // Correct cached price based on days-to-departure heuristic
+    const { correctedPrice, correctionApplied, kUser, kCached } = correctPrice(
+      priceResult.price,
+      priceResult.departDate,
+      fallbackDepartDate, // user's desired departure window
+      todayStr,
+    );
+    if (correctionApplied) {
+      const ratio = kUser / kCached;
+      if (ratio > maxCorrectionRatio) maxCorrectionRatio = ratio;
+      if (process.env.NODE_ENV === "development") {
+        console.log(`[price-correction] ${edge.from}->${edge.to}: €${priceResult.price} → €${correctedPrice} (K(user)=${kUser.toFixed(1)}, K(cached)=${kCached.toFixed(1)}, ratio=${ratio.toFixed(1)}x)`);
+      }
+    }
+
     legs.push({
       from: AIRPORT_CITY[edge.from] ?? edge.from,
       to: AIRPORT_CITY[edge.to] ?? edge.to,
@@ -1062,15 +1271,22 @@ function buildRouteFromEdges(
       hiddenStop: hiddenStop ?? undefined,
       duration: formatDuration(duration),
       durationMinutes: duration,
-      price: priceResult.price,
+      price: correctedPrice,
       visaStatus: visa.status,
       visaNote: visa.note,
       departDate: priceResult.departDate,
+      departTime: priceResult.departTime,
+      flightNumber: priceResult.flightNumber,
     });
   }
 
-  // Totals
+  // Totals — totalPrice uses corrected prices, veryUnderestimatedPrice uses raw cached
   const totalPrice = legs.reduce((sum, l) => sum + l.price, 0);
+  const veryUnderestimatedPrice = path.groundLegs.reduce((sum, gc) => sum + gc.price, 0)
+    + path.flightEdges.reduce((sum, e) => {
+      const pr = priceMap.get(`${apiCode(e.from)}-${apiCode(e.to)}`);
+      return sum + (pr?.price ?? 0);
+    }, 0);
   const totalDurationMinutes = legs.reduce((sum, l) => sum + l.durationMinutes, 0);
 
   // Estimated total including layovers
@@ -1130,6 +1346,13 @@ function buildRouteFromEdges(
         "Indian e-visa takes 3-5 business days — apply immediately if departing within a week."
       );
     }
+  }
+
+  // Price correction warning
+  if (maxCorrectionRatio > 1.5) {
+    warnings.push(
+      `Prices adjusted ~${maxCorrectionRatio.toFixed(0)}x for last-minute booking — actual prices will vary. Check each leg before booking.`
+    );
   }
 
   if (estimatedTotalMinutes > 1440) {
@@ -1265,6 +1488,7 @@ function buildRouteFromEdges(
     id,
     legs,
     totalPrice,
+    veryUnderestimatedPrice,
     totalDurationMinutes,
     totalDuration,
     estimatedTotalMinutes,

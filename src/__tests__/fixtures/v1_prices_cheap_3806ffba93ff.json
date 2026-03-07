@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "1": {
+          "airline": "W4",
+          "departure_at": "2026-03-31T22:20:00+04:00",
+          "return_at": "2026-04-08T21:50:00+01:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 198,
+          "flight_number": 6204,
+          "duration": 2020,
+          "duration_to": 465,
+          "duration_back": 415
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

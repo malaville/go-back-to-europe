@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "DEL": {
+        "1": {
+          "airline": "AK",
+          "departure_at": "2026-03-16T12:55:00+08:00",
+          "return_at": "2026-03-31T23:35:00+05:30",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 314,
+          "flight_number": 583,
+          "duration": 2205,
+          "duration_to": 590,
+          "duration_back": 460
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

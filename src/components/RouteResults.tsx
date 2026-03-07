@@ -134,14 +134,20 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }:
             </span>
             {leg.airline && (
               <span className="text-slate-400">
-                / {leg.airline}
-                {leg.airlineCode && <span className="text-slate-300 ml-0.5">({leg.airlineCode})</span>}
+                / {leg.flightNumber ? (
+                  <span className="font-mono text-slate-500">{leg.flightNumber}</span>
+                ) : (
+                  <>{leg.airline}{leg.airlineCode && <span className="text-slate-300 ml-0.5">({leg.airlineCode})</span>}</>
+                )}
               </span>
             )}
             <span className="font-medium text-slate-600">{leg.duration}</span>
             <span className="font-semibold text-slate-800">€{leg.price}</span>
             {leg.transport === "flight" && leg.departDate && (
-              <span className="text-slate-400">{formatLegDate(leg.departDate)}</span>
+              <span className="text-slate-400">
+                {formatLegDate(leg.departDate)}
+                {leg.departTime && <span className="font-mono ml-1">{leg.departTime}</span>}
+              </span>
             )}
             {leg.transport !== "flight" && isFirstGround && firstFlightDate && (
               <span className="text-slate-400">now {daysUntil(firstFlightDate)}</span>
@@ -159,16 +165,14 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }:
               <p className="text-xs text-slate-400">{leg.visaNote}</p>
             )}
             {leg.transport === "flight" && (
-              <>
-                <a
-                  href={googleFlightsUrl(leg.fromCode, leg.toCode, departureDate)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
-                >
-                  Verify price
-                </a>
-              </>
+              <a
+                href={googleFlightsUrl(leg.fromCode, leg.toCode, leg.departDate ?? departureDate)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
+              >
+                Check times & book
+              </a>
             )}
           </div>
         </div>
@@ -234,6 +238,9 @@ function RouteCard({ route, rank, isHighlighted }: { route: RouteOption; rank: n
         </div>
         <div className="text-right">
           <div className="text-xl font-bold text-slate-900">~€{route.totalPrice}</div>
+          {route.veryUnderestimatedPrice < route.totalPrice && (
+            <div className="text-xs text-slate-400 line-through">€{route.veryUnderestimatedPrice}</div>
+          )}
           <div className="text-xs text-slate-500">{route.estimatedTotalDuration}</div>
           <div className="text-[10px] text-slate-400">
             {departDateStr}

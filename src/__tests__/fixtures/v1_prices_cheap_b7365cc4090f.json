@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "TAS": {
+        "0": {
+          "airline": "HY",
+          "departure_at": "2026-03-19T00:35:00+08:00",
+          "return_at": "2026-04-26T17:40:00+05:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 237,
+          "flight_number": 508,
+          "duration": 320,
+          "duration_to": 175,
+          "duration_back": 145
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BAK": {
+        "0": {
+          "airline": "PC",
+          "departure_at": "2026-03-21T23:05:00+03:00",
+          "return_at": "2026-04-05T07:20:00+04:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 123,
+          "flight_number": 854,
+          "duration": 345,
+          "duration_to": 165,
+          "duration_back": 180
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

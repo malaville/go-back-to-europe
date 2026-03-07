@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BJS": {
+        "1": {
+          "airline": "ZH",
+          "departure_at": "2026-03-13T02:55:00+08:00",
+          "return_at": "2026-03-23T14:15:00+08:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 207,
+          "flight_number": 206,
+          "duration": 1300,
+          "duration_to": 335,
+          "duration_back": 350
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

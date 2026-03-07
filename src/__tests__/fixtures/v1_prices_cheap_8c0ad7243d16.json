@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SGN": {
+        "1": {
+          "airline": "ZH",
+          "departure_at": "2026-03-08T13:15:00+08:00",
+          "return_at": "2026-03-28T02:50:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 183,
+          "flight_number": 9114,
+          "duration": 1375,
+          "duration_to": 375,
+          "duration_back": 345
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

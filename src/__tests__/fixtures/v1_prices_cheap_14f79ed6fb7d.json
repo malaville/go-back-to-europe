@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HKT": {
+        "0": {
+          "airline": "UO",
+          "departure_at": "2026-03-24T07:25:00+08:00",
+          "return_at": "2026-04-02T23:10:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 143,
+          "flight_number": 724,
+          "duration": 460,
+          "duration_to": 230,
+          "duration_back": 230
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

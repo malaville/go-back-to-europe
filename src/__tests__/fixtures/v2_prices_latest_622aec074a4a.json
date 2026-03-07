@@ -1,0 +1,55 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-04-03",
+        "origin": "CTU",
+        "destination": "BAK",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-04T05:23:42",
+        "trip_class": 0,
+        "value": 286,
+        "number_of_changes": 2,
+        "duration": 2410,
+        "distance": 4922,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-15",
+        "origin": "CTU",
+        "destination": "BAK",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-03T02:10:19",
+        "trip_class": 0,
+        "value": 309,
+        "number_of_changes": 1,
+        "duration": 645,
+        "distance": 4982,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "CTU",
+        "destination": "BAK",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-02T05:30:45",
+        "trip_class": 0,
+        "value": 334,
+        "number_of_changes": 1,
+        "duration": 645,
+        "distance": 4982,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

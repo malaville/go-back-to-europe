@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BAK": {
+        "1": {
+          "airline": "HY",
+          "departure_at": "2026-03-19T00:35:00+08:00",
+          "return_at": "2026-03-19T20:40:00+04:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 797,
+          "flight_number": 508,
+          "duration": 1795,
+          "duration_to": 345,
+          "duration_back": 545
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

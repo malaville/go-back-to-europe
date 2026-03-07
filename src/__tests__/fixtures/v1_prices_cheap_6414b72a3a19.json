@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "2": {
+          "airline": "5J",
+          "departure_at": "2026-03-18T15:15:00+08:00",
+          "return_at": "2026-04-22T07:00:00+01:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 540,
+          "flight_number": 112,
+          "duration": 3890,
+          "duration_to": 1065,
+          "duration_back": 1055
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

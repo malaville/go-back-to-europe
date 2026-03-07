@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ALA": {
+        "1": {
+          "airline": "CA",
+          "departure_at": "2026-03-19T20:35:00+08:00",
+          "return_at": "2026-03-24T06:50:00+06:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 310,
+          "flight_number": 1236,
+          "duration": 2250,
+          "duration_to": 500,
+          "duration_back": 315
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

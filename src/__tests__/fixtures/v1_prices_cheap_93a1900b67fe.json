@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "TYO": {
+        "2": {
+          "airline": "CX",
+          "departure_at": "2026-03-17T05:45:00+08:00",
+          "return_at": "2026-04-14T06:35:00+09:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 273,
+          "flight_number": 976,
+          "duration": 1645,
+          "duration_to": 440,
+          "duration_back": 425
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

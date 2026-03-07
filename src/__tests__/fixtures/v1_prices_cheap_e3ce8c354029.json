@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "USM": {
+        "0": {
+          "airline": "PG",
+          "departure_at": "2026-03-22T06:00:00+07:00",
+          "return_at": "2026-04-02T08:30:00+07:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 156,
+          "flight_number": 101,
+          "duration": 145,
+          "duration_to": 70,
+          "duration_back": 75
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

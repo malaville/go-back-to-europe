@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "2": {
+          "airline": "CA",
+          "departure_at": "2026-03-18T18:50:00+08:00",
+          "return_at": "2026-05-02T21:30:00+01:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 644,
+          "flight_number": 709,
+          "duration": 3795,
+          "duration_to": 990,
+          "duration_back": 810
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

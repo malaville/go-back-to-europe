@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "KUL": {
+        "0": {
+          "airline": "D7",
+          "departure_at": "2026-03-16T23:55:00+08:00",
+          "return_at": "2026-03-25T09:05:00+08:00",
+          "expires_at": "2026-03-07T19:08:55Z",
+          "price": 176,
+          "flight_number": 327,
+          "duration": 570,
+          "duration_to": 295,
+          "duration_back": 275
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}
