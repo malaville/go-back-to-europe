@@ -116,7 +116,9 @@ export const mockRoutes: RouteOption[] = [
     totalPrice: 440,
     totalDurationMinutes: 1025,
     totalDuration: "17h 05m (+ layovers)",
-    warnings: [],
+    warnings: [
+      "Route transits through Turkey — near active conflict zones. Check current travel advisories.",
+    ],
     tags: ["Best value"],
   },
   {

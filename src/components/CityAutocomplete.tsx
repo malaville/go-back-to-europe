@@ -34,6 +34,7 @@ export default function CityAutocomplete({
   const [isLoading, setIsLoading] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const lastFetchedQuery = useRef<string | null>(null);
 
   useEffect(() => {
     setQuery(value);
@@ -49,7 +50,10 @@ export default function CityAutocomplete({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const fetchCities = async (searchQuery: string) => {
+  const fetchCities = async (searchQuery: string, { skipCache = false } = {}) => {
+    if (!skipCache && lastFetchedQuery.current === searchQuery && suggestions.length > 0) {
+      return;
+    }
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
@@ -59,6 +63,7 @@ export default function CityAutocomplete({
       if (response.ok) {
         const data = await response.json();
         setSuggestions(data);
+        lastFetchedQuery.current = searchQuery;
       }
     } catch {
       // Silently fail — user can still type

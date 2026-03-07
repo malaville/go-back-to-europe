@@ -42,7 +42,7 @@ export default function SearchForm({ onSearch, isSearching }: SearchFormProps) {
         id="from-city"
         label="Where are you now?"
         placeholder="e.g., Ho Chi Minh City, Bangkok..."
-        region="sea"
+        region="sea,east_asia"
         value={fromCity}
         onChange={setFromCity}
       />
