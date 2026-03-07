@@ -79,13 +79,14 @@ function ticketTypeBadge(type: RouteOption["ticketType"]) {
 }
 
 /** Build a Google Flights one-way search URL for a given leg */
-function googleFlightsUrl(leg: RouteLeg, departureDate?: string): string {
-  // Format: https://www.google.com/travel/flights?q=Flights+to+[DST]+from+[ORG]+on+[YYYY-MM-DD]+oneway&curr=EUR
-  const dateParam = departureDate ? `+on+${departureDate}` : "";
-  return `https://www.google.com/travel/flights?q=Flights+to+${leg.toCode}+from+${leg.fromCode}${dateParam}+oneway&curr=EUR`;
+function googleFlightsUrl(leg: RouteLeg): string {
+  // City names work better than airport codes in Google Flights query
+  const from = encodeURIComponent(leg.from);
+  const to = encodeURIComponent(leg.to);
+  return `https://www.google.com/travel/flights?q=Flights+to+${to}+from+${from}+oneway&curr=EUR`;
 }
 
-function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string }) {
+function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
   return (
     <div className="relative">
       <div className="flex items-start gap-3">
@@ -133,7 +134,7 @@ function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolea
             )}
             {leg.transport === "flight" && (
               <a
-                href={googleFlightsUrl(leg, departureDate)}
+                href={googleFlightsUrl(leg)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
@@ -217,7 +218,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
       {/* Legs */}
       <div className="px-5 pt-3 pb-2">
         {route.legs.map((leg, i) => (
-          <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} />
+          <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} />
         ))}
 
         {/* Final destination dot */}
