@@ -5,11 +5,19 @@ import type { RouteOption, RouteLeg } from "@/data/route-types";
 import { activeAdvisories } from "@/data/advisories";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
 
-/** Strip affiliate marker from URLs when visitor came from Reddit */
+const REDDIT_COOKIE = "ref_reddit";
+
 function useIsRedditReferrer(): boolean {
   return useMemo(() => {
     if (typeof document === "undefined") return false;
-    return /reddit\.com/i.test(document.referrer);
+    // Already flagged in a previous page load
+    if (document.cookie.includes(REDDIT_COOKIE)) return true;
+    // Check current referrer
+    if (/reddit\.com/i.test(document.referrer)) {
+      document.cookie = `${REDDIT_COOKIE}=1;path=/;max-age=${60 * 60 * 24 * 30}`;
+      return true;
+    }
+    return false;
   }, []);
 }
 
