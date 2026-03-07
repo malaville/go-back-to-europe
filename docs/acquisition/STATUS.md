@@ -2,9 +2,9 @@
 
 > Last updated: 2026-03-07
 
-## Current State: READY TO LAUNCH
+## Current State: BLOCKED — 3 new critical bugs found
 
-QA score: **8.3/10** (up from 7.6 after improvements). All critical bugs fixed. Ready for promotion.
+QA score: **5.5/10** (down from 8.3 — date/price bugs found). See `docs/PRICE-DISCREPANCY-REPORT.md` and `docs/qa-test-personas.md`.
 
 ---
 
@@ -15,6 +15,13 @@ QA score: **8.3/10** (up from 7.6 after improvements). All critical bugs fixed. 
 | 1 | XY (flynas) and Gulf carriers filtered from results | Critical | 🟢 FIXED |
 | 2 | "Nonstop" tag on routes with hidden stops | Critical | 🟢 FIXED |
 | 3 | CMB→LHR hidden stop via Delhi — Indian e-visa warning now shown for GB | Critical | 🟢 FIXED |
+| 14 | **60-100% of routes arrive AFTER user's deadline.** Sanna (Mar 12 deadline): 17/17 routes late. James anywhere (Mar 20): 23/25 late. Dates range up to Nov 2026. | Critical | 🔴 TODO |
+| 15 | Booking link goes to full-route Aviasales search — every route uses same link regardless of actual route | Critical | 🔴 TODO |
+| 16 | Aviasales page shows Gulf carriers (EK, QR, EY, WY) as cheapest results | Critical | 🔴 TODO |
+| 17 | flex parameter is 100% cosmetic — flex=3 and flex=7 return identical results (confirmed) | Critical | 🔴 TODO |
+| 18 | flex=3 + Da Lat = 0 routes (7h bus exceeds 6h cap) but user gets no explanation why | High | 🔴 TODO |
+
+See `docs/PRICE-DISCREPANCY-REPORT.md` for full analysis.
 
 ## HIGH PRIORITY — Fix This Week
 
@@ -26,7 +33,7 @@ QA score: **8.3/10** (up from 7.6 after improvements). All critical bugs fixed. 
 | 7 | TBS→HEL on Lufthansa — hidden stop via FRA/MUC not detected | Medium | 🔴 TODO |
 | 8 | Absurd detour routes (e.g. BKK→Bali→SIN→LHR) appearing in results | Medium | 🔴 TODO |
 | 9 | Vietnam visa for FI passport shows "evisa" — should be "free" (45-day exemption) | Medium | 🔴 TODO |
-| 10 | flex parameter cosmetic — flex=3 produces identical results to flex=7 | Medium | 🔴 TODO |
+| 10 | flex parameter cosmetic — promoted to blocking bug #17 | n/a | See #17 |
 
 ## LOW PRIORITY
 

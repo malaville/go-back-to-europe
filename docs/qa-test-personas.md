@@ -1,224 +1,209 @@
-# SkipTheGulf.com — QA Test Personas
+# SkipTheGulf.com — QA Test Personas & Test Plan
 
-Four test personas for validating route safety, visa accuracy, destination correctness, and usability. Each persona represents a real user archetype stranded in Southeast Asia during the Gulf airspace shutdown (March 2026).
+> Updated: 2026-03-07
+> API: `GET /api/query?from=&to=&nat=&date=&flex=&land=`
 
-API endpoint: `https://skipthegulf.com/api/query`
-Query format: `?from={city}&to={city}&nat={ISO2}&date={YYYY-MM-DD}&flex={days}`
+## How the search actually works
+
+```
+date  = DEADLINE — "I need to be there by this date"
+flex  = ground transport budget = flex × 2h (capped at 16h, or 30h with land=1)
+land  = 0 (default, max 16h ground) or 1 (max 30h ground)
+to    = European city, or empty = "Anywhere in Europe" (searches all 19 airports)
+```
+
+Routes should arrive BEFORE the deadline. A route departing after `date` is always wrong.
 
 ---
 
-## Scoring Rubric (5 axes, 1-10 each)
+## Scoring Rubric (6 axes)
 
-| Axis | What it measures | 10 means | 1 means |
+| Axis | Weight | 10 means | 1 means |
 |---|---|---|---|
-| **Route Safety** | No Gulf transit (Abu Dhabi, Dubai, Doha, Sharjah, Muscat, Bahrain, Jeddah, Riyadh). No undetected hidden stops through conflict zones. Airline hubs checked (EY, EK, QR, FZ, G9, WY, GF, SV, XY). | Every route verifiably Gulf-free, all hidden stops detected | Routes transit Gulf hubs undetected |
-| **Visa Accuracy** | Transit visa info correct for persona's nationality. All intermediate stops (including hidden ones) have visa requirements flagged. No "visa unknown" on known corridors. | Every transit point has correct, specific visa info | Missing or wrong visa info that could strand someone |
-| **Route Quality** | Diverse options (not all via same hub). Realistic pricing. Correct airline names. Connection times feasible (>2h international). Route count comparable to similar origin/destination pairs. | 10+ diverse, realistic, bookable-looking routes | Few routes, unrealistic prices, duplicate corridors |
-| **Destination Accuracy** | All routes end at correct destination. Airport codes map correctly. No ghost routes. Tags ("Nonstop", "Fastest", "Recommended") are factually correct. | Every route goes where it says, tags are accurate | Wrong destination, misleading tags, phantom routes |
-| **Usability** | Ranking makes sense. Recommended badge on a genuinely good option. Warnings clear. A stressed, non-expert traveler could scan results and decide in 2 minutes. | Clear, trustworthy, actionable at a glance | Confusing ranking, misleading badges, unclear warnings |
-
-**Weighting:** Safety 30%, Visa 25%, Route Quality 15%, Destination Accuracy 15%, Usability 15%
-
-**Bug vs Feature Gap:** Keep them separate. A bug is something wrong in the current app (incorrect data, mislabeled tags, missing visa info). A feature gap is something absent but desirable (fare context, family multipliers, overland alternatives). Don't penalize the current score for feature gaps.
+| **Route Safety** | 25% | Gulf-free, all hidden stops detected | Gulf carriers/hubs undetected |
+| **Visa Accuracy** | 20% | Correct visa info for every transit point | Missing/wrong visa that could strand someone |
+| **Pricing Accuracy** | 20% | Prices within 15% of Aviasales click-through | 50%+ gap, stale prices, wrong booking links |
+| **Date Accuracy** | 15% | All routes arrive before deadline, no future-month departures | Routes arriving months after deadline |
+| **Destination Accuracy** | 10% | Correct airports, accurate tags | Wrong destinations, misleading tags |
+| **Route Quality** | 10% | Diverse hubs, realistic connections, good count | Few routes, all same corridor |
 
 ---
 
 ## Persona 1 — Joris, Dutch backpacker in Bali
 
-**Profile:** 28yo solo traveler, Dutch passport (NL), budget-conscious, flexible on routing.
-**Situation:** Emirates flight via Dubai cancelled March 5. Needs to reach Amsterdam by March 17 for job start.
-**Origin:** Bali (DPS) — island with limited long-haul connectivity, must route through a gateway (SIN or KUL).
+28yo, NL passport, budget-conscious. Emirates cancelled. Must be in Amsterdam by March 17 for job start. In Bali (DPS) — needs gateway (SIN/KUL).
 
-### Test queries
+### Tests
 
-```
-Primary:    ?from=Bali&to=Amsterdam&nat=NL&flex=7
-Tight:      ?from=Bali&to=Amsterdam&nat=NL&flex=3
-Comparison: ?from=Bangkok&to=Amsterdam&nat=NL&flex=7
-```
+| # | Query | Tests what |
+|---|-------|-----------|
+| 1a | `?from=Bali&to=Amsterdam&nat=NL&date=2026-03-17&flex=7` | Core: gateway routing, date deadline, prices |
+| 1b | `?from=Bali&to=Amsterdam&nat=NL&date=2026-03-17&flex=3` | Flex effect: flex=3 (6h ground) vs flex=7 (14h ground) — should change gateway options |
+| 1c | `?from=Bali&to=Amsterdam&nat=NL&date=2026-03-17&flex=7&land=1` | Land toggle: enables 30h ground — does it add new overland legs? |
+| 1d | `?from=Bali&to=&nat=NL&date=2026-03-17&flex=7` | Anywhere in Europe: empty `to` — should return routes to multiple EU cities |
 
-### What to probe
+### Check
 
-- **Gateway routing:** Bali has no direct long-haul. Every route should start with DPS→SIN or DPS→KUL. If 0 results, that's a critical failure.
-- **Route count parity:** Compare Bali route count against Bangkok→Amsterdam. Bali should get comparable options via its SIN gateway — same hub→Europe corridors (Tbilisi, Istanbul, Seoul, Tokyo, etc.) should be reachable.
-- **flex parameter effect:** Does flex=3 vs flex=7 produce different results, or identical output? If identical, the parameter is cosmetic.
-- **NL visa rules:** Singapore visa-free 90 days, China 144h TWOV eligible, India requires e-visa, Sri Lanka requires ETA. No "visa unknown" acceptable.
-- **Hidden stop detection:** China Southern, Hainan Airlines, Air China routings likely transit a Chinese city — verify detection.
-- **"Nonstop" tag:** Must only appear on single-leg, single-flight segments. DPS→SIN→AMS is 2 flights — tagging it "Nonstop" is factually wrong.
-- **Gulf airline filter:** Check every airline code against banned list (EY, EK, QR, FZ, G9, WY, GF, SV, XY, OV).
-
-### Known bugs from prior testing (verify if fixed)
-
-- "Nonstop" tag on DPS→SIN→AMS (2 flights) — **High severity**
-- "Fastest" tag on ~24h route when ~20h route exists — **Medium**
-- Only 7 routes vs Bangkok's 15 for same destination — **Medium**
-- flex=3 and flex=7 produce identical results — **Medium**
+- [ ] **DEADLINE:** Every route must depart so it arrives BY March 17. Nothing departing after ~March 16 (unless same-day arrival). Nothing in April/May/June/July.
+- [ ] **GATEWAY:** All routes start DPS→SIN, DPS→KUL, or DPS→BKK. No phantom direct DPS→Europe.
+- [ ] **FLEX DIFF (1a vs 1b):** Different flex values must produce different results. If identical, flex is cosmetic.
+- [ ] **LAND DIFF (1a vs 1c):** land=1 should unlock longer ground segments (e.g., bus Bali→Surabaya→Jakarta).
+- [ ] **ANYWHERE (1d):** Routes should go to multiple European cities (Paris, London, Amsterdam, Milan, etc.), not just Amsterdam.
+- [ ] **PRICES:** Click top 3 Aviasales links. Gap <20%? Does Aviasales page show Gulf carriers?
+- [ ] **BOOKING LINKS:** All routes use same link `DPS1503AMS1`? Should be per-leg for separate tickets.
+- [ ] **GULF FILTER:** No EY, EK, QR, FZ, G9, WY, GF, SV, XY, OV, KU.
+- [ ] **VISA:** Singapore (free), China (144h TWOV), India (e-visa needed). No "visa unknown."
 
 ---
 
 ## Persona 2 — Sanna, Finnish remote worker in Vientiane
 
-**Profile:** 34yo digital nomad, Finnish passport (FI), father's health emergency in Helsinki — needs to leave ASAP.
-**Situation:** Based in Laos 3 months. Vientiane (VTE) has almost no international connectivity.
-**Origin:** Vientiane (VTE) — tiny airport, must route through Bangkok (BKK) or Hanoi (HAN).
+34yo, FI passport, father's health emergency. Must reach Helsinki ASAP. In Vientiane (VTE) — tiny airport, needs BKK or HAN gateway.
 
-### Test queries
+### Tests
 
-```
-Primary:    ?from=Vientiane&to=Helsinki&nat=FI&flex=3
-Comparison: ?from=Bangkok&to=Helsinki&nat=FI&flex=5
-```
+| # | Query | Tests what |
+|---|-------|-----------|
+| 2a | `?from=Vientiane&to=Helsinki&nat=FI&date=2026-03-12&flex=3` | Urgent: tight deadline, minimal ground transport |
+| 2b | `?from=Vientiane&to=Helsinki&nat=FI&date=2026-03-12&flex=7` | More flex: does 14h ground open new gateways? |
+| 2c | `?from=Vientiane&to=Helsinki&nat=FI&date=2026-03-12&flex=7&land=1` | Land toggle: could enable VTE→BKK by bus (10h) instead of flight |
+| 2d | `?from=Vientiane&to=&nat=FI&date=2026-03-12&flex=7` | Anywhere: maybe easier to reach Stockholm/Copenhagen than Helsinki? |
 
-### What to probe
+### Check
 
-- **VTE gateway routing:** Must route through BKK or HAN. If 0 results, critical failure.
-- **Destination accuracy:** ALL routes must end in HEL (Helsinki), not Paris or London. There was a historical Helsinki routing bug.
-- **FI passport:** Part of EU_SCHENGEN group — same transit rights as NL, FR, DE. Must have zero "visa unknown."
-- **Tbilisi/Istanbul/Almaty corridors:** These exist for BKK origins — verify they appear for VTE too.
-- **Lufthansa TBS→HEL:** Lufthansa does not fly Tbilisi→Helsinki direct. If this route appears, the hidden stop (Frankfurt or Munich) MUST be flagged. This was a confirmed miss in prior testing.
-- **"Fastest" tag:** Must be on the route with shortest total travel time. Prior testing found it misassigned to a 21h route when a 17h route existed.
-- **Urgency signal:** With flex=3 and an emergency, are results any different from flex=5? Any speed prioritization?
-- **Istanbul ranking:** IST routes tend to be cheap with single-carrier protection but ranked last due to conflict proximity demotion. Verify whether this burial is justified or harmful.
-
-### Known bugs from prior testing (verify if fixed)
-
-- "Nonstop" tag on VTE→BKK→HEL (2 flights) — **High**
-- "Fastest" tag misassigned — **Medium**
-- TBS→HEL on Lufthansa: undetected hidden stop via FRA/MUC — **Medium**
+- [ ] **DEADLINE:** Every route arrives in Helsinki by March 12. Nothing departing after ~March 11.
+- [ ] **GATEWAY:** Routes through BKK or HAN. VTE has no direct Europe flights.
+- [ ] **FLEX DIFF (2a vs 2b):** Flex=3 (6h ground) may limit to VTE→BKK flight only. Flex=7 (14h) might add VTE→HAN overland.
+- [ ] **LAND DIFF (2b vs 2c):** land=1 (30h ground) could add VTE→BKK bus option.
+- [ ] **ANYWHERE (2d):** Are there cheaper/faster routes to other Nordic cities?
+- [ ] **PRICES:** Prior test showed €326 vs Aviasales $713 — 100% gap. Is this fixed?
+- [ ] **DESTINATION:** All routes must end in HEL. Not Paris, not London.
+- [ ] **HIDDEN STOPS:** TBS→HEL on Lufthansa has hidden stop via FRA/MUC — must be flagged.
+- [ ] **VISA:** FI is EU_SCHENGEN. Vietnam should show "free" (45-day exemption), not "evisa."
+- [ ] **GULF FILTER:** No Gulf carriers in any route.
 
 ---
 
 ## Persona 3 — James & family, British in Bangkok
 
-**Profile:** 42yo with wife and 2 kids (ages 6 and 10), UK passport (GB). Prefers fewer stops, willing to pay more for protected connections.
-**Situation:** Qatar Airways via Doha cancelled. 4 passengers needing single-ticket bookings for EU261 protection.
-**Origin:** Bangkok (BKK) — major hub, best route diversity expected.
+42yo, GB passport, wife + 2 kids. Prefers single-ticket for connection protection. Must reach London by March 20. In Bangkok (BKK) — best hub, most options.
 
-### Test queries
+### Tests
 
-```
-Primary:    ?from=Bangkok&to=London&nat=GB&flex=7
-Tight:      ?from=Bangkok&to=London&nat=GB&flex=3
-```
+| # | Query | Tests what |
+|---|-------|-----------|
+| 3a | `?from=Bangkok&to=London&nat=GB&date=2026-03-20&flex=7` | Core: major hub, GB visa rules, family-friendly ranking |
+| 3b | `?from=Bangkok&to=London&nat=GB&date=2026-03-20&flex=3` | Flex diff |
+| 3c | `?from=Bangkok&to=&nat=GB&date=2026-03-20&flex=7` | Anywhere: GB passport has different visa rules from EU — does "anywhere" handle this? |
 
-### What to probe
+### Check
 
-- **GB passport:** NOT EU_SCHENGEN — different visa group. But GB IS eligible for China 144h TWOV. Verify the app knows this and shows it correctly (not just copy-paste from EU rules).
-- **"London" resolution:** Should map to LHR. Check if LGW/STN options are missing (many budget carriers use those).
-- **Colombo hidden stop visa bug:** If a route goes CMB→LHR on Air India, the hidden stop through Delhi requires an Indian e-visa for GB nationals. Prior testing found the hidden stop IS detected ("Likely connects via Delhi") but the visa requirement is NOT flagged. Only the Sri Lankan ETA is shown. This is a **critical safety bug** — a family could be denied boarding or stranded in Delhi.
-- **Single-leg nonstop ticket type:** If BKK→LHR nonstop appears with `ticketType: "separate"`, that's a data bug — a single flight is inherently one ticket.
-- **"Recommended" badge:** For a family, single-ticket routes with connection protection matter more than cheapest-but-separate. Does ranking reflect this?
-- **Price realism:** Normal BKK→LHR is ~300 EUR. If nonstop shows 185 EUR during a crisis, that's likely a stale cached price. No fare context makes it impossible for users to calibrate.
-- **Gulf airline audit:** Check every airline code. Prior testing found XY (flynas, Saudi Arabia) in BKK→Rome results — verify it doesn't appear in London routes. Also check W9, QP, OV against Gulf carrier lists.
-- **flex effect:** Does flex=3 change anything vs flex=7?
-
-### Known bugs from prior testing (verify if fixed)
-
-- CMB→LHR hidden stop via Delhi: Indian e-visa not flagged for GB — **Critical**
-- ticketType "separate" on single-leg nonstop — **Low**
-- "Fastest" tag on ~16h route when nonstop is 11h30m — **Medium**
-- XY (flynas) in other destination results — **High** (audit all routes)
+- [ ] **DEADLINE:** All routes arrive by March 20. Nothing departing after ~March 19.
+- [ ] **GB VISA RULES:** GB is NOT EU_SCHENGEN. China 144h TWOV eligible. India requires e-visa. Verify different treatment from EU passports.
+- [ ] **HIDDEN STOPS:** CMB→LHR via Delhi — must flag Indian e-visa for GB. (Was fixed, verify still works.)
+- [ ] **PRICES:** Prior test showed €328 vs Aviasales $368 — close (4%). Verify still OK.
+- [ ] **BOOKING LINKS:** Aviasales page showed Etihad as cheapest for BKK→LHR — Gulf carrier on the booking page contradicts our promise.
+- [ ] **SINGLE-TICKET PRIORITY:** "Recommended" should favor single-carrier routes for family safety.
+- [ ] **NONSTOP TAG:** BKK→LHR Hainan Airlines has hidden stop via PEK — must NOT be tagged Nonstop. (Was fixed, verify.)
+- [ ] **ANYWHERE (3c):** GB passport means no Schengen-free transit — does the tool handle this differently from EU in "anywhere" mode?
+- [ ] **FLEX DIFF (3a vs 3b):** BKK is already a major hub, flex shouldn't matter much. But verify they're not identical.
+- [ ] **GULF FILTER:** No Gulf carriers.
 
 ---
 
-## Persona 4 — Lea, French backpacker on Koh Lanta
+## Persona 4 — Lea, French backpacker in Da Lat
 
-**Profile:** 25yo solo traveler, French passport (FR), flexible on timing and routing. Comfortable with 24h+ overland travel to reach a cheaper departure airport.
-**Situation:** Island-hopping southern Thailand when Gulf shutdown hit. Currently on Koh Lanta (no airport). Has 37 days left on her Thai visa exemption. Would happily bus to whichever gateway has the cheapest flight to Paris.
-**Origin:** No airport — nearest gateways are Krabi (KBV, 2h), Bangkok (BKK, 15h bus), Kuala Lumpur (KUL, 14h bus via Hat Yai), Singapore (SIN, 24h bus).
+25yo, FR passport, very flexible. Currently in Da Lat (DLI, tiny airport). Comfortable with long overland travel. No rush — deadline March 25.
 
-### Test queries
+### Tests
 
-Run all three gateways and compare total cost (overland + flight):
+| # | Query | Tests what |
+|---|-------|-----------|
+| 4a | `?from=Da+Lat&to=Paris&nat=FR&date=2026-03-25&flex=7` | Small origin, gateway routing, overland |
+| 4b | `?from=Da+Lat&to=Paris&nat=FR&date=2026-03-25&flex=7&land=1` | Land=1: enables 30h ground — DLI→SGN bus (7h) + maybe SGN→BKK bus? |
+| 4c | `?from=Da+Lat&to=Paris&nat=FR&date=2026-03-25&flex=3` | Tight flex: 6h ground — may not even reach SGN by bus (7h). What happens? |
+| 4d | `?from=Da+Lat&to=&nat=FR&date=2026-03-25&flex=7&land=1` | Anywhere + land: most flexible possible search |
+| 4e | `?from=Bangkok&to=Paris&nat=FR&date=2026-03-25&flex=7` | Gateway comparison: what if she buses to BKK first? |
+| 4f | `?from=Singapore&to=Paris&nat=FR&date=2026-03-25&flex=7` | Gateway comparison: what about SIN? |
 
-```
-Gateway BKK: ?from=Bangkok&to=Paris&nat=FR&flex=7
-Gateway KUL: ?from=KualaLumpur&to=Paris&nat=FR&flex=7
-Gateway SIN: ?from=Singapore&to=Paris&nat=FR&flex=7
-```
+### Check
 
-Overland costs to add (static estimates):
-
-| Gateway | Overland method | Time | Cost |
-|---------|----------------|------|------|
-| BKK | Bus/train from Krabi | 12-15h | ~20 EUR |
-| KUL | Bus from Hat Yai via Penang | 10-14h | ~25 EUR |
-| SIN | Bus from Hat Yai via KUL | 20-26h | ~40 EUR |
-
-### What to probe
-
-- **Gateway comparison:** Which origin produces the cheapest total (overland + flight)? Lea's real question is "should I bus north or south?"
-- **KualaLumpur as origin:** Does it work? What route count and price range vs BKK and SIN?
-- **FR passport:** Should be identical visa treatment to NL (EU_SCHENGEN group). Verify no differences.
-- **Route diversity across gateways:** Do BKK, KUL, and SIN surface different hub→Europe corridors, or are they identical?
-- **Price spread:** If BKK→Paris cheapest is 271 EUR and SIN→Paris is 380 EUR, the overland cost difference (20 vs 40 EUR) doesn't close the gap. BKK wins. But if SIN has a route KUL doesn't, that matters.
-- **Thailand visa context:** Lea has 37 days left. If the app eventually shows visa extension info ("Thailand offers 30-day extensions for 1,900 THB"), she'd know she can wait for prices to drop.
-- **"Nonstop" tag accuracy:** BKK→CDG nonstop should be genuinely nonstop (single leg). SIN→CDG may also exist direct. KUL→CDG probably routes via a hub.
-- **Gulf airline filter across all 3 origins:** Same audit — no EY, EK, QR, FZ, G9, WY, GF, SV, XY in any result.
-
-### What this persona uniquely tests
-
-This persona doesn't test a single query — she tests whether a user can **compare gateways** by running 3 queries manually and adding overland costs. Today the app forces this manual comparison. The V4 "Cheapest Gateway" feature (Feature 1, Card 2) would automate it. Scoring this persona reveals:
-
-1. Whether all 3 SEA mega-hubs (BKK, KUL, SIN) work as origins
-2. Whether the cheapest gateway is obvious or requires spreadsheet math
-3. Whether route quality varies significantly by origin (it shouldn't for shared corridors)
-
-### Expected outcome
-
-The optimal advice for Lea is likely: "Bus to Bangkok (15h, 20 EUR), then fly BKK→Paris nonstop for ~271 EUR. Total: ~291 EUR." But she can only discover this by running 3 queries herself and comparing. The app doesn't do this for her — yet.
+- [ ] **DEADLINE:** All routes arrive by March 25. NOTHING in April/May/June/July. Prior test found July 4 departure — this was the critical bug.
+- [ ] **FLEX=3 vs BUS (4c):** Da Lat→HCMC bus is 7h. Flex=3 = 6h ground max. The bus shouldn't be available. Does the tool handle this correctly, or does it still show the 7h bus with flex=3?
+- [ ] **LAND TOGGLE (4a vs 4b):** land=1 should unlock more/different ground legs. If results are identical, land is cosmetic.
+- [ ] **PRICES:** Prior test showed €238 (BKK→CDG) vs Aviasales $414 — 61% gap. Caused by summing segment prices. Is this fixed?
+- [ ] **BOOKING LINKS:** Separate-ticket routes need per-leg links. All routes currently use same `DLI1503CDG1` link.
+- [ ] **GATEWAY COMPARISON (4a vs 4e vs 4f):** Price difference should help Lea decide: bus to BKK (~20 EUR) or to SIN (~40 EUR)?
+- [ ] **ANYWHERE (4d):** With max flexibility, what's the cheapest city to reach? This is Lea's real question.
+- [ ] **GULF FILTER:** No Gulf carriers.
+- [ ] **VISA:** FR is EU_SCHENGEN. All transit points should have visa info.
 
 ---
 
-## Running the tests
+## Coverage Matrix
 
-For each persona:
+Every parameter combination that a real user would use:
 
-1. Run the listed API queries
-2. For every route returned, verify:
-   - No Gulf airline codes (EY, EK, QR, FZ, G9, WY, GF, SV, XY, OV, NAS, F3, 5W)
-   - No Gulf transit cities (AUH, DXB, DOH, SHJ, MCT, BAH, JED, RUH)
-   - Hidden stops detected and visa requirements flagged for hidden stop cities
-   - All routes end at the correct destination airport
-   - Tags ("Nonstop", "Fastest", "Recommended") are factually accurate
-   - Airline names are real carriers that operate the stated segment
-3. Score each axis 1-10, compute weighted total
-4. List bugs (things wrong) separately from feature gaps (things missing)
+| Test | from (small) | from (hub) | to (city) | to (anywhere) | nat (EU) | nat (GB) | flex low | flex high | land=0 | land=1 | date tight | date relaxed |
+|------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1a | x | | x | | x | | | x | x | | | x |
+| 1b | x | | x | | x | | x | | x | | | x |
+| 1c | x | | x | | x | | | x | | x | | x |
+| 1d | x | | | x | x | | | x | x | | | x |
+| 2a | x | | x | | x | | x | | x | | x | |
+| 2b | x | | x | | x | | | x | x | | x | |
+| 2c | x | | x | | x | | | x | | x | x | |
+| 2d | x | | | x | x | | | x | x | | x | |
+| 3a | | x | x | | | x | | x | x | | | x |
+| 3b | | x | x | | | x | x | | x | | | x |
+| 3c | | x | | x | | x | | x | x | | | x |
+| 4a | x | | x | | x | | | x | x | | | x |
+| 4b | x | | x | | x | | | x | | x | | x |
+| 4c | x | | x | | x | | x | | x | | | x |
+| 4d | x | | | x | x | | | x | | x | | x |
+| 4e | | x | x | | x | | | x | x | | | x |
+| 4f | | x | x | | x | | | x | x | | | x |
 
-### Output format per persona
+**17 tests covering:**
+- Small origins (4) + hub origins (3)
+- Specific destination (13) + anywhere (4)
+- EU passport (14) + GB passport (3)
+- Low flex (4) + high flex (13)
+- land=0 (13) + land=1 (4)
+- Tight deadline (4) + relaxed deadline (13)
 
-```
-### Persona [N] — [Name] ([Origin] -> [Destination])
+---
 
-**Queries run:** [list]
-**Routes returned:** [count per query]
+## Systemic checks (run on ALL results)
 
-**Scores:**
-- Route Safety: X/10 — [one-line justification]
-- Visa Accuracy: X/10 — [one-line justification]
-- Route Quality: X/10 — [one-line justification]
-- Destination Accuracy: X/10 — [one-line justification]
-- Usability: X/10 — [one-line justification]
+Every single route returned, across all 17 queries:
 
-**Weighted total: X.X/10**
+1. **Departure ≤ deadline date.** No exceptions.
+2. **No Gulf airline codes:** EY, EK, QR, FZ, G9, WY, GF, SV, XY, OV, KU, NAS, F3, 5W
+3. **No Gulf transit cities:** AUH, DXB, DOH, SHJ, MCT, BAH, JED, RUH
+4. **Booking link matches route:** Separate-ticket routes need per-leg links, not full origin→destination
+5. **Price ≤ 20% of Aviasales click-through** (check top 3 per persona)
+6. **Aviasales page doesn't show Gulf carriers as cheapest** (click and verify)
+7. **Tags are factual:** "Nonstop" = single flight, "Fastest" = actually shortest, "Recommended" = sensible pick
+8. **Hidden stops have visa warnings** for the passenger's nationality
+9. **"Anywhere" returns multiple cities** — not just one destination repeated 25 times
 
-**Bugs found:**
-1. [BUG] description — severity: Critical/High/Medium/Low
+---
 
-**Feature gaps (V4, not counted against score):**
-1. [GAP] description
-```
+## Known bugs to verify
 
-### Cross-persona summary
-
-```
-**Systemic bugs** (across multiple personas):
-- ...
-
-**Overall weighted score: X.X/10**
-
-**Top 3 bugs to fix next (by impact):**
-1. ...
-2. ...
-3. ...
-```
+| # | Bug | Expected | Status |
+|---|-----|----------|--------|
+| 1 | Gulf carriers in results | All filtered | 🟢 FIXED |
+| 2 | Nonstop tag on multi-leg routes | Only on single flights | 🟢 FIXED |
+| 3 | Delhi hidden stop visa for GB | Indian e-visa flagged | 🟢 FIXED |
+| 4 | Routes months after deadline | All arrive before deadline | 🔴 BROKEN |
+| 5 | flex parameter cosmetic | Different flex = different results | 🔴 UNKNOWN |
+| 6 | land parameter cosmetic | land=1 adds longer ground legs | 🔴 UNKNOWN |
+| 7 | Booking links all identical | Per-leg links for separate tickets | 🔴 BROKEN |
+| 8 | Prices 50%+ off from Aviasales | Within 20% | 🔴 BROKEN |
+| 9 | Aviasales page shows Gulf carriers | Non-Gulf results shown | 🔴 BROKEN |
+| 10 | "Anywhere" not tested | Returns multiple EU cities | 🔴 UNKNOWN |
+| 11 | Fastest tag misassigned | On actual fastest route | 🔴 BROKEN |
+| 12 | Vietnam visa "evisa" for FI | Should be "free" | 🔴 BROKEN |
+| 13 | flex=3 allows 7h bus (Da Lat→HCMC) | Should block it (6h max) | 🔴 UNKNOWN |

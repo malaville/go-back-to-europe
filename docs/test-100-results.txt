@@ -1,0 +1,351 @@
+SkipTheGulf.com — 100-query test run
+Date: Sat Mar  7 12:59:57 +07 2026
+API: https://skipthegulf.com/api/query
+============================================
+
+>>> BLOCK 1: Core corridors (20 tests)
+
+========== TEST 001: French in BKK→Paris ==========
+Query: from=Bangkok to=Paris nat=FR flex=7
+
+========== TEST 002: British in BKK→London ==========
+Query: from=Bangkok to=London nat=GB flex=7
+
+========== TEST 003: German in BKK→Berlin ==========
+Query: from=Bangkok to=Berlin nat=DE flex=7
+
+========== TEST 004: Dutch in BKK→Amsterdam ==========
+Query: from=Bangkok to=Amsterdam nat=NL flex=7
+
+========== TEST 005: Finnish in BKK→Helsinki ==========
+Query: from=Bangkok to=Helsinki nat=FI flex=7
+
+========== TEST 006: Italian in BKK→Rome ==========
+Query: from=Bangkok to=Rome nat=IT flex=7
+
+========== TEST 007: Spanish in BKK→Barcelona ==========
+Query: from=Bangkok to=Barcelona nat=ES flex=7
+
+========== TEST 008: Greek in BKK→Athens ==========
+Query: from=Bangkok to=Athens nat=GR flex=7
+
+========== TEST 009: Austrian in BKK→Vienna ==========
+Query: from=Bangkok to=Vienna nat=AT flex=7
+
+========== TEST 010: Polish in BKK→Warsaw ==========
+Query: from=Bangkok to=Warsaw nat=PL flex=7
+
+========== TEST 011: Dutch in Bali→Amsterdam ==========
+Query: from=Bali to=Amsterdam nat=NL flex=7
+
+========== TEST 012: British in Bali→London ==========
+Query: from=Bali to=London nat=GB flex=7
+
+========== TEST 013: French in Bali→Paris ==========
+Query: from=Bali to=Paris nat=FR flex=7
+
+========== TEST 014: German in Bali→Berlin ==========
+Query: from=Bali to=Berlin nat=DE flex=7
+
+========== TEST 015: French in HCMC→Paris ==========
+Query: from=Ho Chi Minh City to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 016: British in HCMC→London ==========
+Query: from=Ho Chi Minh City to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 017: British in SIN→London ==========
+Query: from=Singapore to=London nat=GB flex=7
+
+========== TEST 018: French in SIN→Paris ==========
+Query: from=Singapore to=Paris nat=FR flex=7
+
+========== TEST 019: British in KL→London ==========
+Query: from=Kuala Lumpur to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 020: Dutch in KL→Amsterdam ==========
+Query: from=Kuala Lumpur to=Amsterdam nat=NL flex=7
+ERROR: Invalid JSON
+
+>>> BLOCK 2: Small origins — gateway routing (15 tests)
+
+========== TEST 021: French in VTE→Paris ==========
+Query: from=Vientiane to=Paris nat=FR flex=7
+
+========== TEST 022: Finnish in VTE→Helsinki (urgent) ==========
+Query: from=Vientiane to=Helsinki nat=FI flex=3
+
+========== TEST 023: German in VTE→Berlin ==========
+Query: from=Vientiane to=Berlin nat=DE flex=7
+
+========== TEST 024: French in PNH→Paris ==========
+Query: from=Phnom Penh to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 025: British in PNH→London ==========
+Query: from=Phnom Penh to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 026: Dutch in PNH→Amsterdam ==========
+Query: from=Phnom Penh to=Amsterdam nat=NL flex=7
+ERROR: Invalid JSON
+
+========== TEST 027: French in CNX→Paris ==========
+Query: from=Chiang Mai to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 028: British in CNX→London ==========
+Query: from=Chiang Mai to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 029: British in RGN→London ==========
+Query: from=Yangon to=London nat=GB flex=7
+
+========== TEST 030: British in MNL→London ==========
+Query: from=Manila to=London nat=GB flex=7
+
+========== TEST 031: French in HAN→Paris ==========
+Query: from=Hanoi to=Paris nat=FR flex=7
+
+========== TEST 032: French in DLI→Paris ==========
+Query: from=Da Lat to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 033: Taiwanese origin→London ==========
+Query: from=Taipei to=London nat=GB flex=7
+
+========== TEST 034: French in ICN→Paris ==========
+Query: from=Seoul to=Paris nat=FR flex=7
+
+========== TEST 035: British in NRT→London ==========
+Query: from=Tokyo to=London nat=GB flex=7
+
+>>> BLOCK 3: All destinations from Bangkok (21 tests)
+
+========== TEST 036: BKK→Paris ==========
+Query: from=Bangkok to=Paris nat=FR flex=7
+
+========== TEST 037: BKK→Amsterdam ==========
+Query: from=Bangkok to=Amsterdam nat=NL flex=7
+
+========== TEST 038: BKK→London ==========
+Query: from=Bangkok to=London nat=GB flex=7
+
+========== TEST 039: BKK→Brussels ==========
+Query: from=Bangkok to=Brussels nat=BE flex=7
+
+========== TEST 040: BKK→Lyon ==========
+Query: from=Bangkok to=Lyon nat=FR flex=7
+
+========== TEST 041: BKK→Berlin ==========
+Query: from=Bangkok to=Berlin nat=DE flex=7
+
+========== TEST 042: BKK→Warsaw ==========
+Query: from=Bangkok to=Warsaw nat=PL flex=7
+
+========== TEST 043: BKK→Budapest ==========
+Query: from=Bangkok to=Budapest nat=HU flex=7
+
+========== TEST 044: BKK→Prague ==========
+Query: from=Bangkok to=Prague nat=CZ flex=7
+
+========== TEST 045: BKK→Barcelona ==========
+Query: from=Bangkok to=Barcelona nat=ES flex=7
+
+========== TEST 046: BKK→Madrid ==========
+Query: from=Bangkok to=Madrid nat=ES flex=7
+
+========== TEST 047: BKK→Lisbon ==========
+Query: from=Bangkok to=Lisbon nat=PT flex=7
+
+========== TEST 048: BKK→Rome ==========
+Query: from=Bangkok to=Rome nat=IT flex=7
+
+========== TEST 049: BKK→Milan ==========
+Query: from=Bangkok to=Milan nat=IT flex=7
+
+========== TEST 050: BKK→Vienna ==========
+Query: from=Bangkok to=Vienna nat=AT flex=7
+
+========== TEST 051: BKK→Helsinki ==========
+Query: from=Bangkok to=Helsinki nat=FI flex=7
+
+========== TEST 052: BKK→Athens ==========
+Query: from=Bangkok to=Athens nat=GR flex=7
+
+========== TEST 053: BKK→Stockholm ==========
+Query: from=Bangkok to=Stockholm nat=SE flex=7
+
+========== TEST 054: BKK→Copenhagen ==========
+Query: from=Bangkok to=Copenhagen nat=DK flex=7
+
+========== TEST 055: BKK→Dublin ==========
+Query: from=Bangkok to=Dublin nat=IE flex=7
+
+========== TEST 056: BKK→Bucharest ==========
+Query: from=Bangkok to=Bucharest nat=RO flex=7
+
+>>> BLOCK 4: Nationality sweep — BKK→Paris (16 tests)
+
+========== TEST 057: French passport ==========
+Query: from=Bangkok to=Paris nat=FR flex=7
+
+========== TEST 058: German passport ==========
+Query: from=Bangkok to=Paris nat=DE flex=7
+
+========== TEST 059: Dutch passport ==========
+Query: from=Bangkok to=Paris nat=NL flex=7
+
+========== TEST 060: Italian passport ==========
+Query: from=Bangkok to=Paris nat=IT flex=7
+
+========== TEST 061: Spanish passport ==========
+Query: from=Bangkok to=Paris nat=ES flex=7
+
+========== TEST 062: British passport ==========
+Query: from=Bangkok to=Paris nat=GB flex=7
+
+========== TEST 063: Finnish passport ==========
+Query: from=Bangkok to=Paris nat=FI flex=7
+
+========== TEST 064: Greek passport ==========
+Query: from=Bangkok to=Paris nat=GR flex=7
+
+========== TEST 065: Romanian passport ==========
+Query: from=Bangkok to=Paris nat=RO flex=7
+
+========== TEST 066: Swedish passport ==========
+Query: from=Bangkok to=Paris nat=SE flex=7
+
+========== TEST 067: Danish passport ==========
+Query: from=Bangkok to=Paris nat=DK flex=7
+
+========== TEST 068: Polish passport ==========
+Query: from=Bangkok to=Paris nat=PL flex=7
+
+========== TEST 069: Irish passport ==========
+Query: from=Bangkok to=Paris nat=IE flex=7
+
+========== TEST 070: Norwegian passport ==========
+Query: from=Bangkok to=Paris nat=NO flex=7
+
+========== TEST 071: Swiss passport ==========
+Query: from=Bangkok to=Paris nat=CH flex=7
+
+========== TEST 072: Croatian passport ==========
+Query: from=Bangkok to=Paris nat=HR flex=7
+
+>>> BLOCK 5: Flex parameter comparison (6 tests)
+
+========== TEST 073: BKK→Paris flex=1 ==========
+Query: from=Bangkok to=Paris nat=FR flex=1
+
+========== TEST 074: BKK→Paris flex=3 ==========
+Query: from=Bangkok to=Paris nat=FR flex=3
+
+========== TEST 075: BKK→Paris flex=14 ==========
+Query: from=Bangkok to=Paris nat=FR flex=14
+
+========== TEST 076: DPS→AMS flex=1 ==========
+Query: from=Bali to=Amsterdam nat=NL flex=1
+
+========== TEST 077: DPS→AMS flex=3 ==========
+Query: from=Bali to=Amsterdam nat=NL flex=3
+
+========== TEST 078: DPS→AMS flex=14 ==========
+Query: from=Bali to=Amsterdam nat=NL flex=14
+
+>>> BLOCK 6: Stress tests (10 tests)
+
+========== TEST 079: Romanian in Bali→Bucharest (small+small) ==========
+Query: from=Bali to=Bucharest nat=RO flex=7
+
+========== TEST 080: Irish in Yangon→Dublin (small+small) ==========
+Query: from=Yangon to=Dublin nat=IE flex=7
+
+========== TEST 081: Finnish in Da Lat→Helsinki (tiny+urgent) ==========
+Query: from=Da Lat to=Helsinki nat=FI flex=3
+ERROR: Invalid JSON
+
+========== TEST 082: Greek in Manila→Athens ==========
+Query: from=Manila to=Athens nat=GR flex=7
+
+========== TEST 083: Swedish in PNH→Stockholm ==========
+Query: from=Phnom Penh to=Stockholm nat=SE flex=7
+ERROR: Invalid JSON
+
+========== TEST 084: Hungarian in CNX→Budapest ==========
+Query: from=Chiang Mai to=Budapest nat=HU flex=7
+ERROR: Invalid JSON
+
+========== TEST 085: Portuguese in VTE→Lisbon ==========
+Query: from=Vientiane to=Lisbon nat=PT flex=7
+
+========== TEST 086: Danish in HAN→Copenhagen ==========
+Query: from=Hanoi to=Copenhagen nat=DK flex=7
+
+========== TEST 087: Greek in NRT→Athens ==========
+Query: from=Tokyo to=Athens nat=GR flex=7
+
+========== TEST 088: Irish in ICN→Dublin ==========
+Query: from=Seoul to=Dublin nat=IE flex=7
+
+>>> BLOCK 7: Gateway comparison — cheapest path to Paris (12 tests)
+
+========== TEST 089: BKK→Paris ==========
+Query: from=Bangkok to=Paris nat=FR flex=7
+
+========== TEST 090: KUL→Paris ==========
+Query: from=Kuala Lumpur to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 091: SIN→Paris ==========
+Query: from=Singapore to=Paris nat=FR flex=7
+
+========== TEST 092: SGN→Paris ==========
+Query: from=Ho Chi Minh City to=Paris nat=FR flex=7
+ERROR: Invalid JSON
+
+========== TEST 093: HAN→Paris ==========
+Query: from=Hanoi to=Paris nat=FR flex=7
+
+========== TEST 094: DPS→Paris ==========
+Query: from=Bali to=Paris nat=FR flex=7
+
+========== TEST 095: BKK→London ==========
+Query: from=Bangkok to=London nat=GB flex=7
+
+========== TEST 096: KUL→London ==========
+Query: from=Kuala Lumpur to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 097: SIN→London ==========
+Query: from=Singapore to=London nat=GB flex=7
+
+========== TEST 098: SGN→London ==========
+Query: from=Ho Chi Minh City to=London nat=GB flex=7
+ERROR: Invalid JSON
+
+========== TEST 099: DPS→London ==========
+Query: from=Bali to=London nat=GB flex=7
+
+========== TEST 100: MNL→London ==========
+Query: from=Manila to=London nat=GB flex=7
+
+============================================
+TOTAL TESTS RUN: 100
+============================================
+
+To analyze: grep for these patterns in the output:
+  grep '*** GULF'        — Gulf airlines in results
+  grep '*** NONSTOP'     — Nonstop tag contradictions
+  grep '*** HIDDEN'      — Hidden stop visa gaps
+  grep '*** VISA'        — Visa unknown issues
+  grep '*** FASTEST'     — Fastest tag wrong
+  grep '*** SINGLE-LEG'  — ticketType bug
+  grep '*** WRONG DEST'  — Wrong destination
+  grep '*** BUG'         — Zero routes
+  grep 'ISSUES:'         — Any route with problems
+  grep 'OK —'            — Clean routes
