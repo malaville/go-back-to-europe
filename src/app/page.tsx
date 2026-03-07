@@ -5,7 +5,33 @@ import { useSearchParams, useRouter } from "next/navigation";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
 import RouteResults from "@/components/RouteResults";
 import RouteSkeletons from "@/components/RouteSkeletons";
+import ExplainPanel from "@/components/ExplainPanel";
 import type { RouteOption } from "@/data/route-types";
+import type { ExplainTrace } from "@/lib/route-engine";
+
+function useExplainToggle() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Cmd+Shift+F (Mac) or Ctrl+Shift+F (Windows)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "f") {
+        e.preventDefault();
+        const params = new URLSearchParams(searchParams.toString());
+        if (params.get("explain") === "true") {
+          params.delete("explain");
+        } else {
+          params.set("explain", "true");
+        }
+        const qs = params.toString();
+        router.replace(qs ? `?${qs}` : "/", { scroll: false });
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [searchParams, router]);
+}
 
 export default function Page() {
   return (
@@ -18,6 +44,8 @@ export default function Page() {
 function useSearchState() {
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const explainMode = searchParams.get("explain") === "true";
 
   const getInitialData = useCallback((): SearchFormData | null => {
     const from = searchParams.get("from");
@@ -42,22 +70,25 @@ function useSearchState() {
     params.set("nat", data.nationality);
     params.set("date", data.deadlineDate);
     params.set("flex", String(data.flexDays));
+    if (explainMode) params.set("explain", "true");
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [router]);
+  }, [router, explainMode]);
 
   const clearParams = useCallback(() => {
-    router.replace("/", { scroll: false });
-  }, [router]);
+    router.replace(explainMode ? "/?explain=true" : "/", { scroll: false });
+  }, [router, explainMode]);
 
-  return { getInitialData, setParams, clearParams };
+  return { getInitialData, setParams, clearParams, explainMode };
 }
 
 function Home() {
-  const { getInitialData, setParams, clearParams } = useSearchState();
+  useExplainToggle();
+  const { getInitialData, setParams, clearParams, explainMode } = useSearchState();
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [searchData, setSearchData] = useState<SearchFormData | null>(null);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
+  const [explainTrace, setExplainTrace] = useState<ExplainTrace | null>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
 
   // Re-run search from URL params on mount
@@ -73,26 +104,146 @@ function Home() {
     setIsSearching(true);
     setSearchData(data);
     setSearchError(null);
+    setExplainTrace(null);
     setParams(data);
 
     try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error("Search failed");
-      const results = await res.json();
-      setRoutes(results);
+      if (explainMode) {
+        // Fetch from explain endpoint
+        const params = new URLSearchParams({
+          from: data.fromCity,
+          to: data.targetCity || "",
+          nat: data.nationality,
+          date: data.deadlineDate,
+          flex: String(data.flexDays),
+        });
+        const res = await fetch(`/api/explain?${params.toString()}`);
+        if (!res.ok) throw new Error("Search failed");
+        const json = await res.json();
+        setExplainTrace(json.explain ?? null);
+
+        // Also fetch normal search results for the route cards
+        const searchRes = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!searchRes.ok) throw new Error("Search failed");
+        setRoutes(await searchRes.json());
+      } else {
+        const res = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error("Search failed");
+        setRoutes(await res.json());
+      }
     } catch {
       setSearchError("Could not search routes. Please try again.");
       setRoutes([]);
+      setExplainTrace(null);
     }
 
     setHasSearched(true);
     setIsSearching(false);
   };
 
+  // Explain mode: side-by-side layout
+  if (explainMode) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="bg-white border-b border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-500 text-white shadow-sm">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path d="M12 19V5m0 0l-4 4m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-slate-900 leading-tight">
+                Go Back to Europe
+                <span className="ml-2 text-xs font-mono bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">DEBUG</span>
+              </h1>
+              <p className="text-xs text-slate-500">Explain mode — route engine reasoning trace</p>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+          {/* Back button */}
+          {(hasSearched || isSearching) && (
+            <button
+              onClick={() => {
+                setHasSearched(false);
+                setSearchData(null);
+                setIsSearching(false);
+                setExplainTrace(null);
+                clearParams();
+              }}
+              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 mb-4 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path d="M19 12H5m0 0l4-4m-4 4l4 4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              New search
+            </button>
+          )}
+
+          {/* Search Form (centered, narrower) */}
+          {!hasSearched && !isSearching && (
+            <div className="max-w-lg mx-auto">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <SearchForm onSearch={handleSearch} isSearching={isSearching} initialData={getInitialData()} />
+              </div>
+            </div>
+          )}
+
+          {/* Skeleton */}
+          {isSearching && searchData && (
+            <div className="max-w-lg mx-auto">
+              <RouteSkeletons fromCity={searchData.fromCity} targetCity={searchData.targetCity} />
+            </div>
+          )}
+
+          {/* Split view: routes left, explain right */}
+          {hasSearched && !isSearching && searchData && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left: routes */}
+              <div className="min-w-0">
+                {searchError && (
+                  <div className="rounded-xl bg-red-50 border border-red-200 p-4 mb-4 text-sm text-red-700">
+                    {searchError}
+                  </div>
+                )}
+                <RouteResults
+                  routes={routes}
+                  fromCity={searchData.fromCity}
+                  targetCity={searchData.targetCity}
+                />
+              </div>
+
+              {/* Right: explain panel */}
+              <div className="min-w-0">
+                <ExplainPanel trace={explainTrace} />
+              </div>
+            </div>
+          )}
+        </main>
+
+        <footer className="border-t border-slate-100 bg-white py-4">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <p className="text-xs text-slate-400">
+              Debug mode — showing route engine reasoning. Remove &explain=true from URL for normal view.
+            </p>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Normal mode (unchanged)
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
