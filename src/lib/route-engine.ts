@@ -1036,6 +1036,7 @@ function buildRouteFromEdges(
       visaStatus: visa.status,
       visaNote: visa.note,
       searchUrl: aviasalesLegUrl(edge.from, edge.to, priceResult.departDate),
+      departDate: priceResult.departDate,
     });
   }
 

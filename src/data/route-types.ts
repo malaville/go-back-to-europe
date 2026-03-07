@@ -13,6 +13,7 @@ export type RouteLeg = {
   visaStatus: "free" | "evisa" | "warning" | "easy" | "hard" | "none";
   visaNote?: string;
   searchUrl?: string; // Per-leg Aviasales booking link
+  departDate?: string; // ISO date, e.g. "2026-03-25" — set on flight legs
 };
 
 export type RouteOption = {

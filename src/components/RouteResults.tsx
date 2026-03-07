@@ -79,7 +79,32 @@ function ticketTypeBadge(type: RouteOption["ticketType"]) {
   return null;
 }
 
-function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string }) {
+function formatLegDate(isoDate?: string): string | null {
+  if (!isoDate) return null;
+  const d = new Date(isoDate);
+  if (isNaN(d.getTime())) return null;
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (d.toDateString() === today.toDateString()) return "Today";
+  if (d.toDateString() === tomorrow.toDateString()) return "Tomorrow";
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function daysUntil(isoDate?: string): string | null {
+  if (!isoDate) return null;
+  const target = new Date(isoDate);
+  if (isNaN(target.getTime())) return null;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+  const days = Math.round((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  if (days <= 0) return "today";
+  if (days === 1) return "up to 1 day";
+  return `up to ${days} days`;
+}
+
+function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string; isFirstGround?: boolean; firstFlightDate?: string }) {
   return (
     <div className="relative">
       <div className="flex items-start gap-3">
@@ -113,6 +138,12 @@ function LegCard({ leg, isLast, departureDate }: { leg: RouteLeg; isLast: boolea
             )}
             <span className="font-medium text-slate-600">{leg.duration}</span>
             <span className="font-semibold text-slate-800">€{leg.price}</span>
+            {leg.transport === "flight" && leg.departDate && (
+              <span className="text-slate-400">{formatLegDate(leg.departDate)}</span>
+            )}
+            {leg.transport !== "flight" && isFirstGround && firstFlightDate && (
+              <span className="text-slate-400">now {daysUntil(firstFlightDate)}</span>
+            )}
             {visaBadge(leg.visaStatus, leg.visaNote)}
           </div>
           {/* Hidden stop alert */}
@@ -222,9 +253,13 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
 
       {/* Legs */}
       <div className="px-5 pt-3 pb-2">
-        {route.legs.map((leg, i) => (
-          <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} />
-        ))}
+        {route.legs.map((leg, i) => {
+          const isFirstGround = leg.transport !== "flight" && !route.legs.slice(0, i).some(l => l.transport !== "flight");
+          const firstFlightDate = route.legs.find(l => l.transport === "flight")?.departDate ?? route.departureDate;
+          return (
+            <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} isFirstGround={isFirstGround} firstFlightDate={firstFlightDate} />
+          );
+        })}
 
         {/* Final destination dot */}
         <div className="flex items-center gap-3">
