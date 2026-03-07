@@ -13,27 +13,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Go Back to Europe — Safe Flights Avoiding Conflict Zones",
+  title: "Skip the Gulf — Fly Asia to Europe Without Gulf Carriers",
   description:
-    "Stuck in Southeast Asia? Find safe, affordable routes back to Europe that avoid Middle East conflict zones. Multi-leg flights from Bangkok, Bali, Ho Chi Minh City to Paris, Amsterdam, London. No overflights over war zones. Visa checks and safety alerts included.",
+    "Find safe, affordable routes from Southeast Asia to Europe that skip Gulf carriers and Middle East hubs. Multi-leg flights from Bangkok, Bali, Ho Chi Minh City to Paris, Amsterdam, London. No Emirates, Etihad, Qatar routes. Visa checks and safety alerts included.",
   keywords: [
+    "skip the gulf",
     "flights avoiding middle east",
     "safe flights Asia to Europe",
-    "avoid conflict zones flights",
+    "avoid gulf carriers",
+    "no emirates flights",
     "cheap flights Asia to Europe no middle east",
     "budget flights Southeast Asia Europe",
-    "multi-leg flights home safe route",
+    "multi-leg flights safe route",
     "backpacker flights Europe avoid war zones",
     "safe travel routes Asia Europe",
     "Bangkok to Paris flights safe",
     "Bali to London flights avoid conflict",
     "visa-free transit countries",
-    "go back to Europe",
   ],
   openGraph: {
-    title: "Go Back to Europe — Safe Flights Avoiding Conflict Zones",
+    title: "Skip the Gulf — Fly Asia to Europe Without Gulf Carriers",
     description:
-      "Find safe, affordable routes from Southeast Asia back to Europe — avoiding Middle East conflict zones. Visa checks, cost estimates, and safety alerts included.",
+      "Find safe, affordable routes from Southeast Asia to Europe — skipping Gulf carriers and Middle East hubs. Visa checks, cost estimates, and safety alerts included.",
     type: "website",
     locale: "en_US",
   },

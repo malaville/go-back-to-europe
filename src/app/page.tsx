@@ -167,7 +167,7 @@ function Home() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-900 leading-tight">
-                Go Back to Europe
+                Skip the Gulf
                 <span className="ml-2 text-xs font-mono bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">DEBUG</span>
               </h1>
               <p className="text-xs text-slate-500">Explain mode — route engine reasoning trace</p>
@@ -260,9 +260,9 @@ function Home() {
           </div>
           <div>
             <h1 className="text-lg font-bold text-slate-900 leading-tight">
-              Go Back to Europe
+              Skip the Gulf
             </h1>
-            <p className="text-xs text-slate-500">Fly home safe — avoid conflict zones</p>
+            <p className="text-xs text-slate-500">Fly Asia to Europe — no Gulf carriers</p>
           </div>
         </div>
       </header>
@@ -273,11 +273,11 @@ function Home() {
         {!hasSearched && !isSearching && (
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 leading-snug">
-              Fly home — avoid conflict zones
+              Fly home — skip the Gulf
             </h2>
             <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-sm mx-auto">
               Safe, affordable multi-leg routes from Southeast Asia
-              to Europe. No Middle East overflights. Visa checks included.
+              to Europe. No Gulf carriers or Middle East hubs. Visa checks included.
             </p>
           </div>
         )}
@@ -366,7 +366,7 @@ function Home() {
       <footer className="border-t border-slate-100 bg-white py-4">
         <div className="max-w-lg mx-auto px-4 text-center">
           <p className="text-xs text-slate-400">
-            Go Back to Europe is a community tool. Always verify travel information
+            Skip the Gulf is a community tool. Always verify travel information
             with official sources before booking.
           </p>
         </div>

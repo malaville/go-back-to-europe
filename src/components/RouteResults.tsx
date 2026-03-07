@@ -328,7 +328,7 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
 
       <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 mt-2">
         <p className="text-xs text-blue-700 text-center font-medium">
-          All routes avoid Middle East airspace and Gulf-hub airlines (Emirates, Etihad, Qatar, flydubai, etc.)
+          All routes skip Gulf carriers (Emirates, Etihad, Qatar, flydubai, Kuwait Airways, etc.) and Middle East hubs
         </p>
       </div>
       <p className="text-center text-xs text-slate-400 pt-2">
