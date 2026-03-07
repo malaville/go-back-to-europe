@@ -1317,8 +1317,12 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
   flightDepartDate.setDate(flightDepartDate.getDate() - 2);
   const fallbackDepartDate = flightDepartDate.toISOString().split("T")[0];
 
-  // Ground travel time budget: min(flexDays * 480min, 48h)
-  const maxGroundMinutes = Math.min(flexDays * 480, 48 * 60);
+  // Ground travel time budget: min(flexDays * 120min, 16h)
+  // Capped at 16h — longer overland trips dominate results and are
+  // impractical (e.g., 25h DLI→BKK through Laos/Cambodia).
+  // 16h covers all practical connections: DLI→SGN 7h, DLI→PNH 11h,
+  // VTE→BKK 10h, KUL↔SIN 5h, CNX→BKK 12h.
+  const maxGroundMinutes = Math.min(flexDays * 120, 16 * 60);
 
   // Destination set
   const destinationAirports: string[] =
