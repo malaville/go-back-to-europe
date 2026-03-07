@@ -117,7 +117,7 @@ function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
               </span>
             )}
             <span className="font-medium text-slate-600">{leg.duration}</span>
-            <span className="font-semibold text-slate-800">${leg.price}</span>
+            <span className="font-semibold text-slate-800">€{leg.price}</span>
             {visaBadge(leg.visaStatus, leg.visaNote)}
           </div>
           {/* Hidden stop alert */}
@@ -183,7 +183,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-slate-900">~${route.totalPrice}</div>
+          <div className="text-xl font-bold text-slate-900">~€{route.totalPrice}</div>
           <div className="text-xs text-slate-500">{route.estimatedTotalDuration}</div>
           {route.legs.length > 1 && (
             <div className="text-[10px] text-slate-400">{route.totalDuration}</div>

@@ -148,7 +148,7 @@ export async function getCheapestFlight(
     const params = new URLSearchParams({
       origin: cityCode(origin),
       destination: cityCode(destination),
-      currency: "USD",
+      currency: "EUR",
       token: API_TOKEN,
     });
     if (departMonth) {
@@ -203,7 +203,7 @@ export async function getLatestOneWayPrice(
     const params = new URLSearchParams({
       origin: cityCode(origin),
       destination: cityCode(destination),
-      currency: "USD",
+      currency: "EUR",
       one_way: "true",
       sorting: "price",
       limit: "30",
