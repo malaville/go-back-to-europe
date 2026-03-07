@@ -170,6 +170,14 @@ export async function getCheapestFlight(
 
     // Find cheapest across all indices, skipping blocked airlines
     let cheapest: CheapestFlightResult | null = null;
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[aviasales] getCheapestFlight ${origin}->${destination}: ${Object.keys(tickets).length} tickets found`);
+      for (const key of Object.keys(tickets)) {
+        const t = tickets[key];
+        const blocked = excludeAirlines?.has(t.airline) ? " [BLOCKED]" : "";
+        console.log(`  [${key}] ${t.airline} (${airlineName(t.airline)}) €${t.price} depart=${t.departure_at ?? "?"} stops=${t.number_of_changes ?? "?"}${blocked}`);
+      }
+    }
     for (const key of Object.keys(tickets)) {
       const t = tickets[key];
       if (excludeAirlines?.has(t.airline)) continue;
@@ -182,6 +190,9 @@ export async function getCheapestFlight(
           returnAt: t.return_at ?? null,
         };
       }
+    }
+    if (process.env.NODE_ENV === "development" && cheapest) {
+      console.log(`  → Winner: ${cheapest.airline} (${cheapest.airlineName}) €${cheapest.price} depart=${cheapest.departureAt}`);
     }
     return cheapest;
   } catch (err) {
@@ -218,14 +229,26 @@ export async function getLatestOneWayPrice(
     const json = await res.json();
     if (!json.success || !json.data || json.data.length === 0) return null;
 
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[aviasales] getLatestOneWayPrice ${origin}->${destination}: ${json.data.length} results (maxChanges=${maxChanges ?? "any"})`);
+      for (const d of json.data.slice(0, 10)) {
+        const blocked = excludeAirlines?.has(d.airline) ? " [BLOCKED]" : "";
+        const stopsOk = maxChanges !== undefined && (d.number_of_changes ?? 99) > maxChanges ? " [TOO MANY STOPS]" : "";
+        console.log(`  ${d.airline} (${airlineName(d.airline)}) €${d.value} stops=${d.number_of_changes ?? "?"} depart=${d.depart_date ?? "?"}${blocked}${stopsOk}`);
+      }
+    }
+
     // Find cheapest that passes all filters
     for (const d of json.data) {
       if (excludeAirlines?.has(d.airline)) continue;
       if (maxChanges !== undefined && (d.number_of_changes ?? 99) > maxChanges) continue;
+      if (process.env.NODE_ENV === "development") {
+        console.log(`  → Winner: ${d.airline} (${airlineName(d.airline)}) €${d.value} stops=${d.number_of_changes ?? 0} depart=${d.depart_date ?? "?"}`);
+      }
       return {
         price: d.value,
-        airline: d.airline,
-        airlineName: airlineName(d.airline),
+        airline: d.airline ?? "",
+        airlineName: d.airline ? airlineName(d.airline) : "",
         departDate: d.depart_date ?? "",
         numberOfChanges: d.number_of_changes ?? 0,
       };

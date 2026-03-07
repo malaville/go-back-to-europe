@@ -659,6 +659,7 @@ type SegmentPriceResult = {
   airline: string;
   airlineFullName: string;
   departDate?: string;
+  numberOfChanges?: number; // from /v2/prices/latest — undefined means unknown
 };
 
 /**
@@ -690,6 +691,7 @@ async function fetchSegmentPrice(
       airline: latest.airline,
       airlineFullName: latest.airlineName,
       departDate: latest.departDate || undefined,
+      numberOfChanges: latest.numberOfChanges,
     };
   }
 
@@ -724,14 +726,22 @@ async function fetchPriceWithFallback(
   to: string,
   departMonth?: string
 ): Promise<SegmentPriceResult | null> {
+  const isDev = process.env.NODE_ENV === "development";
+  if (isDev) console.log(`\n[price] Fetching ${from}->${to} (month=${departMonth})`);
+
   const apiResult = await fetchSegmentPrice(from, to, departMonth);
-  if (apiResult) return apiResult;
+  if (apiResult) {
+    if (isDev) console.log(`[price] ${from}->${to}: API hit → ${apiResult.airline} (${apiResult.airlineFullName}) €${apiResult.price} depart=${apiResult.departDate ?? "?"}`);
+    return apiResult;
+  }
+  if (isDev) console.log(`[price] ${from}->${to}: API miss, trying fallbacks...`);
 
   // Check fifth freedom routes
   const key = `${apiCode(from)}-${apiCode(to)}`;
   const revKey = `${apiCode(to)}-${apiCode(from)}`;
   const fifth = FIFTH_FREEDOM_ROUTES[key] ?? FIFTH_FREEDOM_ROUTES[revKey];
   if (fifth) {
+    if (isDev) console.log(`[price] ${from}->${to}: 5th freedom → ${fifth.airline} (${airlineName(fifth.airline)}) €${fifth.price}`);
     return {
       price: fifth.price,
       airline: fifth.airline,
@@ -742,6 +752,7 @@ async function fetchPriceWithFallback(
   // Check fallback prices
   const fb = FALLBACK_FLIGHT_PRICES[key] ?? FALLBACK_FLIGHT_PRICES[revKey];
   if (fb) {
+    if (isDev) console.log(`[price] ${from}->${to}: fallback → €${fb.price}`);
     return {
       price: fb.price,
       airline: "??",
@@ -1121,8 +1132,23 @@ function buildRouteFromEdges(
 
   // Tags — auto-generate from structure
   const tags: string[] = [];
-  if (flightLegs.length === 1 && path.groundLegs.length === 0 && !flightLegs[0].hiddenStop) {
-    tags.push("Nonstop");
+
+  // Check if the single-flight route is truly nonstop using API stop count
+  const singleFlightEdge = path.flightEdges.length === 1 ? path.flightEdges[0] : null;
+  const singleFlightPrice = singleFlightEdge
+    ? priceMap.get(`${apiCode(singleFlightEdge.from)}-${apiCode(singleFlightEdge.to)}`)
+    : null;
+  const isVerifiedNonstop = singleFlightPrice?.numberOfChanges === 0;
+  const hasStops = singleFlightPrice?.numberOfChanges !== undefined && singleFlightPrice.numberOfChanges > 0;
+
+  if (flightLegs.length === 1 && path.groundLegs.length === 0 && !flightLegs[0].hiddenStop && !hasStops) {
+    if (isVerifiedNonstop) {
+      tags.push("Nonstop");
+    } else if (flightLegs[0].airlineCode && flightLegs[0].airlineCode !== "??") {
+      // Known airline, unknown stops — might be nonstop
+      tags.push("Nonstop");
+    }
+    // If airline unknown AND stops unknown, don't tag Nonstop
   } else {
     // Build "Via X" or "Via X + Y" tag from intermediate hubs
     const intermediateAirports = path.flightEdges.slice(0, -1).map(e => e.to);
@@ -1211,23 +1237,26 @@ function scoreAndSort(routes: RouteOption[]): RouteOption[] {
     const hasHiddenStop = route.legs.some(l => l.hiddenStop);
     const hasConflict = route.warnings.some(w => w.includes("conflict"));
     const allVisaFree = route.legs.every(l => l.visaStatus === "free" || l.visaStatus === "none");
+    const isNonstop = route.tags.includes("Nonstop");
 
     // Normalized 0-1 scores (higher = better)
-    const priceScore = 1 - (route.totalPrice - minPrice) / priceRange;           // 30%
+    const priceScore = 1 - (route.totalPrice - minPrice) / priceRange;           // 25%
     const timeScore = 1 - (route.estimatedTotalMinutes - minTime) / timeRange;    // 20%
     const safetyScore = hasConflict ? 0 : 1;                                       // 15%
-    const visaScore = allVisaFree ? 1 : 0;                                         // 15%
+    const visaScore = allVisaFree ? 1 : 0;                                         // 10%
     const stopsScore = Math.max(0, 1 - stops * 0.33);                             // 10%
+    const nonstopScore = isNonstop ? 1 : 0;                                        // 10%
     const hiddenScore = hasHiddenStop ? 0 : 1;                                     // 5%
     const ticketScore = route.ticketType === "single-carrier" ? 1
       : route.ticketType === "alliance" ? 0.5 : 0;                                // 5%
 
     const score =
-      priceScore * 0.30 +
+      priceScore * 0.25 +
       timeScore * 0.20 +
       safetyScore * 0.15 +
-      visaScore * 0.15 +
+      visaScore * 0.10 +
       stopsScore * 0.10 +
+      nonstopScore * 0.10 +
       hiddenScore * 0.05 +
       ticketScore * 0.05;
 
