@@ -56,6 +56,12 @@ function visaBadge(status: RouteLeg["visaStatus"], note?: string) {
   );
 }
 
+/** Build a Google Flights search URL for a given leg */
+function googleFlightsUrl(leg: RouteLeg): string {
+  // Google Flights URL format: /flights/FROM-TO
+  return `https://www.google.com/travel/flights?q=flights+from+${leg.fromCode}+to+${leg.toCode}`;
+}
+
 function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
   return (
     <div className="relative">
@@ -83,15 +89,30 @@ function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
               {leg.transport}
             </span>
             {leg.airline && (
-              <span className="text-slate-400">/ {leg.airline}</span>
+              <span className="text-slate-400">
+                / {leg.airline}
+                {leg.airlineCode && <span className="text-slate-300 ml-0.5">({leg.airlineCode})</span>}
+              </span>
             )}
             <span className="font-medium text-slate-600">{leg.duration}</span>
             <span className="font-semibold text-slate-800">${leg.price}</span>
             {visaBadge(leg.visaStatus, leg.visaNote)}
           </div>
-          {leg.visaNote && leg.visaStatus !== "none" && (
-            <p className="mt-1 text-xs text-slate-400">{leg.visaNote}</p>
-          )}
+          <div className="mt-1 flex items-center gap-3">
+            {leg.visaNote && leg.visaStatus !== "none" && (
+              <p className="text-xs text-slate-400">{leg.visaNote}</p>
+            )}
+            {leg.transport === "flight" && (
+              <a
+                href={googleFlightsUrl(leg)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:text-blue-600 hover:underline shrink-0"
+              >
+                Verify price
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -156,6 +177,13 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
           ))}
         </div>
       )}
+
+      {/* Safety note */}
+      <div className="mx-5 mb-4 mt-1 text-center">
+        <p className="text-[10px] text-slate-400">
+          Prices are estimates from cached data. Click &quot;Verify price&quot; on each leg to check current fares.
+        </p>
+      </div>
     </div>
   );
 }
@@ -192,8 +220,13 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
         <RouteCard key={route.id} route={route} rank={i + 1} />
       ))}
 
+      <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 mt-2">
+        <p className="text-xs text-blue-700 text-center font-medium">
+          All routes avoid Middle East airspace and Gulf-hub airlines (Emirates, Etihad, Qatar, flydubai, etc.)
+        </p>
+      </div>
       <p className="text-center text-xs text-slate-400 pt-2">
-        Prices are estimates and may vary. Always check visa requirements with your embassy before traveling.
+        Prices are estimates from cached flight data — click &quot;Verify price&quot; to check on Google Flights. Always confirm visa requirements before traveling.
       </p>
     </div>
   );

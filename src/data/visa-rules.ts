@@ -65,6 +65,9 @@ export const visaRules: VisaRuleData[] = [
   { nationality: "FR", destinationCountry: "MU", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
   { nationality: "FR", destinationCountry: "RW", category: "evisa", maxDays: 30, notes: "E-visa or visa on arrival, ~$30" },
 
+  // China (144-hour visa-free transit)
+  { nationality: "FR", destinationCountry: "CN", category: "free", maxDays: 6, notes: "144h visa-free transit — must have onward ticket to third country within 144h" },
+
   // Caucasus / Near-Europe
   { nationality: "FR", destinationCountry: "GE", category: "free", maxDays: 365, notes: "Visa exemption for 1 year" },
   { nationality: "FR", destinationCountry: "TR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days in 180-day period" },

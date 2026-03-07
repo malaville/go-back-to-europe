@@ -5,6 +5,7 @@ export type RouteLeg = {
   toCode: string;
   transport: "flight" | "bus" | "train" | "ferry";
   airline?: string;
+  airlineCode?: string;
   duration: string; // e.g., "3h 20m"
   durationMinutes: number;
   price: number; // USD

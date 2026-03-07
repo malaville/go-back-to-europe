@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
 import RouteResults from "@/components/RouteResults";
+import RouteSkeletons from "@/components/RouteSkeletons";
 import type { RouteOption } from "@/data/mock-routes";
 
 export default function Page() {
@@ -114,7 +115,7 @@ function Home() {
       {/* Main Content */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6">
         {/* Hero — only before search */}
-        {!hasSearched && (
+        {!hasSearched && !isSearching && (
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 leading-snug">
               Fly home — avoid conflict zones
@@ -126,12 +127,13 @@ function Home() {
           </div>
         )}
 
-        {/* Back button when showing results */}
-        {hasSearched && (
+        {/* Back button when showing results or searching */}
+        {(hasSearched || isSearching) && (
           <button
             onClick={() => {
               setHasSearched(false);
               setSearchData(null);
+              setIsSearching(false);
               clearParams();
             }}
             className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 mb-4 transition-colors"
@@ -144,14 +146,19 @@ function Home() {
         )}
 
         {/* Search Form */}
-        {!hasSearched && (
+        {!hasSearched && !isSearching && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
             <SearchForm onSearch={handleSearch} isSearching={isSearching} initialData={getInitialData()} />
           </div>
         )}
 
+        {/* Skeleton loader while searching */}
+        {isSearching && searchData && (
+          <RouteSkeletons fromCity={searchData.fromCity} targetCity={searchData.targetCity} />
+        )}
+
         {/* Results */}
-        {hasSearched && searchData && (
+        {hasSearched && !isSearching && searchData && (
           <>
             {searchError && (
               <div className="rounded-xl bg-red-50 border border-red-200 p-4 mb-4 text-sm text-red-700">
@@ -167,7 +174,7 @@ function Home() {
         )}
 
         {/* Trust signals */}
-        {!hasSearched && (
+        {!hasSearched && !isSearching && (
           <div className="mt-8 grid grid-cols-3 gap-3 text-center">
             <div className="rounded-xl bg-white border border-slate-100 p-3">
               <div className="text-blue-600 flex justify-center mb-1">

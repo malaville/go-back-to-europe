@@ -13,6 +13,23 @@ import {
 } from "./aviasales";
 import { visaRules } from "@/data/visa-rules";
 
+// ── Airlines that hub through the Middle East ─────────────────────────────
+// Flights on these carriers between non-ME points almost always connect
+// through the Gulf (Abu Dhabi, Dubai, Doha, Sharjah, etc.), defeating the
+// "avoid conflict zones" constraint even when the listed airports are safe.
+const MIDDLE_EAST_HUB_AIRLINES = new Set([
+  "EY", // Etihad Airways — Abu Dhabi hub
+  "EK", // Emirates — Dubai hub
+  "FZ", // flydubai — Dubai hub
+  "G9", // Air Arabia — Sharjah hub
+  "QR", // Qatar Airways — Doha hub
+  "GF", // Gulf Air — Bahrain hub
+  "WY", // Oman Air — Muscat hub
+  "SV", // Saudia — Jeddah/Riyadh hub
+  "RJ", // Royal Jordanian — Amman hub
+  "ME", // Middle East Airlines — Beirut hub
+]);
+
 // ── Ground-transport connections ──────────────────────────────────────────
 // Small airports that need a ground leg to reach an international hub.
 
@@ -45,24 +62,31 @@ const GROUND_CONNECTIONS: GroundConnection[] = [
 // ── Segment durations (minutes) ───────────────────────────────────────────
 
 const SEGMENT_DURATIONS: Record<string, number> = {
+  // ── Direct nonstop SEA → Europe (Vietnam Airlines, Air France, SQ, etc.) ──
+  "SGN-PAR": 780, "SGN-LON": 750,
+  "BKK-PAR": 690, "BKK-LON": 690, "BKK-AMS": 690,
+  "SIN-PAR": 800, "SIN-LON": 780, "SIN-AMS": 750,
   // From SGN
   "SGN-BKK": 105, "SGN-SIN": 125, "SGN-KUL": 130,
   "SGN-SEL": 310, "SGN-TPE": 210, "SGN-TYO": 340,
   "SGN-HKG": 165, "SGN-DEL": 330, "SGN-BOM": 360,
   "SGN-CMB": 240,
+  "SGN-CAN": 150, "SGN-PVG": 240,
   // From BKK
   "BKK-SEL": 310, "BKK-TPE": 220, "BKK-TYO": 360,
   "BKK-IST": 570, "BKK-TBS": 510,
   "BKK-HKG": 165, "BKK-DEL": 255, "BKK-BOM": 270,
   "BKK-ADD": 540, "BKK-ALA": 390, "BKK-TAS": 420,
   "BKK-CMB": 210,
+  "BKK-CAN": 180, "BKK-PVG": 270,
   // From KUL
   "KUL-IST": 675, "KUL-HKG": 225, "KUL-DEL": 330,
   "KUL-CMB": 210, "KUL-ADD": 540,
+  "KUL-CAN": 225, "KUL-PVG": 300,
   // From SIN
-  "SIN-PAR": 800, "SIN-LON": 780, "SIN-AMS": 750,
   "SIN-HKG": 225, "SIN-DEL": 330, "SIN-CMB": 210,
   "SIN-ADD": 570,
+  "SIN-CAN": 225, "SIN-PVG": 300,
   // From HKG (to Europe)
   "HKG-PAR": 720, "HKG-LON": 720, "HKG-AMS": 700,
   "HKG-BER": 680, "HKG-FCO": 690, "HKG-BCN": 720,
@@ -116,6 +140,16 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "TAS-MAD": 390, "TAS-WAW": 270, "TAS-VIE": 300,
   "TAS-PRG": 300, "TAS-BUD": 270,
   "CMB-BER": 570, "CMB-BCN": 600, "CMB-MAD": 600,
+  // From CAN — Guangzhou (China Southern hub)
+  "CAN-PAR": 720, "CAN-LON": 720, "CAN-AMS": 690,
+  "CAN-BER": 660, "CAN-FCO": 690, "CAN-BCN": 720,
+  "CAN-MAD": 720, "CAN-LIS": 750,
+  // From PVG — Shanghai (China Eastern hub)
+  "PVG-PAR": 750, "PVG-LON": 720, "PVG-AMS": 690,
+  "PVG-BER": 660, "PVG-FCO": 690, "PVG-BCN": 720,
+  "PVG-MAD": 750, "PVG-LIS": 780,
+  "PVG-WAW": 600, "PVG-VIE": 630, "PVG-PRG": 630, "PVG-BUD": 630,
+  "CAN-WAW": 630, "CAN-VIE": 660, "CAN-PRG": 660, "CAN-BUD": 660,
 };
 
 /** Look up segment duration, trying both orderings of city codes. */
@@ -150,6 +184,8 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   ALA: "KZ",
   TAS: "UZ",
   CMB: "LK",
+  CAN: "CN",
+  PVG: "CN",
   HEL: "FI",
   DPS: "ID",
   MNL: "PH",
@@ -215,6 +251,8 @@ const AIRPORT_CITY: Record<string, string> = {
   ALA: "Almaty",
   TAS: "Tashkent",
   CMB: "Colombo",
+  CAN: "Guangzhou",
+  PVG: "Shanghai",
   HEL: "Helsinki",
   DPS: "Bali",
   MNL: "Manila",
@@ -321,28 +359,49 @@ type RoutePattern = {
 function getCandidatePatterns(departureHub: string): RoutePattern[] {
   const patterns: RoutePattern[] = [];
 
-  // ── 2-leg direct routes (only from major SEA airports)
-  if (["SIN", "BKK", "KUL"].includes(departureHub)) {
+  // ── Nonstop direct routes (VN, AF, SQ, TG, BA, KLM fly nonstop from major SEA hubs)
+  if (["SGN", "SIN", "BKK", "KUL"].includes(departureHub)) {
     patterns.push({
-      hubs: [], // departure → destination directly
-      tag: "Direct",
+      hubs: [],
+      tag: "Nonstop",
     });
   }
 
-  // ── 3-leg via East Asia
+  // ── 3-leg via East Asia (clean — no ME transit)
   patterns.push({ hubs: ["ICN"], tag: "Via Seoul" });
   patterns.push({ hubs: ["NRT"], tag: "Via Tokyo" });
   patterns.push({ hubs: ["TPE"], tag: "Via Taipei" });
 
-  // ── 3-leg via Hong Kong
+  // ── 3-leg via Hong Kong (Cathay Pacific — no ME transit)
   patterns.push({ hubs: ["HKG"], tag: "Via Hong Kong" });
 
+  // ── 3-leg via China (144h visa-free transit for many nationalities)
+  patterns.push({ hubs: ["CAN"], tag: "Via Guangzhou" });
+  patterns.push({ hubs: ["PVG"], tag: "Via Shanghai" });
+
+  // ── 3-leg via Singapore (Singapore Airlines — no ME transit)
+  if (departureHub !== "SIN") {
+    patterns.push({ hubs: ["SIN"], tag: "Via Singapore" });
+  }
+
   // ── 3-leg via South Asia
-  patterns.push({ hubs: ["DEL"], tag: "Via Delhi" });
-  patterns.push({ hubs: ["BOM"], tag: "Via Mumbai" });
+  patterns.push({
+    hubs: ["DEL"],
+    tag: "Via Delhi",
+    warnings: [
+      "Indian e-visa takes 3-5 business days — apply immediately if departing within a week.",
+    ],
+  });
+  patterns.push({
+    hubs: ["BOM"],
+    tag: "Via Mumbai",
+    warnings: [
+      "Indian e-visa takes 3-5 business days — apply immediately if departing within a week.",
+    ],
+  });
   patterns.push({ hubs: ["CMB"], tag: "Via Colombo" });
 
-  // ── 3-leg via Africa
+  // ── 3-leg via Africa (Ethiopian Airlines — no ME transit, flies polar/African routes)
   patterns.push({ hubs: ["ADD"], tag: "Via Addis Ababa" });
 
   // ── 3-leg via Central Asia
@@ -362,9 +421,7 @@ function getCandidatePatterns(departureHub: string): RoutePattern[] {
   // ── 4-leg budget/adventure routes
   patterns.push({ hubs: ["BKK", "ICN"], tag: "Budget via Bangkok + Seoul" });
   patterns.push({ hubs: ["BKK", "TBS"], tag: "Budget via Bangkok + Tbilisi" });
-  patterns.push({ hubs: ["BKK", "DEL"], tag: "Via Bangkok + Delhi" });
-  patterns.push({ hubs: ["BKK", "ADD"], tag: "Via Bangkok + Addis Ababa" });
-  patterns.push({ hubs: ["BKK", "ALA"], tag: "Via Bangkok + Almaty" });
+  patterns.push({ hubs: ["BKK", "CAN"], tag: "Via Bangkok + Guangzhou" });
   patterns.push({ hubs: ["BKK", "HKG"], tag: "Via Bangkok + Hong Kong" });
   patterns.push({ hubs: ["SIN", "CMB"], tag: "Via Singapore + Colombo" });
   patterns.push({
@@ -389,14 +446,15 @@ type SegmentPriceResult = {
 /**
  * Fetch the cheapest price for a single flight segment, trying both
  * getCheapestFlight (monthly cache) and getLatestOneWayPrice as fallback.
+ * Automatically excludes Middle East hub airlines to avoid Gulf transits.
  */
 async function fetchSegmentPrice(
   from: string,
   to: string,
   departMonth?: string
 ): Promise<SegmentPriceResult | null> {
-  // Try the monthly cache first
-  const cheap = await getCheapestFlight(from, to, departMonth);
+  // Try the monthly cache first — skip ME-hub airlines
+  const cheap = await getCheapestFlight(from, to, departMonth, MIDDLE_EAST_HUB_AIRLINES);
   if (cheap) {
     return {
       price: cheap.price,
@@ -405,8 +463,8 @@ async function fetchSegmentPrice(
     };
   }
 
-  // Fallback: latest one-way prices
-  const latest = await getLatestOneWayPrice(from, to);
+  // Fallback: latest one-way prices — also skip ME-hub airlines
+  const latest = await getLatestOneWayPrice(from, to, MIDDLE_EAST_HUB_AIRLINES);
   if (latest) {
     return {
       price: latest.price,
@@ -528,6 +586,7 @@ export async function searchRoutes(params: {
         toCode: seg.to,
         transport: "flight",
         airline: priceResult.airlineFullName,
+        airlineCode: priceResult.airline,
         duration: formatDuration(duration),
         durationMinutes: duration,
         price: priceResult.price,
@@ -570,10 +629,17 @@ export async function searchRoutes(params: {
 
   const rawResults = await Promise.all(routePromises);
 
-  // Filter nulls and sort by price
+  // Filter nulls, then sort: safe routes first, then by price.
+  // Routes with conflict-zone warnings get pushed to the bottom.
   const routes = rawResults
     .filter((r): r is RouteOption => r !== null)
-    .sort((a, b) => a.totalPrice - b.totalPrice);
+    .sort((a, b) => {
+      const aHasWarning = a.warnings.some((w) => w.includes("conflict"));
+      const bHasWarning = b.warnings.some((w) => w.includes("conflict"));
+      if (aHasWarning && !bHasWarning) return 1;
+      if (!aHasWarning && bHasWarning) return -1;
+      return a.totalPrice - b.totalPrice;
+    });
 
   // Tag the cheapest, fastest, and most comfortable
   if (routes.length > 0) {

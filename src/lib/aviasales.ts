@@ -71,6 +71,16 @@ const AIRLINE_NAMES: Record<string, string> = {
   Z2: "AirAsia Philippines",
   QD: "Cambodia Airways",
   K6: "Cambodia Angkor Air",
+  CA: "Air China",
+  CZ: "China Southern",
+  MU: "China Eastern",
+  HU: "Hainan Airlines",
+  "3U": "Sichuan Airlines",
+  EY: "Etihad Airways",
+  FZ: "flydubai",
+  G9: "Air Arabia",
+  SV: "Saudia",
+  RJ: "Royal Jordanian",
 };
 
 export function airlineName(iataCode: string): string {
@@ -131,7 +141,8 @@ export type LatestPriceResult = {
 export async function getCheapestFlight(
   origin: string,
   destination: string,
-  departMonth?: string // YYYY-MM
+  departMonth?: string, // YYYY-MM
+  excludeAirlines?: Set<string>
 ): Promise<CheapestFlightResult | null> {
   try {
     const params = new URLSearchParams({
@@ -156,10 +167,11 @@ export async function getCheapestFlight(
     const tickets = json.data[destKey];
     if (!tickets) return null;
 
-    // Find cheapest across all indices
+    // Find cheapest across all indices, skipping blocked airlines
     let cheapest: CheapestFlightResult | null = null;
     for (const key of Object.keys(tickets)) {
       const t = tickets[key];
+      if (excludeAirlines?.has(t.airline)) continue;
       if (!cheapest || t.price < cheapest.price) {
         cheapest = {
           price: t.price,
@@ -183,7 +195,8 @@ export async function getCheapestFlight(
  */
 export async function getLatestOneWayPrice(
   origin: string,
-  destination: string
+  destination: string,
+  excludeAirlines?: Set<string>
 ): Promise<LatestPriceResult | null> {
   try {
     const params = new URLSearchParams({
@@ -192,7 +205,7 @@ export async function getLatestOneWayPrice(
       currency: "USD",
       one_way: "true",
       sorting: "price",
-      limit: "1",
+      limit: "30",
       token: API_TOKEN,
     });
 
@@ -203,14 +216,18 @@ export async function getLatestOneWayPrice(
     const json = await res.json();
     if (!json.success || !json.data || json.data.length === 0) return null;
 
-    const d = json.data[0];
-    return {
-      price: d.value,
-      airline: d.airline,
-      airlineName: airlineName(d.airline),
-      departDate: d.depart_date ?? "",
-      numberOfChanges: d.number_of_changes ?? 0,
-    };
+    // Find cheapest that isn't on a blocked airline
+    for (const d of json.data) {
+      if (excludeAirlines?.has(d.airline)) continue;
+      return {
+        price: d.value,
+        airline: d.airline,
+        airlineName: airlineName(d.airline),
+        departDate: d.depart_date ?? "",
+        numberOfChanges: d.number_of_changes ?? 0,
+      };
+    }
+    return null;
   } catch (err) {
     console.error(`[aviasales] getLatestOneWayPrice ${origin}->${destination} failed:`, err);
     return null;
