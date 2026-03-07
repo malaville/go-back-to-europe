@@ -16,8 +16,8 @@ function useExplainToggle() {
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      // Cmd+Shift+F (Mac) or Ctrl+Shift+F (Windows)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "f") {
+      // Cmd+Shift+E (Mac) or Ctrl+Shift+E (Windows)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "e") {
         e.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (params.get("explain") === "true") {
