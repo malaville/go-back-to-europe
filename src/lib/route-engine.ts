@@ -1,0 +1,579 @@
+// ---------------------------------------------------------------------------
+// Route-building engine
+// Generates multi-leg SEA → Europe routes that avoid conflict zones,
+// prices each segment via the Aviasales cached-price API, and returns
+// sorted RouteOption[] results.
+// ---------------------------------------------------------------------------
+
+import type { RouteOption, RouteLeg } from "@/data/mock-routes";
+import {
+  getCheapestFlight,
+  getLatestOneWayPrice,
+  airlineName,
+} from "./aviasales";
+import { visaRules } from "@/data/visa-rules";
+
+// ── Ground-transport connections ──────────────────────────────────────────
+// Small airports that need a ground leg to reach an international hub.
+
+type GroundConnection = {
+  fromCode: string;
+  fromCity: string;
+  toCode: string;
+  toCity: string;
+  transport: "bus" | "train" | "ferry";
+  durationMinutes: number;
+  price: number;
+  note: string;
+};
+
+const GROUND_CONNECTIONS: GroundConnection[] = [
+  {
+    fromCode: "DLI",
+    fromCity: "Da Lat",
+    toCode: "SGN",
+    toCity: "Ho Chi Minh City",
+    transport: "bus",
+    durationMinutes: 420, // 7 h
+    price: 10,
+    note: "Regular buses, ~300km",
+  },
+  // Add more ground connections here as needed:
+  // { fromCode: "XXX", fromCity: "...", toCode: "YYY", ... },
+];
+
+// ── Segment durations (minutes) ───────────────────────────────────────────
+
+const SEGMENT_DURATIONS: Record<string, number> = {
+  // From SGN
+  "SGN-BKK": 105,
+  "SGN-SIN": 125,
+  "SGN-KUL": 130,
+  "SGN-SEL": 310,
+  "SGN-TPE": 210,
+  "SGN-TYO": 340,
+  // From BKK
+  "BKK-SEL": 310,
+  "BKK-IST": 570,
+  "BKK-TBS": 510,
+  "BKK-DOH": 390,
+  "BKK-TPE": 220,
+  // From KUL
+  "KUL-IST": 675,
+  "KUL-DOH": 420,
+  // From SIN (direct to Europe)
+  "SIN-PAR": 800,
+  "SIN-LON": 780,
+  "SIN-AMS": 750,
+  // From SEL (to Europe)
+  "SEL-PAR": 750,
+  "SEL-AMS": 690,
+  "SEL-LON": 700,
+  "SEL-BER": 660,
+  // From TYO (to Europe)
+  "TYO-PAR": 750,
+  "TYO-AMS": 720,
+  "TYO-LON": 720,
+  // From TPE (to Europe)
+  "TPE-PAR": 780,
+  "TPE-AMS": 790,
+  "TPE-LON": 770,
+  // From TBS (to Europe)
+  "TBS-PAR": 310,
+  "TBS-BER": 270,
+  "TBS-WAW": 240,
+  "TBS-VIE": 240,
+  "TBS-AMS": 330,
+  // From IST (to Europe)
+  "IST-PAR": 220,
+  "IST-AMS": 220,
+  "IST-LON": 240,
+  "IST-BER": 180,
+  // From DOH (to Europe)
+  "DOH-PAR": 390,
+  "DOH-AMS": 420,
+  "DOH-LON": 420,
+  "DOH-BER": 380,
+};
+
+/** Look up segment duration, trying both orderings of city codes. */
+function getSegmentDuration(from: string, to: string): number | null {
+  return SEGMENT_DURATIONS[`${from}-${to}`] ?? SEGMENT_DURATIONS[`${to}-${from}`] ?? null;
+}
+
+// ── Airport → country code mapping ───────────────────────────────────────
+
+const AIRPORT_COUNTRY: Record<string, string> = {
+  BKK: "TH",
+  DMK: "TH",
+  CNX: "TH",
+  SGN: "VN",
+  HAN: "VN",
+  DLI: "VN",
+  SIN: "SG",
+  KUL: "MY",
+  PNH: "KH",
+  ICN: "KR",
+  GMP: "KR",
+  NRT: "JP",
+  HND: "JP",
+  TPE: "TW",
+  TSA: "TW",
+  IST: "TR",
+  TBS: "GE",
+  DOH: "QA",
+  DPS: "ID",
+  MNL: "PH",
+  VTE: "LA",
+  RGN: "MM",
+  // European airports — visa status "none" (home)
+  CDG: "FR",
+  ORY: "FR",
+  LYS: "FR",
+  AMS: "NL",
+  LHR: "GB",
+  LGW: "GB",
+  STN: "GB",
+  BER: "DE",
+  FCO: "IT",
+  CIA: "IT",
+  MXP: "IT",
+  LIN: "IT",
+  BGY: "IT",
+  BCN: "ES",
+  MAD: "ES",
+  LIS: "PT",
+  WAW: "PL",
+  WMI: "PL",
+  BUD: "HU",
+  PRG: "CZ",
+  VIE: "AT",
+  BRU: "BE",
+  CRL: "BE",
+};
+
+// EU / EEA / Schengen country codes — transit visa always "none"
+const EU_COUNTRIES = new Set([
+  "FR", "NL", "GB", "DE", "IT", "ES", "PT", "PL", "HU", "CZ", "AT", "BE",
+  "SE", "DK", "FI", "IE", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE",
+  "LU", "MT", "CY", "GR", "NO", "IS", "CH",
+]);
+
+// ── Airport → city name mapping ──────────────────────────────────────────
+
+const AIRPORT_CITY: Record<string, string> = {
+  BKK: "Bangkok",
+  DMK: "Bangkok",
+  CNX: "Chiang Mai",
+  SGN: "Ho Chi Minh City",
+  HAN: "Hanoi",
+  DLI: "Da Lat",
+  SIN: "Singapore",
+  KUL: "Kuala Lumpur",
+  PNH: "Phnom Penh",
+  ICN: "Seoul",
+  GMP: "Seoul",
+  NRT: "Tokyo",
+  HND: "Tokyo",
+  TPE: "Taipei",
+  TSA: "Taipei",
+  IST: "Istanbul",
+  TBS: "Tbilisi",
+  DOH: "Doha",
+  DPS: "Bali",
+  MNL: "Manila",
+  VTE: "Vientiane",
+  RGN: "Yangon",
+  CDG: "Paris",
+  ORY: "Paris",
+  LYS: "Lyon",
+  AMS: "Amsterdam",
+  LHR: "London",
+  LGW: "London",
+  STN: "London",
+  BER: "Berlin",
+  FCO: "Rome",
+  CIA: "Rome",
+  MXP: "Milan",
+  LIN: "Milan",
+  BGY: "Milan",
+  BCN: "Barcelona",
+  MAD: "Madrid",
+  LIS: "Lisbon",
+  WAW: "Warsaw",
+  WMI: "Warsaw",
+  BUD: "Budapest",
+  PRG: "Prague",
+  VIE: "Vienna",
+  BRU: "Brussels",
+  CRL: "Brussels",
+};
+
+// Airport code → city code used by the Aviasales API
+const AIRPORT_TO_API_CODE: Record<string, string> = {
+  ICN: "SEL",
+  GMP: "SEL",
+  NRT: "TYO",
+  HND: "TYO",
+  CDG: "PAR",
+  ORY: "PAR",
+  LHR: "LON",
+  LGW: "LON",
+  STN: "LON",
+  MXP: "MIL",
+  LIN: "MIL",
+  BGY: "MIL",
+  FCO: "ROM",
+  CIA: "ROM",
+  CRL: "BRU",
+};
+
+function apiCode(airportCode: string): string {
+  return AIRPORT_TO_API_CODE[airportCode] ?? airportCode;
+}
+
+// ── Visa lookup helper ───────────────────────────────────────────────────
+
+function resolveVisaStatus(
+  airportCode: string,
+  nationality: string
+): { status: RouteLeg["visaStatus"]; note?: string } {
+  const country = AIRPORT_COUNTRY[airportCode];
+  if (!country) return { status: "none" };
+
+  // European destination — you're going home
+  if (EU_COUNTRIES.has(country)) return { status: "none" };
+
+  // Look up in visa rules
+  const rule = visaRules.find(
+    (r) => r.nationality === nationality && r.destinationCountry === country
+  );
+
+  if (rule) {
+    return { status: rule.category, note: rule.notes };
+  }
+
+  // Fallback — unknown, mark as warning
+  return { status: "warning", note: "Visa requirements unknown — check before travel" };
+}
+
+// ── Duration formatting ──────────────────────────────────────────────────
+
+function formatDuration(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
+
+// ── Route pattern definitions ────────────────────────────────────────────
+// Each pattern is an array of airport codes representing waypoints.
+// The engine fills in departure (index 0) and destination (last index).
+
+type RoutePattern = {
+  hubs: string[]; // intermediate airport codes between departure and destination
+  tag: string;
+  warnings?: string[];
+};
+
+/**
+ * Generate candidate route patterns for a given (departure, destination) pair.
+ * The departure hub is the first international airport reachable from the
+ * departure city (after any ground transport leg).
+ */
+function getCandidatePatterns(departureHub: string): RoutePattern[] {
+  const patterns: RoutePattern[] = [];
+
+  // ── 2-leg direct routes (only from major SEA airports)
+  if (["SIN", "BKK", "KUL"].includes(departureHub)) {
+    patterns.push({
+      hubs: [], // departure → destination directly
+      tag: "Direct",
+    });
+  }
+
+  // ── 3-leg via East Asia
+  patterns.push({ hubs: ["ICN"], tag: "Via Seoul" });
+  patterns.push({ hubs: ["NRT"], tag: "Via Tokyo" });
+  patterns.push({ hubs: ["TPE"], tag: "Via Taipei" });
+
+  // ── 3-leg via safe Gulf / Caucasus
+  patterns.push({ hubs: ["DOH"], tag: "Via Doha" });
+  patterns.push({ hubs: ["TBS"], tag: "Via Tbilisi" });
+  patterns.push({
+    hubs: ["IST"],
+    tag: "Via Istanbul",
+    warnings: [
+      "Route transits through Turkey — near active conflict zones. Check current travel advisories.",
+    ],
+  });
+
+  // ── 4-leg budget routes
+  patterns.push({ hubs: ["BKK", "ICN"], tag: "Budget via Bangkok + Seoul" });
+  patterns.push({
+    hubs: ["BKK", "TBS"],
+    tag: "Budget via Bangkok + Tbilisi",
+  });
+  patterns.push({
+    hubs: ["KUL", "IST"],
+    tag: "Budget via KL + Istanbul",
+    warnings: [
+      "Route transits through Turkey — near active conflict zones. Check current travel advisories.",
+    ],
+  });
+
+  return patterns;
+}
+
+// ── Segment price fetching ───────────────────────────────────────────────
+
+type SegmentPriceResult = {
+  price: number;
+  airline: string;
+  airlineFullName: string;
+};
+
+/**
+ * Fetch the cheapest price for a single flight segment, trying both
+ * getCheapestFlight (monthly cache) and getLatestOneWayPrice as fallback.
+ */
+async function fetchSegmentPrice(
+  from: string,
+  to: string,
+  departMonth?: string
+): Promise<SegmentPriceResult | null> {
+  // Try the monthly cache first
+  const cheap = await getCheapestFlight(from, to, departMonth);
+  if (cheap) {
+    return {
+      price: cheap.price,
+      airline: cheap.airline,
+      airlineFullName: cheap.airlineName,
+    };
+  }
+
+  // Fallback: latest one-way prices
+  const latest = await getLatestOneWayPrice(from, to);
+  if (latest) {
+    return {
+      price: latest.price,
+      airline: latest.airline,
+      airlineFullName: latest.airlineName,
+    };
+  }
+
+  return null;
+}
+
+// ── Main search function ─────────────────────────────────────────────────
+
+export async function searchRoutes(params: {
+  fromCity: string;
+  fromAirport: string;
+  targetCity: string;
+  targetAirport: string;
+  nationality: string;
+  departMonth: string; // YYYY-MM
+}): Promise<RouteOption[]> {
+  const { fromCity, fromAirport, targetCity, targetAirport, nationality, departMonth } = params;
+
+  // Determine which EU airports to search
+  const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN"];
+  const destinationAirports: string[] =
+    targetAirport && targetAirport.length > 0
+      ? [targetAirport]
+      : EU_SEARCH_AIRPORTS;
+
+  // Determine if we need a ground transport prefix
+  const groundLeg = GROUND_CONNECTIONS.find((g) => g.fromCode === fromAirport);
+  const departureHub = groundLeg ? groundLeg.toCode : fromAirport;
+
+  // Build candidate routes for every destination
+  const patterns = getCandidatePatterns(departureHub);
+
+  // Generate all (pattern, destination) combinations
+  type Candidate = {
+    destAirport: string;
+    pattern: RoutePattern;
+  };
+
+  const candidates: Candidate[] = [];
+  for (const dest of destinationAirports) {
+    for (const pattern of patterns) {
+      // Skip patterns where the departure hub is the same as a hub in the pattern
+      // (e.g., departing from BKK with a pattern that goes through BKK)
+      if (pattern.hubs.includes(departureHub)) continue;
+
+      // Skip direct routes for airports that don't have known direct durations
+      if (pattern.hubs.length === 0) {
+        const dur = getSegmentDuration(apiCode(departureHub), apiCode(dest));
+        if (!dur) continue;
+      }
+
+      candidates.push({ destAirport: dest, pattern });
+    }
+  }
+
+  // Process all candidates in parallel
+  const routePromises = candidates.map(async (candidate): Promise<RouteOption | null> => {
+    const { destAirport, pattern } = candidate;
+
+    // Build the full waypoint chain: [departureHub, ...hubs, destAirport]
+    const waypoints = [departureHub, ...pattern.hubs, destAirport];
+
+    // Fetch prices for all flight segments in parallel
+    const segmentCodes = waypoints.map((wp, i) => {
+      if (i === waypoints.length - 1) return null;
+      return { from: wp, to: waypoints[i + 1] };
+    }).filter((s): s is { from: string; to: string } => s !== null);
+
+    const priceResults = await Promise.all(
+      segmentCodes.map((seg) => fetchSegmentPrice(seg.from, seg.to, departMonth))
+    );
+
+    // If any segment has no price, skip this route
+    if (priceResults.some((r) => r === null)) return null;
+
+    // Build the legs
+    const legs: RouteLeg[] = [];
+
+    // Prepend ground transport leg if needed
+    if (groundLeg) {
+      const gVisa = resolveVisaStatus(groundLeg.toCode, nationality);
+      legs.push({
+        from: groundLeg.fromCity,
+        to: groundLeg.toCity,
+        fromCode: groundLeg.fromCode,
+        toCode: groundLeg.toCode,
+        transport: groundLeg.transport,
+        duration: formatDuration(groundLeg.durationMinutes),
+        durationMinutes: groundLeg.durationMinutes,
+        price: groundLeg.price,
+        visaStatus: gVisa.status,
+        visaNote: gVisa.note,
+      });
+    }
+
+    // Flight legs
+    for (let i = 0; i < segmentCodes.length; i++) {
+      const seg = segmentCodes[i];
+      const priceResult = priceResults[i]!;
+
+      const fromApi = apiCode(seg.from);
+      const toApi = apiCode(seg.to);
+      const duration = getSegmentDuration(fromApi, toApi);
+
+      // If we don't have a duration for this segment, skip the route
+      if (duration === null) return null;
+
+      const visa = resolveVisaStatus(seg.to, nationality);
+
+      legs.push({
+        from: AIRPORT_CITY[seg.from] ?? seg.from,
+        to: AIRPORT_CITY[seg.to] ?? seg.to,
+        fromCode: seg.from,
+        toCode: seg.to,
+        transport: "flight",
+        airline: priceResult.airlineFullName,
+        duration: formatDuration(duration),
+        durationMinutes: duration,
+        price: priceResult.price,
+        visaStatus: visa.status,
+        visaNote: visa.note,
+      });
+    }
+
+    // Totals
+    const totalPrice = legs.reduce((sum, l) => sum + l.price, 0);
+    const totalDurationMinutes = legs.reduce((sum, l) => sum + l.durationMinutes, 0);
+    const layoverText = legs.length > 1 ? " (+ layovers)" : "";
+    const totalDuration = formatDuration(totalDurationMinutes) + layoverText;
+
+    // Warnings
+    const warnings: string[] = [...(pattern.warnings ?? [])];
+    if (totalDurationMinutes > 1200) {
+      warnings.push(
+        "Long total travel time — consider an overnight stop at a layover city"
+      );
+    }
+
+    // Tags
+    const tags: string[] = [pattern.tag];
+
+    // Generate a deterministic ID
+    const legCodes = legs.map((l) => l.fromCode).join("-") + "-" + legs[legs.length - 1].toCode;
+    const id = `route-${legCodes}-${totalPrice}`;
+
+    return {
+      id,
+      legs,
+      totalPrice,
+      totalDurationMinutes,
+      totalDuration,
+      warnings,
+      tags,
+    };
+  });
+
+  const rawResults = await Promise.all(routePromises);
+
+  // Filter nulls and sort by price
+  const routes = rawResults
+    .filter((r): r is RouteOption => r !== null)
+    .sort((a, b) => a.totalPrice - b.totalPrice);
+
+  // Tag the cheapest, fastest, and most comfortable
+  if (routes.length > 0) {
+    // Cheapest
+    routes[0].tags.push("Cheapest");
+
+    // Fastest
+    const fastest = routes.reduce((min, r) =>
+      r.totalDurationMinutes < min.totalDurationMinutes ? r : min
+    );
+    if (!fastest.tags.includes("Cheapest")) {
+      fastest.tags.push("Fastest");
+    } else if (routes.length > 1) {
+      // Find next fastest that isn't already tagged cheapest
+      const nextFastest = routes
+        .filter((r) => r !== fastest)
+        .reduce((min, r) =>
+          r.totalDurationMinutes < min.totalDurationMinutes ? r : min
+        );
+      nextFastest.tags.push("Fastest");
+    }
+
+    // Most comfortable = fewest legs (and within that, shortest duration)
+    const comfortable = routes.reduce((best, r) => {
+      if (r.legs.length < best.legs.length) return r;
+      if (
+        r.legs.length === best.legs.length &&
+        r.totalDurationMinutes < best.totalDurationMinutes
+      )
+        return r;
+      return best;
+    });
+    if (
+      !comfortable.tags.includes("Cheapest") &&
+      !comfortable.tags.includes("Fastest")
+    ) {
+      comfortable.tags.push("Most comfortable");
+    }
+
+    // Adventure route = most legs
+    const adventure = routes.reduce((best, r) =>
+      r.legs.length > best.legs.length ? r : best
+    );
+    if (
+      adventure.legs.length > 2 &&
+      !adventure.tags.includes("Cheapest") &&
+      !adventure.tags.includes("Fastest") &&
+      !adventure.tags.includes("Most comfortable")
+    ) {
+      adventure.tags.push("Adventure route");
+    }
+  }
+
+  return routes;
+}

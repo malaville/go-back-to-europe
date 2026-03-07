@@ -13,24 +13,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Go Back to Europe — Find Safe, Cheap Flights Home",
+  title: "Go Back to Europe — Safe Flights Avoiding Conflict Zones",
   description:
-    "Stuck in Southeast Asia? Find safe, affordable multi-leg routes back to Europe. Compare cheap flights from Bangkok, Bali, Ho Chi Minh City, and more to Paris, Amsterdam, London, Berlin. Budget travel routing with visa checks and safety alerts.",
+    "Stuck in Southeast Asia? Find safe, affordable routes back to Europe that avoid Middle East conflict zones. Multi-leg flights from Bangkok, Bali, Ho Chi Minh City to Paris, Amsterdam, London. No overflights over war zones. Visa checks and safety alerts included.",
   keywords: [
-    "cheap flights Asia to Europe",
+    "flights avoiding middle east",
+    "safe flights Asia to Europe",
+    "avoid conflict zones flights",
+    "cheap flights Asia to Europe no middle east",
     "budget flights Southeast Asia Europe",
-    "multi-leg flights home",
-    "backpacker flights Europe",
-    "safe travel routes",
-    "Bangkok to Paris flights",
-    "Bali to London flights",
+    "multi-leg flights home safe route",
+    "backpacker flights Europe avoid war zones",
+    "safe travel routes Asia Europe",
+    "Bangkok to Paris flights safe",
+    "Bali to London flights avoid conflict",
     "visa-free transit countries",
     "go back to Europe",
   ],
   openGraph: {
-    title: "Go Back to Europe — Find Safe, Cheap Flights Home",
+    title: "Go Back to Europe — Safe Flights Avoiding Conflict Zones",
     description:
-      "Find safe, affordable multi-leg routes from Southeast Asia back to Europe. Visa checks, cost estimates, and safety alerts included.",
+      "Find safe, affordable routes from Southeast Asia back to Europe — avoiding Middle East conflict zones. Visa checks, cost estimates, and safety alerts included.",
     type: "website",
     locale: "en_US",
   },

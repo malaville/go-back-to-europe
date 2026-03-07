@@ -3,19 +3,33 @@
 import { useState } from "react";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
 import RouteResults from "@/components/RouteResults";
-import { mockRoutes } from "@/data/mock-routes";
+import type { RouteOption } from "@/data/mock-routes";
 
 export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [searchData, setSearchData] = useState<SearchFormData | null>(null);
+  const [routes, setRoutes] = useState<RouteOption[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   const handleSearch = async (data: SearchFormData) => {
     setIsSearching(true);
     setSearchData(data);
+    setSearchError(null);
 
-    // Simulate API delay — will be replaced with real flight search
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const res = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Search failed");
+      const results = await res.json();
+      setRoutes(results);
+    } catch {
+      setSearchError("Could not search routes. Please try again.");
+      setRoutes([]);
+    }
 
     setHasSearched(true);
     setIsSearching(false);
@@ -35,7 +49,7 @@ export default function Home() {
             <h1 className="text-lg font-bold text-slate-900 leading-tight">
               Go Back to Europe
             </h1>
-            <p className="text-xs text-slate-500">Safe, cheap routes home</p>
+            <p className="text-xs text-slate-500">Fly home safe — avoid conflict zones</p>
           </div>
         </div>
       </header>
@@ -46,11 +60,11 @@ export default function Home() {
         {!hasSearched && (
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 leading-snug">
-              Need to get back to Europe?
+              Fly home — avoid conflict zones
             </h2>
             <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-sm mx-auto">
-              We find safe, affordable multi-leg routes from Southeast Asia
-              to anywhere in Europe. Visa checks and cost estimates included.
+              Safe, affordable multi-leg routes from Southeast Asia
+              to Europe. No Middle East overflights. Visa checks included.
             </p>
           </div>
         )}
@@ -80,11 +94,18 @@ export default function Home() {
 
         {/* Results */}
         {hasSearched && searchData && (
-          <RouteResults
-            routes={mockRoutes}
-            fromCity={searchData.fromCity}
-            targetCity={searchData.targetCity}
-          />
+          <>
+            {searchError && (
+              <div className="rounded-xl bg-red-50 border border-red-200 p-4 mb-4 text-sm text-red-700">
+                {searchError}
+              </div>
+            )}
+            <RouteResults
+              routes={routes}
+              fromCity={searchData.fromCity}
+              targetCity={searchData.targetCity}
+            />
+          </>
         )}
 
         {/* Trust signals */}
