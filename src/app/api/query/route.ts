@@ -22,13 +22,6 @@ async function lookupAirportCode(cityName: string): Promise<string> {
   return lookupAirportByCity(cityName);
 }
 
-function getDepartMonth(deadlineDate: string, flexDays: number): string {
-  const deadline = new Date(deadlineDate);
-  const earliest = new Date(deadline);
-  earliest.setDate(earliest.getDate() - flexDays);
-  return `${earliest.getFullYear()}-${String(earliest.getMonth() + 1).padStart(2, "0")}`;
-}
-
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
@@ -70,15 +63,12 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const departMonth = getDepartMonth(deadlineDate, flexDays);
-
   const routes = await searchRoutes({
     fromCity,
     fromAirport,
     targetCity: isAnywhere ? "Anywhere in Europe" : targetCity,
     targetAirport,
     nationality,
-    departMonth,
     deadlineDate,
     flexDays,
     longLandTransport,
@@ -93,7 +83,6 @@ export async function GET(request: NextRequest) {
     flyingTime: route.totalDuration,
     departure: route.departureDate,
     ticketType: route.ticketType,
-    bookUrl: route.searchUrl,
     warnings: route.warnings,
     legs: route.legs.map((leg) => ({
       from: leg.from,
@@ -111,7 +100,6 @@ export async function GET(request: NextRequest) {
       verifyUrl: leg.transport === "flight"
         ? googleFlightsUrl(leg.fromCode, leg.toCode, route.departureDate)
         : null,
-      bookUrl: leg.searchUrl ?? null,
     })),
   }));
 

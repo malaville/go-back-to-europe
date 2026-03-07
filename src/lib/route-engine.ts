@@ -542,17 +542,6 @@ function apiCode(airportCode: string): string {
   return AIRPORT_TO_API_CODE[airportCode] ?? airportCode;
 }
 
-/** Build an Aviasales one-way search URL for a single leg */
-function aviasalesLegUrl(from: string, to: string, departDate?: string): string {
-  let ddmm = "1503"; // fallback: 15th of March
-  if (departDate) {
-    const d = new Date(departDate);
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    ddmm = `${day}${month}`;
-  }
-  return `https://www.aviasales.com/search/${from}${ddmm}${to}1?marker=708661`;
-}
 
 // ── Reverse API code mapping ─────────────────────────────────────────────
 // API/city codes → primary airport code
@@ -980,8 +969,8 @@ function buildRouteFromEdges(
   priceMap: Map<string, SegmentPriceResult>,
   nationality: string,
   deadlineDate: string,
-  departMonth: string,
   fallbackDepartDate: string,
+  todayStr: string,
 ): RouteOption | null {
   const legs: RouteLeg[] = [];
 
@@ -1035,7 +1024,6 @@ function buildRouteFromEdges(
       price: priceResult.price,
       visaStatus: visa.status,
       visaNote: visa.note,
-      searchUrl: aviasalesLegUrl(edge.from, edge.to, priceResult.departDate),
       departDate: priceResult.departDate,
     });
   }
@@ -1186,19 +1174,17 @@ function buildRouteFromEdges(
     if (allianceName) tags.push(allianceName);
   }
 
-  // Search URL
-  const searchMonth = departMonth.split("-")[1] || "03";
-  const searchDate = `15${searchMonth}`;
-  const firstFrom = legs[0].fromCode;
-  const lastTo = legs[legs.length - 1].toCode;
-  const searchUrl = `https://www.aviasales.com/search/${firstFrom}${searchDate}${lastTo}1?marker=708661`;
-
   // ID
   const legCodes = legs.map((l) => l.fromCode).join("-") + "-" + legs[legs.length - 1].toCode;
   const id = `route-${legCodes}-${totalPrice}`;
 
   // Departure date: use real API date from first flight, fallback to deadline - 2 days
   const departureDate = firstFlightDepartDate || fallbackDepartDate;
+
+  // Reject routes that depart after the deadline or before today
+  if (departureDate > deadlineDate || departureDate < todayStr) {
+    return null;
+  }
 
   return {
     id,
@@ -1208,7 +1194,6 @@ function buildRouteFromEdges(
     totalDuration,
     estimatedTotalMinutes,
     estimatedTotalDuration,
-    searchUrl,
     ticketType,
     warnings,
     tags,
@@ -1342,10 +1327,10 @@ type SearchParams = {
   targetCity: string;
   targetAirport: string;
   nationality: string;
-  departMonth: string; // YYYY-MM
   deadlineDate: string; // ISO date for calculating departure date
   flexDays: number; // days of flexibility before deadline
   longLandTransport?: boolean; // user willing to take 16-30h overland legs
+  today?: string; // ISO date override for "today" (defaults to actual today) — useful for deterministic tests
 };
 
 export async function searchRoutes(params: SearchParams): Promise<RouteOption[]> {
@@ -1358,7 +1343,12 @@ export async function searchRoutesWithExplain(params: SearchParams): Promise<{ r
 }
 
 async function _searchRoutesInternal(params: SearchParams, explain: boolean): Promise<{ routes: RouteOption[]; explain?: ExplainTrace }> {
-  const { fromAirport, targetAirport, nationality, departMonth, deadlineDate, flexDays, longLandTransport } = params;
+  const { fromAirport, targetAirport, nationality, deadlineDate, flexDays, longLandTransport, today: todayOverride } = params;
+  const todayStr = todayOverride ?? new Date().toISOString().split("T")[0];
+  // Compute departMonth internally — Travelpayouts API only accepts YYYY-MM
+  const earliest = new Date(deadlineDate);
+  earliest.setDate(earliest.getDate() - flexDays);
+  const departMonth = `${earliest.getFullYear()}-${String(earliest.getMonth() + 1).padStart(2, "0")}`;
   const t0 = Date.now();
   const steps: ExplainStep[] = [];
   function trace(step: string, detail: string, data?: unknown) {
@@ -1638,8 +1628,8 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
       priceMap,
       nationality,
       deadlineDate,
-      departMonth,
       fallbackDepartDate,
+      todayStr,
     );
     if (!route) { droppedBuildFail++; continue; }
 
