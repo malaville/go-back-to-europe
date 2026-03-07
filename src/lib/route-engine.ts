@@ -56,11 +56,11 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "BKK-SEL": 310,
   "BKK-IST": 570,
   "BKK-TBS": 510,
-  "BKK-DOH": 390,
+  // DOH removed — Doha is in the Middle East
   "BKK-TPE": 220,
   // From KUL
   "KUL-IST": 675,
-  "KUL-DOH": 420,
+  // KUL-DOH removed
   // From SIN (direct to Europe)
   "SIN-PAR": 800,
   "SIN-LON": 780,
@@ -89,11 +89,7 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "IST-AMS": 220,
   "IST-LON": 240,
   "IST-BER": 180,
-  // From DOH (to Europe)
-  "DOH-PAR": 390,
-  "DOH-AMS": 420,
-  "DOH-LON": 420,
-  "DOH-BER": 380,
+  // DOH routes removed — Middle East
 };
 
 /** Look up segment duration, trying both orderings of city codes. */
@@ -121,7 +117,7 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   TSA: "TW",
   IST: "TR",
   TBS: "GE",
-  DOH: "QA",
+  // DOH removed — Middle East
   DPS: "ID",
   MNL: "PH",
   VTE: "LA",
@@ -298,8 +294,7 @@ function getCandidatePatterns(departureHub: string): RoutePattern[] {
   patterns.push({ hubs: ["NRT"], tag: "Via Tokyo" });
   patterns.push({ hubs: ["TPE"], tag: "Via Taipei" });
 
-  // ── 3-leg via safe Gulf / Caucasus
-  patterns.push({ hubs: ["DOH"], tag: "Via Doha" });
+  // ── 3-leg via Caucasus (avoiding Middle East entirely)
   patterns.push({ hubs: ["TBS"], tag: "Via Tbilisi" });
   patterns.push({
     hubs: ["IST"],
