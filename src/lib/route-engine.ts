@@ -309,6 +309,24 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "PVG-WAW": 600, "PVG-VIE": 630, "PVG-PRG": 630, "PVG-BUD": 630,
   "CAN-WAW": 630, "CAN-VIE": 660, "CAN-PRG": 660, "CAN-BUD": 660,
 
+  // Munich (MUC) — from major hubs
+  "BKK-MUC": 675, // Thai Airways direct, ~11h 15m
+  "SIN-MUC": 750, // ~12h 30m
+  "HKG-MUC": 690, // ~11h 30m
+  "DEL-MUC": 480, // ~8h
+  "BOM-MUC": 510, // ~8h 30m
+  "IST-MUC": 165, // ~2h 45m
+  "TBS-MUC": 240, // ~4h
+  "ADD-MUC": 450, // ~7h 30m
+  "ALA-MUC": 360, // ~6h
+  "TAS-MUC": 330, // ~5h 30m
+  "CMB-MUC": 600, // ~10h
+  "SEL-MUC": 690, // ~11h 30m
+  "TYO-MUC": 720, // ~12h
+  "TPE-MUC": 750, // ~12h 30m
+  "CAN-MUC": 690, // ~11h 30m
+  "PVG-MUC": 660, // ~11h
+
   // ── Small SEA origins → transit hubs ──
   // Hanoi (HAN)
   "HAN-BKK": 120, "HAN-SIN": 210, "HAN-HKG": 135,
@@ -454,6 +472,7 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   CPH: "DK",
   DUB: "IE",
   OTP: "RO",
+  MUC: "DE",
 };
 
 // EU / EEA / Schengen country codes — transit visa always "none"
@@ -527,6 +546,7 @@ const AIRPORT_CITY: Record<string, string> = {
   CPH: "Copenhagen",
   DUB: "Dublin",
   OTP: "Bucharest",
+  MUC: "Munich",
 };
 
 // Airport code → city code used by the Aviasales API
@@ -609,6 +629,7 @@ const VISA_WARNING_AIRPORTS = new Set(["DEL", "BOM"]);
 const EU_SEARCH_AIRPORTS = [
   "CDG", "AMS", "LHR", "BER", "FCO", "MXP", "BCN", "MAD", "LIS",
   "WAW", "VIE", "PRG", "BUD", "HEL", "ATH", "ARN", "CPH", "DUB", "OTP",
+  "MUC",
 ];
 
 const EU_AIRPORT_SET = new Set(EU_SEARCH_AIRPORTS);

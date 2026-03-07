@@ -416,4 +416,14 @@ export const cities: CityData[] = [
       { code: "OTP", name: "Henri Coanda International Airport", distanceKm: 16, travelTimeHours: 0.3 },
     ],
   },
+  {
+    name: "Munich",
+    country: "DE",
+    region: "europe",
+    lat: 48.1351,
+    lng: 11.582,
+    nearbyAirports: [
+      { code: "MUC", name: "Munich Airport", distanceKm: 28, travelTimeHours: 0.5 },
+    ],
+  },
 ];
