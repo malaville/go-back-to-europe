@@ -44,3 +44,7 @@ Loaded on-demand — not preloaded.
 wonder, reflect, advocate, contrarian, judge
 **Support**: hacker, simplifier, researcher, architect
 <!-- ooo:END -->
+
+## Project Notes
+
+- **No need to run `npm run build` before pushing** — it runs automatically via a pre-push git hook.

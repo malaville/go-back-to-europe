@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import DatadogInit from "@/lib/datadog";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,10 +53,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <DatadogInit />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 text-slate-900`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );

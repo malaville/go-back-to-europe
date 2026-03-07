@@ -122,6 +122,25 @@ export const costOfLiving = pgTable("cost_of_living", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// ── Community signups ────────────────────────────────────────────
+export const signups = pgTable(
+  "signups",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: text("email").notNull(),
+    name: text("name"),
+    fromCity: text("from_city"),
+    toCity: text("to_city"),
+    nationality: text("nationality"),
+    interests: jsonb("interests"), // ["route_alerts", "beta_tester", "community"]
+    message: text("message"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("signups_email_idx").on(table.email),
+  ]
+);
+
 // ── Cities + airports mapping ──────────────────────────────────
 export const cities = pgTable(
   "cities",
