@@ -9,11 +9,16 @@ const REDDIT_COOKIE = "ref_reddit";
 
 function useIsRedditReferrer(): boolean {
   return useMemo(() => {
-    if (typeof document === "undefined") return false;
+    if (typeof window === "undefined") return false;
     // Already flagged in a previous page load
     if (document.cookie.includes(REDDIT_COOKIE)) return true;
-    // Check current referrer
-    if (/reddit\.com/i.test(document.referrer)) {
+    // Check referrer OR URL params (?ref=reddit or ?utm_source=reddit)
+    const params = new URLSearchParams(window.location.search);
+    const isReddit =
+      /reddit\.com/i.test(document.referrer) ||
+      params.get("ref") === "reddit" ||
+      params.get("utm_source") === "reddit";
+    if (isReddit) {
       document.cookie = `${REDDIT_COOKIE}=1;path=/;max-age=${60 * 60 * 24 * 30}`;
       return true;
     }
