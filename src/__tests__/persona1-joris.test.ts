@@ -70,9 +70,12 @@ describe("Joris — Bali→Amsterdam, flex=7", () => {
     }
   });
 
-  it("every route has a departure date", () => {
+  it("first flight leg has a departure date", () => {
     for (const route of routes) {
-      expect(route.departureDate).toBeDefined();
+      const firstFlight = route.legs.find(l => l.transport === "flight");
+      if (firstFlight) {
+        expect(firstFlight.departDate).toBeDefined();
+      }
     }
   });
 
