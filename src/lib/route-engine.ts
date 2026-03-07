@@ -29,6 +29,8 @@ const MIDDLE_EAST_HUB_AIRLINES = new Set([
   "SV", // Saudia — Jeddah/Riyadh hub
   "RJ", // Royal Jordanian — Amman hub
   "ME", // Middle East Airlines — Beirut hub
+  "KU", // Kuwait Airways — Kuwait City hub
+  "OV", // SalamAir — Muscat hub
 ]);
 
 // ── Airline hub cities ────────────────────────────────────────────────────
@@ -345,6 +347,13 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   // Bucharest (OTP)
   "BKK-OTP": 540, "SIN-OTP": 570, "HKG-OTP": 630,
   "DEL-OTP": 360, "ALA-OTP": 300, "TBS-OTP": 150, "IST-OTP": 240,
+  // Milan (MIL → MXP)
+  "BKK-MIL": 660, "SIN-MIL": 690, "HKG-MIL": 690,
+  "DEL-MIL": 480, "BOM-MIL": 480, "ADD-MIL": 420,
+  "ALA-MIL": 360, "TAS-MIL": 360, "CMB-MIL": 570,
+  "IST-MIL": 180, "TBS-MIL": 240,
+  "SEL-MIL": 720, "TYO-MIL": 720, "TPE-MIL": 750,
+  "CAN-MIL": 690, "PVG-MIL": 690,
 };
 
 /** Look up segment duration, trying both orderings of city codes. */
@@ -584,7 +593,7 @@ const VISA_WARNING_AIRPORTS = new Set(["DEL", "BOM"]);
 // ── EU search airports (module level) ────────────────────────────────────
 
 const EU_SEARCH_AIRPORTS = [
-  "CDG", "AMS", "LHR", "BER", "FCO", "BCN", "MAD", "LIS",
+  "CDG", "AMS", "LHR", "BER", "FCO", "MXP", "BCN", "MAD", "LIS",
   "WAW", "VIE", "PRG", "BUD", "HEL", "ATH", "ARN", "CPH", "DUB", "OTP",
 ];
 
@@ -1087,7 +1096,7 @@ function buildRouteFromEdges(
 
   // Tags — auto-generate from structure
   const tags: string[] = [];
-  if (flightLegs.length === 1 && path.groundLegs.length === 0) {
+  if (flightLegs.length === 1 && path.groundLegs.length === 0 && !flightLegs[0].hiddenStop) {
     tags.push("Nonstop");
   } else {
     // Build "Via X" or "Via X + Y" tag from intermediate hubs
