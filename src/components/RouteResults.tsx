@@ -1,30 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import type { RouteOption, RouteLeg } from "@/data/route-types";
 import { activeAdvisories } from "@/data/advisories";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
-
-const REDDIT_COOKIE = "ref_reddit";
-
-function useIsRedditReferrer(): boolean {
-  return useMemo(() => {
-    if (typeof window === "undefined") return false;
-    // Already flagged in a previous page load
-    if (document.cookie.includes(REDDIT_COOKIE)) return true;
-    // Check referrer OR URL params (?ref=reddit or ?utm_source=reddit)
-    const params = new URLSearchParams(window.location.search);
-    const isReddit =
-      /reddit\.com/i.test(document.referrer) ||
-      params.get("ref") === "reddit" ||
-      params.get("utm_source") === "reddit";
-    if (isReddit) {
-      document.cookie = `${REDDIT_COOKIE}=1;path=/;max-age=${60 * 60 * 24 * 30}`;
-      return true;
-    }
-    return false;
-  }, []);
-}
 
 
 function transportIcon(transport: RouteLeg["transport"]) {
@@ -127,7 +105,7 @@ function daysUntil(isoDate?: string): string | null {
   return `up to ${days} days`;
 }
 
-function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate, isReddit }: { leg: RouteLeg; isLast: boolean; departureDate?: string; isFirstGround?: boolean; firstFlightDate?: string; isReddit?: boolean }) {
+function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string; isFirstGround?: boolean; firstFlightDate?: string }) {
   return (
     <div className="relative">
       <div className="flex items-start gap-3">
@@ -189,16 +167,6 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate, i
                 >
                   Verify price
                 </a>
-                {leg.searchUrl && !isReddit && (
-                  <a
-                    href={leg.searchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-orange-500 hover:text-orange-600 hover:underline shrink-0"
-                  >
-                    Book this leg
-                  </a>
-                )}
               </>
             )}
           </div>
@@ -208,7 +176,7 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate, i
   );
 }
 
-function RouteCard({ route, rank, isReddit }: { route: RouteOption; rank: number; isReddit: boolean }) {
+function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
   const lastLeg = route.legs[route.legs.length - 1];
   const isRecommended = route.tags.includes("Recommended");
 
@@ -280,7 +248,7 @@ function RouteCard({ route, rank, isReddit }: { route: RouteOption; rank: number
           const isFirstGround = leg.transport !== "flight" && !route.legs.slice(0, i).some(l => l.transport !== "flight");
           const firstFlightDate = route.legs.find(l => l.transport === "flight")?.departDate ?? route.departureDate;
           return (
-            <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} isFirstGround={isFirstGround} firstFlightDate={firstFlightDate} isReddit={isReddit} />
+            <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} isFirstGround={isFirstGround} firstFlightDate={firstFlightDate} />
           );
         })}
 
@@ -361,8 +329,6 @@ type RouteResultsProps = {
 };
 
 export default function RouteResults({ routes, fromCity, targetCity }: RouteResultsProps) {
-  const isReddit = useIsRedditReferrer();
-
   if (routes.length === 0) {
     return (
       <div className="text-center py-12">
@@ -387,7 +353,7 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
       </div>
 
       {routes.map((route, i) => (
-        <RouteCard key={route.id} route={route} rank={i + 1} isReddit={isReddit} />
+        <RouteCard key={route.id} route={route} rank={i + 1} />
       ))}
 
       <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 mt-2">

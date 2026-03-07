@@ -5,51 +5,47 @@
 
 ---
 
-## Post 1: r/flights
+## Post 1: r/flights (BANNED — do not repost)
 
-**Title:** made a thing to find flights SEA→Europe that skip the Gulf entirely
+Title: how are you guys dealing with getting back to Europe from SEA?
 
-**Body:**
+Flair: Discussion
 
-so like many of you i got stuck in Bangkok after the Gulf shutdown. cancelled Emirates, cancelled Qatar, the whole thing.
+Body:
 
-i spent the past week building [skipthegulf.com](https://skipthegulf.com), you put where you are, where you wanna go, your passport, and it finds routes that don't touch Gulf airspace at all. i'm french, i'm flexible, i don't even like flying honestly (french are obsessed with trains). but being flexible and "having to skip the Gulf" was really hard to get around mentally ... so many options, so many things to check, you just stare at Google Flights for hours.
+i'm french, stuck in thailand since the Gulf shutdown. had to cancel my flight, and since then every couple of days i open Google Flights, stare at it for 20 minutes, realize i can't afford the direct options, get overwhelmed by the number of combinations, and just close the tab.
 
-the thing that surprised me most building this: a LOT of flights that look direct actually have hidden stops. like Air India Colombo→London? that stops in Delhi (and I have asthma...lol) and if you're British you need an Indian e-visa for that. the tool catches these and warns you.
+i'm trying to build a tool to help with this (mostly for my own sanity) but i'd love to know how others are handling it. what's your nationality, where are you stuck, and have you actually found a route that works? or are you just waiting it out?
 
-it also checks visa rules for transit countries based on your nationality. turns out Tbilisi is kind of the MVP hub right now — most EU passports don't need a visa and there's surprisingly good connections.
+the nationality thing matters more than i expected — transit visas are different for everyone, and some "direct" flights have hidden stops in countries where you might need a visa you don't have.
 
-it also proposes slower options, or stopovers in nice cities. like why not stop in Kazakhstan or Georgia for a couple days before heading to europe? you're already rerouting, might as well make it interesting.
-
-prices come from Aviasales so treat them as ballpark, always double check on Google Flights before you book.
-
-it's free, no account needed, no ads. just trying to help people get home honestly.
-
-if you try it let me know what's broken or missing, i'm actively improving it (literally today). there's also a [/community](https://skipthegulf.com/community) page if you want route alerts or just to connect with others in the same situation — helps me know what to build next too.
+curious what's working for people. i feel like we're all individually googling the same thing.
 
 ---
 
-## Post 2: r/travel
+## Post 2: r/travel (NO LINK — drop in comments when asked)
 
-**Title:** for people stuck in SEA trying to get back to Europe — what routes actually work right now
+Title: for people stuck in SEA trying to get back to Europe — what routes actually work right now
 
-**Body:**
+Flair: Discussion
+
+Body:
 
 been helping friends figure out how to get home after the Gulf airspace closure. ended up building a whole tool today because the manual research was killing me. here's what i've found:
 
-**tbilisi** is the move right now. seriously. cheap flights from BKK, no visa for most EU passports, and from there you can get to basically anywhere in Europe. georgian airways and turkish have good options.
+tbilisi is the move right now. seriously. cheap flights from BKK, no visa for most EU passports, and from there you can get to basically anywhere in Europe. georgian airways and turkish have good options.
 
-**china transit** works but it's tricky — 144h visa-free transit exists for a lot of passports but you need to know the rules. not every airport qualifies.
+china transit works but it's tricky — 144h visa-free transit exists for a lot of passports but you need to know the rules. not every airport qualifies.
 
-**watch out for hidden stops.** airlines sell "direct" flights that actually stop somewhere. Air India Colombo→London goes through Delhi. if your passport needs an Indian visa, you're stuck at the airport. i've seen people almost get caught by this.
+watch out for hidden stops. airlines sell "direct" flights that actually stop somewhere. Air India Colombo→London goes through Delhi. if your passport needs an Indian visa, you're stuck at the airport. i've seen people almost get caught by this.
 
-**if you're in Bali or a small city** — you'll need to get to Bangkok or Singapore first. that's just how it is, but from BKK or SIN you have 20+ options to most European cities.
+if you're in Bali or a small city — you'll need to get to Bangkok or Singapore first. that's just how it is, but from BKK or SIN you have 20+ options to most European cities.
 
-i built a tool that finds all these routes automatically: [skipthegulf.com](https://skipthegulf.com). you enter your city, destination, passport, and it does the rest. checks visas, catches hidden stops, filters out all Gulf carriers.
-
-prices are approximate (from Aviasales), verify on Google Flights. but at least you know what routes exist.
+prices are approximate — verify on Google Flights. but at least you know what routes exist.
 
 happy to answer questions if anyone's stuck on a specific route.
+
+Comment reply (when someone asks): skipthegulf.com — free, no signup, no ads. just put your city + passport and it finds routes.
 
 ---
 

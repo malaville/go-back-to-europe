@@ -9,8 +9,8 @@
 
 | # | Time | Subreddit | Status | Upvotes | Comments | Queries/hr |
 |---|------|-----------|--------|---------|----------|------------|
-| 1 | 08:00 | r/flights | ⬜ Pending | — | — | — |
-| 2 | 10:00 | r/travel | ⬜ Pending | — | — | — |
+| 1 | 08:00 | r/flights | 🔴 Banned | — | — | — |
+| 2 | 10:00 | r/travel | 🟡 Posted | — | — | — |
 | 3 | 14:00 | r/digitalnomad | ⬜ Pending | — | — | — |
 | 4 | 17:00 | r/Thailand | ⬜ Pending | — | — | — |
 | 5 | Day 2 09:00 | r/bali | ⬜ Pending | — | — | — |
