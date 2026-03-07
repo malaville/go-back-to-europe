@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-08",
+        "origin": "ADD",
+        "destination": "ROM",
+        "gate": "Qatar Airways",
+        "return_date": "",
+        "found_at": "2026-03-04T18:40:24",
+        "trip_class": 0,
+        "value": 473,
+        "number_of_changes": 2,
+        "duration": 1345,
+        "distance": 4479,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

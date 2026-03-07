@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "1": {
+          "airline": "U2",
+          "departure_at": "2026-03-25T21:15:00+04:00",
+          "return_at": "2026-05-21T18:35:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 203,
+          "flight_number": 3998,
+          "duration": 3015,
+          "duration_to": 375,
+          "duration_back": 445
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

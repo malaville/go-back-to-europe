@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ROM": {
+        "2": {
+          "airline": "YP",
+          "departure_at": "2026-03-11T12:30:00+09:00",
+          "return_at": "2026-03-18T16:00:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1065,
+          "flight_number": 732,
+          "duration": 3895,
+          "duration_to": 1160,
+          "duration_back": 1195
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

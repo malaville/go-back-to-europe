@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "WAW": {
+        "2": {
+          "airline": "VF",
+          "departure_at": "2026-03-26T06:50:00+05:00",
+          "return_at": "2026-04-01T09:10:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 447,
+          "flight_number": 584,
+          "duration": 4310,
+          "duration_to": 555,
+          "duration_back": 535
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

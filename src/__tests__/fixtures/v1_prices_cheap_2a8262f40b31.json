@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "2": {
+          "airline": "KQ",
+          "departure_at": "2026-03-08T10:20:00+03:00",
+          "return_at": "2026-03-15T22:20:00+01:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 1237,
+          "flight_number": 401,
+          "duration": 3010,
+          "duration_to": 765,
+          "duration_back": 520
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

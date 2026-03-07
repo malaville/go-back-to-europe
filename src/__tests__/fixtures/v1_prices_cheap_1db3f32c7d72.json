@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-26T06:15:00+06:00",
+          "return_at": "2026-04-09T22:05:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 312,
+          "flight_number": 101,
+          "duration": 2450,
+          "duration_to": 655,
+          "duration_back": 585
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SGN": {
+        "0": {
+          "airline": "VJ",
+          "departure_at": "2026-03-11T16:15:00+08:00",
+          "return_at": "2026-03-15T08:50:00+07:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 97,
+          "flight_number": 816,
+          "duration": 260,
+          "duration_to": 125,
+          "duration_back": 135
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

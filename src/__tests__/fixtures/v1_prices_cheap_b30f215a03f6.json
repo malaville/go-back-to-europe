@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BUH": {
+        "3": {
+          "airline": "PC",
+          "departure_at": "2026-03-10T06:15:00+06:00",
+          "return_at": "2026-03-15T11:20:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 350,
+          "flight_number": 101,
+          "duration": 3055,
+          "duration_to": 775,
+          "duration_back": 400
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

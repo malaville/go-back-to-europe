@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PRG": {
+        "1": {
+          "airline": "GQ",
+          "departure_at": "2026-03-24T02:45:00+04:00",
+          "return_at": "2026-04-02T12:00:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 146,
+          "flight_number": 785,
+          "duration": 1515,
+          "duration_to": 340,
+          "duration_back": 285
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BUD": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-10T06:15:00+06:00",
+          "return_at": "2026-03-17T15:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 314,
+          "flight_number": 101,
+          "duration": 3270,
+          "duration_to": 535,
+          "duration_back": 505
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "DEL": {
+        "0": {
+          "airline": "SL",
+          "departure_at": "2026-03-18T13:40:00+07:00",
+          "return_at": "2026-03-22T17:10:00+05:30",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 175,
+          "flight_number": 244,
+          "duration": 490,
+          "duration_to": 240,
+          "duration_back": 250
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

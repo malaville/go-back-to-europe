@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "KUL": {
+        "0": {
+          "airline": "9C",
+          "departure_at": "2026-03-07T16:45:00+08:00",
+          "return_at": "2026-03-27T19:55:00+08:00",
+          "expires_at": "2026-03-07T09:24:15Z",
+          "price": 128,
+          "flight_number": 6515,
+          "duration": 685,
+          "duration_to": 355,
+          "duration_back": 330
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

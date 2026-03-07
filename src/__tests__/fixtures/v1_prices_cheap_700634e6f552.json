@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PRG": {
+        "1": {
+          "airline": "EK",
+          "departure_at": "2026-03-27T06:15:00+08:00",
+          "return_at": "2026-04-28T16:10:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 752,
+          "flight_number": 305,
+          "duration": 3685,
+          "duration_to": 1000,
+          "duration_back": 860
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

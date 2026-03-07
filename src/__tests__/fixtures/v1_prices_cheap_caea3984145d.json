@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "0": {
+          "airline": "W9",
+          "departure_at": "2026-03-29T20:15:00+03:00",
+          "return_at": "2026-04-10T07:05:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 66,
+          "flight_number": 5730,
+          "duration": 485,
+          "duration_to": 245,
+          "duration_back": 240
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

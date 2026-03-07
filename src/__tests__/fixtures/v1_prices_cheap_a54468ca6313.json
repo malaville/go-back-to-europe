@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CMB": {
+        "1": {
+          "airline": "AK",
+          "departure_at": "2026-03-07T20:15:00+07:00",
+          "return_at": "2026-03-21T22:50:00+05:30",
+          "expires_at": "2026-03-07T09:24:13Z",
+          "price": 326,
+          "flight_number": 525,
+          "duration": 1465,
+          "duration_to": 325,
+          "duration_back": 345
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

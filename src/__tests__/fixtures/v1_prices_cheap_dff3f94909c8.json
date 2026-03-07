@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "1": {
+          "airline": "MU",
+          "departure_at": "2026-03-20T20:15:00+09:00",
+          "return_at": "2026-03-22T10:30:00Z",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1097,
+          "flight_number": 540,
+          "duration": 3195,
+          "duration_to": 955,
+          "duration_back": 850
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

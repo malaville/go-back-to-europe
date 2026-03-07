@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "VIE": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-27T06:15:00+06:00",
+          "return_at": "2026-04-09T06:00:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 298,
+          "flight_number": 101,
+          "duration": 3195,
+          "duration_to": 550,
+          "duration_back": 515
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

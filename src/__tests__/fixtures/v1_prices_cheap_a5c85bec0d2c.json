@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PRG": {
+        "0": {
+          "airline": "VF",
+          "departure_at": "2026-03-29T17:20:00+03:00",
+          "return_at": "2026-03-31T10:35:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 113,
+          "flight_number": 5135,
+          "duration": 315,
+          "duration_to": 160,
+          "duration_back": 155
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

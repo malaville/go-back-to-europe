@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "VIE": {
+        "0": {
+          "airline": "TK",
+          "departure_at": "2026-03-30T10:05:00+03:00",
+          "return_at": "2026-04-13T12:40:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 74,
+          "flight_number": 17,
+          "duration": 285,
+          "duration_to": 150,
+          "duration_back": 135
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

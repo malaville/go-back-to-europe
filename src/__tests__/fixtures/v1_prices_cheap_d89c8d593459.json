@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "1": {
+          "airline": "VF",
+          "departure_at": "2026-03-30T05:15:00+04:00",
+          "return_at": "2026-04-03T17:40:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 176,
+          "flight_number": 616,
+          "duration": 1230,
+          "duration_to": 375,
+          "duration_back": 325
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

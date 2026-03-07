@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HEL": {
+        "2": {
+          "airline": "WY",
+          "departure_at": "2026-03-16T20:05:00+07:00",
+          "return_at": "2026-03-19T07:40:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 776,
+          "flight_number": 816,
+          "duration": 4015,
+          "duration_to": 1035,
+          "duration_back": 1005
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "2": {
+          "airline": "C6",
+          "departure_at": "2026-03-30T05:10:00+05:00",
+          "return_at": "2026-04-07T10:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 462,
+          "flight_number": 301,
+          "duration": 2875,
+          "duration_to": 615,
+          "duration_back": 500
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

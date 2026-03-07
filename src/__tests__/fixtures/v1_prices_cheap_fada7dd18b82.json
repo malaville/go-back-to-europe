@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "VIE": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-12T18:55:00+07:00",
+          "return_at": "2026-03-15T15:05:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 762,
+          "flight_number": 835,
+          "duration": 2735,
+          "duration_to": 805,
+          "duration_back": 725
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

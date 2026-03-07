@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MNL": {
+        "0": {
+          "airline": "HB",
+          "departure_at": "2026-03-08T01:35:00+08:00",
+          "return_at": "2026-03-12T02:05:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 99,
+          "flight_number": 233,
+          "duration": 265,
+          "duration_to": 130,
+          "duration_back": 135
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

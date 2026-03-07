@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SHA": {
+        "0": {
+          "airline": "9C",
+          "departure_at": "2026-03-10T23:40:00+08:00",
+          "return_at": "2026-03-18T16:45:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 149,
+          "flight_number": 6516,
+          "duration": 695,
+          "duration_to": 340,
+          "duration_back": 355
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CPH": {
+        "3": {
+          "airline": "PC",
+          "departure_at": "2026-03-13T06:15:00+06:00",
+          "return_at": "2026-03-19T09:15:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 375,
+          "flight_number": 101,
+          "duration": 3475,
+          "duration_to": 770,
+          "duration_back": 630
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

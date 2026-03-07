@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "1": {
+          "airline": "HU",
+          "departure_at": "2026-03-08T11:10:00+07:00",
+          "return_at": "2026-03-15T15:50:00Z",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 506,
+          "flight_number": 7940,
+          "duration": 4545,
+          "duration_to": 1205,
+          "duration_back": 980
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

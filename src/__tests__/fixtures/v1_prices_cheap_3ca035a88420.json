@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "3": {
+          "airline": "KC",
+          "departure_at": "2026-03-08T11:40:00+09:00",
+          "return_at": "2026-03-13T13:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 1492,
+          "flight_number": 910,
+          "duration": 4610,
+          "duration_to": 1045,
+          "duration_back": 1055
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

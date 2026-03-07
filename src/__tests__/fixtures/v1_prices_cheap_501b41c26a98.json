@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SIN": {
+        "0": {
+          "airline": "VJ",
+          "departure_at": "2026-03-26T08:50:00+07:00",
+          "return_at": "2026-04-01T15:25:00+08:00",
+          "expires_at": "2026-03-07T09:24:14Z",
+          "price": 92,
+          "flight_number": 811,
+          "duration": 260,
+          "duration_to": 135,
+          "duration_back": 125
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

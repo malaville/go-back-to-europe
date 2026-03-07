@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "RGN": {
+        "0": {
+          "airline": "FD",
+          "departure_at": "2026-03-23T16:30:00+07:00",
+          "return_at": "2026-03-28T08:35:00+06:30",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 122,
+          "flight_number": 253,
+          "duration": 150,
+          "duration_to": 75,
+          "duration_back": 75
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

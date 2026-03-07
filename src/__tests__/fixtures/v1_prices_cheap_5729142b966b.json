@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HEL": {
+        "1": {
+          "airline": "LH",
+          "departure_at": "2026-03-19T06:10:00+04:00",
+          "return_at": "2026-03-21T19:35:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 212,
+          "flight_number": 2559,
+          "duration": 920,
+          "duration_to": 405,
+          "duration_back": 400
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

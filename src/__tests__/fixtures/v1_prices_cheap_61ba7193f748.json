@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "1": {
+          "airline": "EY",
+          "departure_at": "2026-03-27T17:50:00+09:00",
+          "return_at": "2026-04-04T20:30:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 580,
+          "flight_number": 823,
+          "duration": 3375,
+          "duration_to": 1110,
+          "duration_back": 995
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

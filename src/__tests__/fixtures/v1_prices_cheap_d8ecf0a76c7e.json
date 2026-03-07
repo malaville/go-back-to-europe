@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HKG": {
+        "1": {
+          "airline": "SQ",
+          "departure_at": "2026-03-26T21:40:00+08:00",
+          "return_at": "2026-04-08T12:35:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 191,
+          "flight_number": 947,
+          "duration": 1355,
+          "duration_to": 400,
+          "duration_back": 395
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

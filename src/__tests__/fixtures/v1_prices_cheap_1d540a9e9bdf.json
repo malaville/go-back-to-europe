@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "DUB": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-12T03:15:00+08:00",
+          "return_at": "2026-03-12T21:20:00Z",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1017,
+          "flight_number": 945,
+          "duration": 1995,
+          "duration_to": 940,
+          "duration_back": 885
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

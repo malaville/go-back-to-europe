@@ -1,0 +1,85 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-18",
+        "origin": "HKG",
+        "destination": "PRG",
+        "gate": "Vayama",
+        "return_date": "",
+        "found_at": "2026-03-04T13:42:08",
+        "trip_class": 0,
+        "value": 318,
+        "number_of_changes": 2,
+        "duration": 2390,
+        "distance": 8778,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-06-17",
+        "origin": "HKG",
+        "destination": "PRG",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-05T18:59:10",
+        "trip_class": 0,
+        "value": 348,
+        "number_of_changes": 2,
+        "duration": 1795,
+        "distance": 8778,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-05",
+        "origin": "HKG",
+        "destination": "PRG",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-05T03:36:32",
+        "trip_class": 0,
+        "value": 408,
+        "number_of_changes": 2,
+        "duration": 2705,
+        "distance": 8778,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "HKG",
+        "destination": "PRG",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-03T11:16:40",
+        "trip_class": 0,
+        "value": 449,
+        "number_of_changes": 3,
+        "duration": 1860,
+        "distance": 8778,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-09",
+        "origin": "HKG",
+        "destination": "PRG",
+        "gate": "Qatar Airways",
+        "return_date": "",
+        "found_at": "2026-03-06T10:35:47",
+        "trip_class": 0,
+        "value": 505,
+        "number_of_changes": 1,
+        "duration": 1590,
+        "distance": 8778,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

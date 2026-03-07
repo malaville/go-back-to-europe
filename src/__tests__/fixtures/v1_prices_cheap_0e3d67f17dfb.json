@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "3": {
+          "airline": "AI",
+          "departure_at": "2026-03-11T10:25:00+05:30",
+          "return_at": "2026-03-25T12:10:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 548,
+          "flight_number": 1763,
+          "duration": 3560,
+          "duration_to": 920,
+          "duration_back": 580
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

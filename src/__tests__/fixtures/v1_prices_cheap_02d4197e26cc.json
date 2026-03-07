@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SHA": {
+        "1": {
+          "airline": "ZH",
+          "departure_at": "2026-03-21T02:50:00+07:00",
+          "return_at": "2026-03-28T18:25:00+08:00",
+          "expires_at": "2026-03-07T09:24:13Z",
+          "price": 127,
+          "flight_number": 118,
+          "duration": 1180,
+          "duration_to": 300,
+          "duration_back": 330
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

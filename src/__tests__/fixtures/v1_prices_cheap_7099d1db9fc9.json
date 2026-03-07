@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-12T23:35:00+08:00",
+          "return_at": "2026-03-13T21:30:00Z",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 772,
+          "flight_number": 871,
+          "duration": 2235,
+          "duration_to": 1055,
+          "duration_back": 900
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

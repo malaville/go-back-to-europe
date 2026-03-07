@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SEL": {
+        "1": {
+          "airline": "SC",
+          "departure_at": "2026-03-18T01:30:00+07:00",
+          "return_at": "2026-03-25T07:00:00+09:00",
+          "expires_at": "2026-03-07T09:24:14Z",
+          "price": 156,
+          "flight_number": 8074,
+          "duration": 1490,
+          "duration_to": 390,
+          "duration_back": 330
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-22",
+        "origin": "ADD",
+        "destination": "BCN",
+        "gate": "City.Travel",
+        "return_date": "",
+        "found_at": "2026-03-04T23:12:30",
+        "trip_class": 0,
+        "value": 339,
+        "number_of_changes": 2,
+        "duration": 2160,
+        "distance": 5086,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-20",
+        "origin": "ADD",
+        "destination": "BCN",
+        "gate": "City.Travel",
+        "return_date": "",
+        "found_at": "2026-03-04T23:12:24",
+        "trip_class": 0,
+        "value": 408,
+        "number_of_changes": 1,
+        "duration": 1865,
+        "distance": 5086,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

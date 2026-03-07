@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "1": {
+          "airline": "EY",
+          "departure_at": "2026-03-23T11:05:00+05:30",
+          "return_at": "2026-03-26T10:25:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 463,
+          "flight_number": 201,
+          "duration": 1660,
+          "duration_to": 615,
+          "duration_back": 550
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

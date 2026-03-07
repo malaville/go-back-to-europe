@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BER": {
+        "2": {
+          "airline": "FM",
+          "departure_at": "2026-03-19T18:25:00+09:00",
+          "return_at": "2026-03-22T11:20:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 627,
+          "flight_number": 828,
+          "duration": 4805,
+          "duration_to": 1035,
+          "duration_back": 970
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

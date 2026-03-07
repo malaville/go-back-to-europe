@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "1": {
+          "airline": "PC",
+          "departure_at": "2026-03-25T06:25:00+04:00",
+          "return_at": "2026-04-01T12:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 190,
+          "flight_number": 315,
+          "duration": 1220,
+          "duration_to": 380,
+          "duration_back": 355
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

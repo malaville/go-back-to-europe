@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "1": {
+          "airline": "FZ",
+          "departure_at": "2026-03-13T11:15:00+05:30",
+          "return_at": "2026-03-20T10:00:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 720,
+          "flight_number": 1026,
+          "duration": 3275,
+          "duration_to": 880,
+          "duration_back": 655
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

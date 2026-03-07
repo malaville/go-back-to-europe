@@ -1,0 +1,100 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-12",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "Qatar Airways",
+        "return_date": "",
+        "found_at": "2026-03-04T14:19:11",
+        "trip_class": 0,
+        "value": 336,
+        "number_of_changes": 1,
+        "duration": 2215,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-12",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T16:25:27",
+        "trip_class": 0,
+        "value": 340,
+        "number_of_changes": 2,
+        "duration": 2015,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-14",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "City.Travel",
+        "return_date": "",
+        "found_at": "2026-03-03T11:32:47",
+        "trip_class": 0,
+        "value": 380,
+        "number_of_changes": 1,
+        "duration": 1525,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "OneTwoTrip",
+        "return_date": "",
+        "found_at": "2026-03-03T11:32:49",
+        "trip_class": 0,
+        "value": 385,
+        "number_of_changes": 1,
+        "duration": 1155,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-13",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T14:19:15",
+        "trip_class": 0,
+        "value": 398,
+        "number_of_changes": 2,
+        "duration": 2345,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-10",
+        "origin": "CAN",
+        "destination": "VIE",
+        "gate": "Aviakassa",
+        "return_date": "",
+        "found_at": "2026-03-03T11:32:50",
+        "trip_class": 0,
+        "value": 438,
+        "number_of_changes": 3,
+        "duration": 2475,
+        "distance": 8569,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

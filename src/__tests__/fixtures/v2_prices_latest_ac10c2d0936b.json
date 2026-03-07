@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-07",
+        "origin": "HKG",
+        "destination": "ATH",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-02T05:50:15",
+        "trip_class": 0,
+        "value": 384,
+        "number_of_changes": 2,
+        "duration": 2720,
+        "distance": 8505,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "HKG",
+        "destination": "ATH",
+        "gate": "Biletix",
+        "return_date": "",
+        "found_at": "2026-03-07T04:58:25",
+        "trip_class": 0,
+        "value": 785,
+        "number_of_changes": 2,
+        "duration": 1630,
+        "distance": 8505,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

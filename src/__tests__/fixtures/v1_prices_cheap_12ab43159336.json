@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CNX": {
+        "0": {
+          "airline": "TR",
+          "departure_at": "2026-03-11T13:35:00+08:00",
+          "return_at": "2026-03-14T16:45:00+07:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 191,
+          "flight_number": 680,
+          "duration": 385,
+          "duration_to": 190,
+          "duration_back": 195
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

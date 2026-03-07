@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "3": {
+          "airline": "PC",
+          "departure_at": "2026-03-27T06:15:00+06:00",
+          "return_at": "2026-04-08T08:40:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 310,
+          "flight_number": 101,
+          "duration": 4275,
+          "duration_to": 695,
+          "duration_back": 540
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

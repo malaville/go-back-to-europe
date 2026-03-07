@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HEL": {
+        "3": {
+          "airline": "CZ",
+          "departure_at": "2026-03-17T08:10:00+08:00",
+          "return_at": "2026-03-18T05:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 894,
+          "flight_number": 8890,
+          "duration": 3460,
+          "duration_to": 1000,
+          "duration_back": 1055
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

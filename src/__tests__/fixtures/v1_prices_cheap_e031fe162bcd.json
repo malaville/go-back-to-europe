@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HAN": {
+        "0": {
+          "airline": "VJ",
+          "departure_at": "2026-03-20T18:35:00+07:00",
+          "return_at": "2026-03-29T09:05:00+07:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 128,
+          "flight_number": 4904,
+          "duration": 220,
+          "duration_to": 110,
+          "duration_back": 110
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CPH": {
+        "2": {
+          "airline": "GF",
+          "departure_at": "2026-03-19T20:00:00+08:00",
+          "return_at": "2026-03-22T20:20:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 824,
+          "flight_number": 166,
+          "duration": 3290,
+          "duration_to": 1200,
+          "duration_back": 1040
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

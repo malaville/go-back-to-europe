@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "STO": {
+        "1": {
+          "airline": "PC",
+          "departure_at": "2026-03-17T06:15:00+06:00",
+          "return_at": "2026-03-25T11:15:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 377,
+          "flight_number": 101,
+          "duration": 1545,
+          "duration_to": 595,
+          "duration_back": 540
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

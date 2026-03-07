@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "2": {
+          "airline": "AY",
+          "departure_at": "2026-03-07T21:45:00+08:00",
+          "return_at": "2026-03-13T10:55:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1907,
+          "flight_number": 100,
+          "duration": 2515,
+          "duration_to": 1075,
+          "duration_back": 815
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

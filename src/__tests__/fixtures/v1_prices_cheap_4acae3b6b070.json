@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CMB": {
+        "1": {
+          "airline": "6E",
+          "departure_at": "2026-03-07T23:00:00+07:00",
+          "return_at": "2026-03-24T10:25:00+05:30",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 204,
+          "flight_number": 1056,
+          "duration": 1780,
+          "duration_to": 335,
+          "duration_back": 360
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "1": {
+          "airline": "MU",
+          "departure_at": "2026-03-16T20:15:00+09:00",
+          "return_at": "2026-03-31T13:25:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 892,
+          "flight_number": 540,
+          "duration": 2960,
+          "duration_to": 965,
+          "duration_back": 885
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

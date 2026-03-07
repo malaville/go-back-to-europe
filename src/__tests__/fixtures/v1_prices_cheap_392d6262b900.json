@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SGN": {
+        "0": {
+          "airline": "FD",
+          "departure_at": "2026-03-29T07:30:00+07:00",
+          "return_at": "2026-04-01T21:35:00+07:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 96,
+          "flight_number": 656,
+          "duration": 195,
+          "duration_to": 105,
+          "duration_back": 90
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

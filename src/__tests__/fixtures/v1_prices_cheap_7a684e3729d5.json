@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "3": {
+          "airline": "QH",
+          "departure_at": "2026-03-08T06:15:00+07:00",
+          "return_at": "2026-04-07T22:25:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1074,
+          "flight_number": 150,
+          "duration": 4520,
+          "duration_to": 1160,
+          "duration_back": 870
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

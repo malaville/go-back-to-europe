@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-27T06:15:00+06:00",
+          "return_at": "2026-04-05T23:05:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 339,
+          "flight_number": 101,
+          "duration": 2565,
+          "duration_to": 635,
+          "duration_back": 575
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

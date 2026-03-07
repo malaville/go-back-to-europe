@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "STO": {
+        "2": {
+          "airline": "G9",
+          "departure_at": "2026-03-30T04:30:00+05:30",
+          "return_at": "2026-04-30T11:25:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 500,
+          "flight_number": 464,
+          "duration": 4155,
+          "duration_to": 715,
+          "duration_back": 680
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "WAW": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-27T06:15:00+06:00",
+          "return_at": "2026-04-05T09:10:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 282,
+          "flight_number": 101,
+          "duration": 3075,
+          "duration_to": 570,
+          "duration_back": 435
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

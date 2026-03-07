@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "DUB": {
+        "2": {
+          "airline": "FS",
+          "departure_at": "2026-03-30T09:30:00+06:00",
+          "return_at": "2026-04-18T16:15:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 363,
+          "flight_number": 7077,
+          "duration": 4240,
+          "duration_to": 660,
+          "duration_back": 665
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

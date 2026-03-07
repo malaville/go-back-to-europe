@@ -1,0 +1,100 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-04-05",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Т-Банк",
+        "return_date": "",
+        "found_at": "2026-02-28T18:15:08",
+        "trip_class": 0,
+        "value": 294,
+        "number_of_changes": 1,
+        "duration": 1145,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-10",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Smartflight",
+        "return_date": "",
+        "found_at": "2026-03-06T04:55:00",
+        "trip_class": 0,
+        "value": 321,
+        "number_of_changes": 1,
+        "duration": 1570,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-09",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Qatar Airways",
+        "return_date": "",
+        "found_at": "2026-03-05T07:33:06",
+        "trip_class": 0,
+        "value": 342,
+        "number_of_changes": 1,
+        "duration": 1570,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-18",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Т-Банк",
+        "return_date": "",
+        "found_at": "2026-03-06T13:53:38",
+        "trip_class": 0,
+        "value": 361,
+        "number_of_changes": 1,
+        "duration": 1570,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-10-13",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Biletix",
+        "return_date": "",
+        "found_at": "2026-03-01T06:59:10",
+        "trip_class": 0,
+        "value": 368,
+        "number_of_changes": 1,
+        "duration": 1105,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-07",
+        "origin": "HKG",
+        "destination": "BUD",
+        "gate": "Ubfly",
+        "return_date": "",
+        "found_at": "2026-03-06T09:17:17",
+        "trip_class": 0,
+        "value": 717,
+        "number_of_changes": 2,
+        "duration": 1670,
+        "distance": 8537,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

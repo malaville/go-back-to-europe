@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-13",
+        "origin": "ADD",
+        "destination": "MAD",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-06T18:10:08",
+        "trip_class": 0,
+        "value": 304,
+        "number_of_changes": 1,
+        "duration": 705,
+        "distance": 5443,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-12",
+        "origin": "ADD",
+        "destination": "MAD",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-05T08:29:06",
+        "trip_class": 0,
+        "value": 355,
+        "number_of_changes": 1,
+        "duration": 705,
+        "distance": 5443,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-10",
+        "origin": "ADD",
+        "destination": "MAD",
+        "gate": "",
+        "return_date": "",
+        "found_at": "2026-03-07T00:00:00",
+        "trip_class": 0,
+        "value": 555,
+        "number_of_changes": 0,
+        "duration": 0,
+        "distance": 0,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "ADD",
+        "destination": "MAD",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-06T22:02:59",
+        "trip_class": 0,
+        "value": 754,
+        "number_of_changes": 2,
+        "duration": 1855,
+        "distance": 5443,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

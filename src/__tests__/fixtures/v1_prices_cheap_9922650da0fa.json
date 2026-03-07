@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "LON": {
+        "2": {
+          "airline": "MS",
+          "departure_at": "2026-03-14T04:05:00+03:00",
+          "return_at": "2026-04-04T18:50:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 567,
+          "flight_number": 852,
+          "duration": 3450,
+          "duration_to": 605,
+          "duration_back": 805
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

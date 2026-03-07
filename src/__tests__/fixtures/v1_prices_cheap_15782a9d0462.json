@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "1": {
+          "airline": "KU",
+          "departure_at": "2026-03-15T03:00:00+07:00",
+          "return_at": "2026-03-31T15:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 583,
+          "flight_number": 414,
+          "duration": 1770,
+          "duration_to": 840,
+          "duration_back": 750
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

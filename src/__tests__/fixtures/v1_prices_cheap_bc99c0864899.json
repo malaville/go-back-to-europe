@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BUD": {
+        "3": {
+          "airline": "IX",
+          "departure_at": "2026-03-08T09:55:00+05:30",
+          "return_at": "2026-03-19T05:50:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 641,
+          "flight_number": 6601,
+          "duration": 4035,
+          "duration_to": 780,
+          "duration_back": 585
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ROM": {
+        "2": {
+          "airline": "XY",
+          "departure_at": "2026-03-10T04:10:00+05:30",
+          "return_at": "2026-03-10T20:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 643,
+          "flight_number": 330,
+          "duration": 2650,
+          "duration_to": 720,
+          "duration_back": 795
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

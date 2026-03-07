@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-30",
+        "origin": "BOM",
+        "destination": "LIS",
+        "gate": "Flightnetwork",
+        "return_date": "",
+        "found_at": "2026-03-06T15:12:50",
+        "trip_class": 0,
+        "value": 263,
+        "number_of_changes": 1,
+        "duration": 770,
+        "distance": 8016,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-10",
+        "origin": "BOM",
+        "destination": "LIS",
+        "gate": "Clickavia",
+        "return_date": "",
+        "found_at": "2026-03-02T17:46:13",
+        "trip_class": 0,
+        "value": 323,
+        "number_of_changes": 2,
+        "duration": 1145,
+        "distance": 8016,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "BOM",
+        "destination": "LIS",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-06T12:00:53",
+        "trip_class": 0,
+        "value": 1337,
+        "number_of_changes": 3,
+        "duration": 1750,
+        "distance": 8016,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-07",
+        "origin": "BOM",
+        "destination": "LIS",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-06T12:01:02",
+        "trip_class": 0,
+        "value": 1342,
+        "number_of_changes": 3,
+        "duration": 1725,
+        "distance": 8016,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

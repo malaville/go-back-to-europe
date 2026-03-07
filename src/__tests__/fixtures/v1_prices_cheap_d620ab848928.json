@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BUD": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-15T00:55:00+08:00",
+          "return_at": "2026-03-21T16:00:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 678,
+          "flight_number": 875,
+          "duration": 2125,
+          "duration_to": 885,
+          "duration_back": 735
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

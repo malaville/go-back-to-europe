@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-07",
+        "origin": "ADD",
+        "destination": "SIN",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T05:50:22",
+        "trip_class": 0,
+        "value": 743,
+        "number_of_changes": 2,
+        "duration": 2585,
+        "distance": 7259,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-08",
+        "origin": "ADD",
+        "destination": "SIN",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T05:49:43",
+        "trip_class": 0,
+        "value": 872,
+        "number_of_changes": 2,
+        "duration": 2510,
+        "distance": 7259,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

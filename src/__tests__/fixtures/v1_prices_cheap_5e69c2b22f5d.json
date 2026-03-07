@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PRG": {
+        "1": {
+          "airline": "FS",
+          "departure_at": "2026-03-30T09:30:00+06:00",
+          "return_at": "2026-04-13T11:55:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 336,
+          "flight_number": 7077,
+          "duration": 2335,
+          "duration_to": 495,
+          "duration_back": 465
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

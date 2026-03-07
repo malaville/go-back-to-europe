@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "TAS": {
+        "0": {
+          "airline": "C6",
+          "departure_at": "2026-03-19T01:30:00+07:00",
+          "return_at": "2026-03-29T06:40:00+05:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 397,
+          "flight_number": 526,
+          "duration": 2710,
+          "duration_to": 425,
+          "duration_back": 465
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

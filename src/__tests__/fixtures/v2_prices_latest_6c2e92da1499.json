@@ -1,0 +1,55 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-13",
+        "origin": "CAN",
+        "destination": "ATH",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-05T10:22:51",
+        "trip_class": 0,
+        "value": 297,
+        "number_of_changes": 1,
+        "duration": 1385,
+        "distance": 8382,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-17",
+        "origin": "CAN",
+        "destination": "ATH",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-02T18:59:59",
+        "trip_class": 0,
+        "value": 398,
+        "number_of_changes": 2,
+        "duration": 1820,
+        "distance": 8382,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-11",
+        "origin": "CAN",
+        "destination": "ATH",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-05T10:54:50",
+        "trip_class": 0,
+        "value": 424,
+        "number_of_changes": 2,
+        "duration": 2025,
+        "distance": 8382,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "1": {
+          "airline": "EY",
+          "departure_at": "2026-03-13T20:00:00+07:00",
+          "return_at": "2026-03-18T14:40:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 662,
+          "flight_number": 421,
+          "duration": 2650,
+          "duration_to": 895,
+          "duration_back": 805
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

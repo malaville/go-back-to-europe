@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "HKG": {
+        "0": {
+          "airline": "UO",
+          "departure_at": "2026-03-27T21:55:00+07:00",
+          "return_at": "2026-03-30T07:40:00+08:00",
+          "expires_at": "2026-03-07T09:24:13Z",
+          "price": 136,
+          "flight_number": 543,
+          "duration": 235,
+          "duration_to": 105,
+          "duration_back": 130
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

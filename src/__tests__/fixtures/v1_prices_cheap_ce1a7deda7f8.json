@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BER": {
+        "1": {
+          "airline": "AY",
+          "departure_at": "2026-03-19T07:50:00+05:30",
+          "return_at": "2026-03-22T08:40:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 585,
+          "flight_number": 122,
+          "duration": 1940,
+          "duration_to": 715,
+          "duration_back": 630
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

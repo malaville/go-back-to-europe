@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "WAW": {
+        "1": {
+          "airline": "LH",
+          "departure_at": "2026-03-17T13:05:00+09:00",
+          "return_at": "2026-04-07T09:40:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 473,
+          "flight_number": 713,
+          "duration": 2090,
+          "duration_to": 920,
+          "duration_back": 790
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

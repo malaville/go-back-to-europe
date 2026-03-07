@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "1": {
+          "airline": "MU",
+          "departure_at": "2026-03-25T08:55:00+09:00",
+          "return_at": "2026-04-09T15:00:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 407,
+          "flight_number": 5052,
+          "duration": 2735,
+          "duration_to": 885,
+          "duration_back": 820
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

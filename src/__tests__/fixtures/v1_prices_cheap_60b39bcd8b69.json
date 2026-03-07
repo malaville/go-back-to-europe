@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ROM": {
+        "1": {
+          "airline": "EK",
+          "departure_at": "2026-03-12T22:00:00+05:30",
+          "return_at": "2026-03-17T20:50:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 596,
+          "flight_number": 509,
+          "duration": 1905,
+          "duration_to": 670,
+          "duration_back": 520
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

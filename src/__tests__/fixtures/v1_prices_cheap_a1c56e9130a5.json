@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-10T00:55:00+08:00",
+          "return_at": "2026-03-12T08:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 687,
+          "flight_number": 875,
+          "duration": 2540,
+          "duration_to": 975,
+          "duration_back": 810
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

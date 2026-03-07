@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "KUL": {
+        "0": {
+          "airline": "AK",
+          "departure_at": "2026-03-10T13:05:00+08:00",
+          "return_at": "2026-03-13T18:00:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 85,
+          "flight_number": 365,
+          "duration": 370,
+          "duration_to": 185,
+          "duration_back": 185
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

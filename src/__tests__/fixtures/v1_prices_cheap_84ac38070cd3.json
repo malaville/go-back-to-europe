@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ROM": {
+        "1": {
+          "airline": "HU",
+          "departure_at": "2026-03-11T20:30:00+08:00",
+          "return_at": "2026-03-16T11:15:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 517,
+          "flight_number": 7728,
+          "duration": 2070,
+          "duration_to": 930,
+          "duration_back": 790
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

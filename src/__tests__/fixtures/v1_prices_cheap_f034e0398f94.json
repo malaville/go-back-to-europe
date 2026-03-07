@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "1": {
+          "airline": "AY",
+          "departure_at": "2026-03-28T07:50:00+05:30",
+          "return_at": "2026-04-09T11:55:00+02:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 482,
+          "flight_number": 122,
+          "duration": 2600,
+          "duration_to": 745,
+          "duration_back": 640
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

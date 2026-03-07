@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "TBS": {
+        "2": {
+          "airline": "G9",
+          "departure_at": "2026-03-29T08:55:00+07:00",
+          "return_at": "2026-04-03T01:35:00+04:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 621,
+          "flight_number": 822,
+          "duration": 4230,
+          "duration_to": 820,
+          "duration_back": 665
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

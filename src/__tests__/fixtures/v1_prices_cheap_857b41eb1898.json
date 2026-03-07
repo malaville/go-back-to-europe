@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CAN": {
+        "1": {
+          "airline": "VJ",
+          "departure_at": "2026-03-25T15:35:00+08:00",
+          "return_at": "2026-04-06T22:00:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 178,
+          "flight_number": 898,
+          "duration": 1970,
+          "duration_to": 395,
+          "duration_back": 440
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

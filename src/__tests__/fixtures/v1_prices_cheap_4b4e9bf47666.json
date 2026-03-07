@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ADD": {
+        "1": {
+          "airline": "G9",
+          "departure_at": "2026-03-15T09:45:00+08:00",
+          "return_at": "2026-03-23T01:30:00+03:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 573,
+          "flight_number": 801,
+          "duration": 2775,
+          "duration_to": 710,
+          "duration_back": 685
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

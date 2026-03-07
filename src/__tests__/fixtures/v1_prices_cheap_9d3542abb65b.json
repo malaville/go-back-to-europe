@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ATH": {
+        "0": {
+          "airline": "GQ",
+          "departure_at": "2026-03-10T02:45:00+04:00",
+          "return_at": "2026-04-24T10:25:00+03:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 148,
+          "flight_number": 785,
+          "duration": 480,
+          "duration_to": 180,
+          "duration_back": 215
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "SIN": {
+        "0": {
+          "airline": "8M",
+          "departure_at": "2026-03-20T08:10:00+06:30",
+          "return_at": "2026-03-20T21:10:00+08:00",
+          "expires_at": "2026-03-07T09:24:16Z",
+          "price": 334,
+          "flight_number": 231,
+          "duration": 360,
+          "duration_to": 180,
+          "duration_back": 180
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-04-06",
+        "origin": "HKG",
+        "destination": "LIS",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-02T10:47:21",
+        "trip_class": 0,
+        "value": 322,
+        "number_of_changes": 2,
+        "duration": 2620,
+        "distance": 11003,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-09-01",
+        "origin": "HKG",
+        "destination": "LIS",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T23:57:57",
+        "trip_class": 0,
+        "value": 373,
+        "number_of_changes": 2,
+        "duration": 1605,
+        "distance": 11003,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-12",
+        "origin": "HKG",
+        "destination": "LIS",
+        "gate": "Авиасейлс",
+        "return_date": "",
+        "found_at": "2026-03-02T16:39:30",
+        "trip_class": 0,
+        "value": 375,
+        "number_of_changes": 2,
+        "duration": 3765,
+        "distance": 11003,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-11",
+        "origin": "HKG",
+        "destination": "LIS",
+        "gate": "Flightnetwork",
+        "return_date": "",
+        "found_at": "2026-03-06T03:45:14",
+        "trip_class": 0,
+        "value": 418,
+        "number_of_changes": 2,
+        "duration": 2105,
+        "distance": 11003,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-21",
+        "origin": "HKG",
+        "destination": "LIS",
+        "gate": "Qatar Airways",
+        "return_date": "",
+        "found_at": "2026-03-06T03:44:54",
+        "trip_class": 0,
+        "value": 432,
+        "number_of_changes": 1,
+        "duration": 2290,
+        "distance": 11003,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

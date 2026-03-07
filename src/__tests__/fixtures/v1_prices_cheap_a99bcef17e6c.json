@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "2": {
+          "airline": "PC",
+          "departure_at": "2026-03-24T06:15:00+06:00",
+          "return_at": "2026-04-16T07:45:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 337,
+          "flight_number": 101,
+          "duration": 4480,
+          "duration_to": 615,
+          "duration_back": 595
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

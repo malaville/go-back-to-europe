@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BKK": {
+        "0": {
+          "airline": "FD",
+          "departure_at": "2026-03-20T08:05:00+07:00",
+          "return_at": "2026-03-23T06:25:00+07:00",
+          "expires_at": "2026-03-07T09:24:14Z",
+          "price": 120,
+          "flight_number": 1043,
+          "duration": 140,
+          "duration_to": 70,
+          "duration_back": 70
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "DEL": {
+        "1": {
+          "airline": "6E",
+          "departure_at": "2026-03-12T05:45:00+08:00",
+          "return_at": "2026-04-05T23:30:00+05:30",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 272,
+          "flight_number": 1032,
+          "duration": 2200,
+          "duration_to": 390,
+          "duration_back": 445
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

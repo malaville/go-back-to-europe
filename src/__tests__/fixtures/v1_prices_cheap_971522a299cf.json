@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "1": {
+          "airline": "VF",
+          "departure_at": "2026-03-08T18:15:00+03:00",
+          "return_at": "2026-03-13T06:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 131,
+          "flight_number": 3006,
+          "duration": 1990,
+          "duration_to": 320,
+          "duration_back": 290
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

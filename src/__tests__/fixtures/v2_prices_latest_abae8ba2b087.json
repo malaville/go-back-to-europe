@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-29",
+        "origin": "CAN",
+        "destination": "LIS",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-05T21:17:50",
+        "trip_class": 0,
+        "value": 411,
+        "number_of_changes": 2,
+        "duration": 1745,
+        "distance": 10870,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-13",
+        "origin": "CAN",
+        "destination": "LIS",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-02T16:34:50",
+        "trip_class": 0,
+        "value": 431,
+        "number_of_changes": 2,
+        "duration": 2940,
+        "distance": 10870,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-12",
+        "origin": "CAN",
+        "destination": "LIS",
+        "gate": "Trip.com",
+        "return_date": "",
+        "found_at": "2026-03-03T00:21:11",
+        "trip_class": 0,
+        "value": 460,
+        "number_of_changes": 1,
+        "duration": 1185,
+        "distance": 10870,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-11",
+        "origin": "CAN",
+        "destination": "LIS",
+        "gate": "City.Travel",
+        "return_date": "",
+        "found_at": "2026-03-04T17:44:37",
+        "trip_class": 0,
+        "value": 464,
+        "number_of_changes": 2,
+        "duration": 2400,
+        "distance": 10870,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

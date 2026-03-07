@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "2": {
+          "airline": "FM",
+          "departure_at": "2026-03-15T18:25:00+09:00",
+          "return_at": "2026-03-28T16:50:00+01:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 679,
+          "flight_number": 828,
+          "duration": 4235,
+          "duration_to": 1020,
+          "duration_back": 920
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

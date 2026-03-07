@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MAD": {
+        "1": {
+          "airline": "EK",
+          "departure_at": "2026-03-07T15:40:00+05:30",
+          "return_at": "2026-03-16T21:45:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 611,
+          "flight_number": 507,
+          "duration": 2230,
+          "duration_to": 695,
+          "duration_back": 595
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

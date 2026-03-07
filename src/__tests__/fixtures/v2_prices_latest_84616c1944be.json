@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-04-16",
+        "origin": "HKG",
+        "destination": "DUB",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T12:29:26",
+        "trip_class": 0,
+        "value": 325,
+        "number_of_changes": 2,
+        "duration": 1355,
+        "distance": 9829,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-17",
+        "origin": "HKG",
+        "destination": "DUB",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T15:05:24",
+        "trip_class": 0,
+        "value": 400,
+        "number_of_changes": 2,
+        "duration": 1485,
+        "distance": 9829,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-03",
+        "origin": "HKG",
+        "destination": "DUB",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T04:13:06",
+        "trip_class": 0,
+        "value": 416,
+        "number_of_changes": 2,
+        "duration": 3345,
+        "distance": 9829,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-04-05",
+        "origin": "HKG",
+        "destination": "DUB",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T05:25:10",
+        "trip_class": 0,
+        "value": 460,
+        "number_of_changes": 2,
+        "duration": 2125,
+        "distance": 9829,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

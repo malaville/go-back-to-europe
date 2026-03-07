@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "VIE": {
+        "2": {
+          "airline": "VF",
+          "departure_at": "2026-03-26T06:50:00+05:00",
+          "return_at": "2026-04-05T03:10:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 411,
+          "flight_number": 584,
+          "duration": 2980,
+          "duration_to": 515,
+          "duration_back": 405
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-31",
+        "origin": "DEL",
+        "destination": "PRG",
+        "gate": "Авиасейлс",
+        "return_date": "",
+        "found_at": "2026-03-07T01:42:36",
+        "trip_class": 0,
+        "value": 294,
+        "number_of_changes": 2,
+        "duration": 1710,
+        "distance": 5714,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-29",
+        "origin": "DEL",
+        "destination": "PRG",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T01:45:27",
+        "trip_class": 0,
+        "value": 316,
+        "number_of_changes": 3,
+        "duration": 1295,
+        "distance": 5714,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-30",
+        "origin": "DEL",
+        "destination": "PRG",
+        "gate": "Kupi.com",
+        "return_date": "",
+        "found_at": "2026-03-07T00:36:29",
+        "trip_class": 0,
+        "value": 322,
+        "number_of_changes": 1,
+        "duration": 1180,
+        "distance": 5714,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-15",
+        "origin": "DEL",
+        "destination": "PRG",
+        "gate": "Авиасейлс",
+        "return_date": "",
+        "found_at": "2026-03-06T10:27:39",
+        "trip_class": 0,
+        "value": 331,
+        "number_of_changes": 3,
+        "duration": 3530,
+        "distance": 5714,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "AMS": {
+        "2": {
+          "airline": "HY",
+          "departure_at": "2026-03-09T15:20:00+05:00",
+          "return_at": "2026-03-16T16:40:00+01:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 448,
+          "flight_number": 777,
+          "duration": 3650,
+          "duration_to": 635,
+          "duration_back": 525
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

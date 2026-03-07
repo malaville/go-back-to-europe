@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MNL": {
+        "0": {
+          "airline": "5J",
+          "departure_at": "2026-03-29T03:50:00+07:00",
+          "return_at": "2026-04-22T21:05:00+08:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 167,
+          "flight_number": 932,
+          "duration": 455,
+          "duration_to": 225,
+          "duration_back": 230
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ATH": {
+        "0": {
+          "airline": "A3",
+          "departure_at": "2026-03-21T22:00:00+03:00",
+          "return_at": "2026-03-26T18:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 72,
+          "flight_number": 995,
+          "duration": 175,
+          "duration_to": 85,
+          "duration_back": 90
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

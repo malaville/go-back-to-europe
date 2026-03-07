@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BCN": {
+        "2": {
+          "airline": "FZ",
+          "departure_at": "2026-03-21T01:45:00+05:30",
+          "return_at": "2026-03-31T23:05:00+02:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 807,
+          "flight_number": 570,
+          "duration": 2240,
+          "duration_to": 810,
+          "duration_back": 739
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

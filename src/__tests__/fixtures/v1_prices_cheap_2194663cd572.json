@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "ROM": {
+        "0": {
+          "airline": "PC",
+          "departure_at": "2026-03-31T09:05:00+03:00",
+          "return_at": "2026-04-15T12:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 89,
+          "flight_number": 1221,
+          "duration": 325,
+          "duration_to": 165,
+          "duration_back": 160
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

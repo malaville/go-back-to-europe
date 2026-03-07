@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "WAW": {
+        "3": {
+          "airline": "XY",
+          "departure_at": "2026-03-12T04:10:00+05:30",
+          "return_at": "2026-03-26T21:35:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 584,
+          "flight_number": 330,
+          "duration": 3810,
+          "duration_to": 755,
+          "duration_back": 550
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

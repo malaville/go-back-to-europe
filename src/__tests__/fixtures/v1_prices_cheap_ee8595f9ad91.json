@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BUD": {
+        "2": {
+          "airline": "MU",
+          "departure_at": "2026-03-27T16:40:00+09:00",
+          "return_at": "2026-04-01T12:30:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 521,
+          "flight_number": 560,
+          "duration": 3045,
+          "duration_to": 900,
+          "duration_back": 835
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

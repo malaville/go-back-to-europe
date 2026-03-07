@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CNX": {
+        "1": {
+          "airline": "VJ",
+          "departure_at": "2026-03-15T17:35:00+07:00",
+          "return_at": "2026-03-21T14:30:00+07:00",
+          "expires_at": "2026-03-07T09:24:13Z",
+          "price": 192,
+          "flight_number": 805,
+          "duration": 1820,
+          "duration_to": 175,
+          "duration_back": 180
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

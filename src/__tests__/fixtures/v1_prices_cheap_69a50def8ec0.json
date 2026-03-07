@@ -1,0 +1,9 @@
+{
+  "status": 400,
+  "body": {
+    "error": "bad request: airport PNH: not flightable",
+    "data": null,
+    "status": 400,
+    "success": false
+  }
+}

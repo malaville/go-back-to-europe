@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "CAN": {
+        "0": {
+          "airline": "SL",
+          "departure_at": "2026-03-22T22:00:00+07:00",
+          "return_at": "2026-03-27T02:50:00+08:00",
+          "expires_at": "2026-03-07T09:24:14Z",
+          "price": 128,
+          "flight_number": 900,
+          "duration": 350,
+          "duration_to": 170,
+          "duration_back": 180
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

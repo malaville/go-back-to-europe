@@ -1,0 +1,55 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-05-01",
+        "origin": "HKG",
+        "destination": "CPH",
+        "gate": "Flightnetwork",
+        "return_date": "",
+        "found_at": "2026-03-07T01:59:03",
+        "trip_class": 0,
+        "value": 352,
+        "number_of_changes": 2,
+        "duration": 1845,
+        "distance": 8651,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-14",
+        "origin": "HKG",
+        "destination": "CPH",
+        "gate": "Farera",
+        "return_date": "",
+        "found_at": "2026-03-05T11:44:33",
+        "trip_class": 0,
+        "value": 427,
+        "number_of_changes": 1,
+        "duration": 1205,
+        "distance": 8651,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-09",
+        "origin": "HKG",
+        "destination": "CPH",
+        "gate": "Bookhara.uz",
+        "return_date": "",
+        "found_at": "2026-03-07T03:14:58",
+        "trip_class": 0,
+        "value": 571,
+        "number_of_changes": 1,
+        "duration": 1135,
+        "distance": 8651,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

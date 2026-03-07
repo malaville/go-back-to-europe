@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "BKK": {
+        "1": {
+          "airline": "TR",
+          "departure_at": "2026-03-25T20:05:00+08:00",
+          "return_at": "2026-04-08T22:30:00+07:00",
+          "expires_at": "2026-03-07T09:24:09Z",
+          "price": 159,
+          "flight_number": 283,
+          "duration": 1985,
+          "duration_to": 300,
+          "duration_back": 315
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

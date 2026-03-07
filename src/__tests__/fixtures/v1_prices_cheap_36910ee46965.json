@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "1": {
+          "airline": "W4",
+          "departure_at": "2026-03-30T23:55:00+03:00",
+          "return_at": "2026-04-27T21:45:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 102,
+          "flight_number": 3718,
+          "duration": 1330,
+          "duration_to": 250,
+          "duration_back": 205
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

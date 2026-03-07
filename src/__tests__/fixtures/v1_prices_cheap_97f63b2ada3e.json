@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PAR": {
+        "2": {
+          "airline": "MH",
+          "departure_at": "2026-03-10T19:00:00+07:00",
+          "return_at": "2026-03-15T15:15:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 1016,
+          "flight_number": 767,
+          "duration": 3445,
+          "duration_to": 1010,
+          "duration_back": 815
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

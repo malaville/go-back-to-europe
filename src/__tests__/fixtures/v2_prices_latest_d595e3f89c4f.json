@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "body": {
+    "currency": "eur",
+    "error": "",
+    "data": [
+      {
+        "depart_date": "2026-03-29",
+        "origin": "HKG",
+        "destination": "BUH",
+        "gate": "Kiwi.com",
+        "return_date": "",
+        "found_at": "2026-03-04T13:16:34",
+        "trip_class": 0,
+        "value": 384,
+        "number_of_changes": 2,
+        "duration": 2605,
+        "distance": 8125,
+        "show_to_affiliates": true,
+        "actual": true
+      },
+      {
+        "depart_date": "2026-03-11",
+        "origin": "HKG",
+        "destination": "BUH",
+        "gate": "City.Travel",
+        "return_date": "",
+        "found_at": "2026-03-05T03:49:46",
+        "trip_class": 0,
+        "value": 536,
+        "number_of_changes": 2,
+        "duration": 3345,
+        "distance": 8125,
+        "show_to_affiliates": true,
+        "actual": true
+      }
+    ],
+    "success": true
+  }
+}

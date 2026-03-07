@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "PRG": {
+        "1": {
+          "airline": "C6",
+          "departure_at": "2026-03-22T22:10:00+05:00",
+          "return_at": "2026-04-25T10:35:00+02:00",
+          "expires_at": "2026-03-07T09:24:12Z",
+          "price": 433,
+          "flight_number": 305,
+          "duration": 2500,
+          "duration_to": 500,
+          "duration_back": 475
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}

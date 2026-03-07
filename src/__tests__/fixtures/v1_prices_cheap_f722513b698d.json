@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "MIL": {
+        "1": {
+          "airline": "QR",
+          "departure_at": "2026-03-12T18:55:00+07:00",
+          "return_at": "2026-03-15T22:10:00+01:00",
+          "expires_at": "2026-03-07T09:24:11Z",
+          "price": 553,
+          "flight_number": 835,
+          "duration": 1935,
+          "duration_to": 825,
+          "duration_back": 740
+        }
+      }
+    },
+    "currency": "EUR",
+    "success": true
+  }
+}
