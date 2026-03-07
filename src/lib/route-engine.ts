@@ -1088,10 +1088,21 @@ function buildRouteFromEdges(
       "Separate tickets — no rebooking protection if you miss a connection. Book with extra layover time."
     );
   }
-  // Flag hidden stops
+  // Flag hidden stops + check visa for hidden stop hubs
   for (const leg of flightLegs) {
     if (leg.hiddenStop) {
       warnings.push(`${leg.from}→${leg.to} on ${leg.airline}: ${leg.hiddenStop}`);
+      // Check if hidden stop hub requires a visa (e.g., DEL/BOM for Indian transit)
+      const hubMatch = leg.hiddenStop.match(/via (.+)$/);
+      if (hubMatch) {
+        const hubName = hubMatch[1];
+        const hubCode = Object.entries(AIRPORT_CITY).find(([, name]) => name === hubName)?.[0];
+        if (hubCode && VISA_WARNING_AIRPORTS.has(hubCode)) {
+          warnings.push(
+            "Indian e-visa takes 3-5 business days — apply immediately if departing within a week."
+          );
+        }
+      }
     }
   }
 
