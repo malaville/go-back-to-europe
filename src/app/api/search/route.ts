@@ -37,21 +37,6 @@ async function lookupAirportCode(cityName: string): Promise<string> {
   return lookupAirportByCity(cityName);
 }
 
-/**
- * Derive the departure month (YYYY-MM) from a deadline date and flex window.
- * We target the month that the user would depart in — deadline minus flex days.
- */
-function getDepartMonth(deadlineDate: string, flexDays: number): string {
-  const deadline = new Date(deadlineDate);
-  // Earliest possible departure
-  const earliest = new Date(deadline);
-  earliest.setDate(earliest.getDate() - flexDays);
-
-  const year = earliest.getFullYear();
-  const month = String(earliest.getMonth() + 1).padStart(2, "0");
-  return `${year}-${month}`;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as SearchRequestBody;
@@ -81,9 +66,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json([], { status: 200 });
     }
 
-    // Calculate departure month
-    const departMonth = getDepartMonth(deadlineDate, flexDays ?? 7);
-
     // Search routes
     const routes = await searchRoutes({
       fromCity,
@@ -91,7 +73,6 @@ export async function POST(request: NextRequest) {
       targetCity: isAnywhere ? "Anywhere in Europe" : targetCity,
       targetAirport,
       nationality: nationality || "FR",
-      departMonth,
       deadlineDate,
       flexDays: flexDays ?? 7,
       longLandTransport: longLandTransport ?? false,

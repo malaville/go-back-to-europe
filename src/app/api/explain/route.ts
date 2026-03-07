@@ -18,13 +18,6 @@ async function lookupAirportCode(cityName: string): Promise<string> {
   return lookupAirportByCity(cityName);
 }
 
-function getDepartMonth(deadlineDate: string, flexDays: number): string {
-  const deadline = new Date(deadlineDate);
-  const earliest = new Date(deadline);
-  earliest.setDate(earliest.getDate() - flexDays);
-  return `${earliest.getFullYear()}-${String(earliest.getMonth() + 1).padStart(2, "0")}`;
-}
-
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
@@ -57,22 +50,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: `Unknown destination: "${targetCity}"` }, { status: 400 });
   }
 
-  const departMonth = getDepartMonth(deadlineDate, flexDays);
-
   const { routes, explain } = await searchRoutesWithExplain({
     fromCity,
     fromAirport,
     targetCity: isAnywhere ? "Anywhere in Europe" : targetCity,
     targetAirport,
     nationality,
-    departMonth,
     deadlineDate,
     flexDays,
     longLandTransport,
   });
 
   const response = NextResponse.json({
-    query: { from: fromCity, fromAirport, to: isAnywhere ? "Anywhere in Europe" : targetCity, targetAirport, nat: nationality, date: deadlineDate, flex: flexDays, departMonth },
+    query: { from: fromCity, fromAirport, to: isAnywhere ? "Anywhere in Europe" : targetCity, targetAirport, nat: nationality, date: deadlineDate, flex: flexDays },
     explain,
     routeCount: routes.length,
     routes: routes.map((r, i) => ({
