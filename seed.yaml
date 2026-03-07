@@ -5,32 +5,36 @@ goal: >
   safety signals from logged-in users.
 
 constraints:
-  - Next.js + React on Vercel
-  - Vercel-partner database (Neon Postgres or similar)
-  - Datadog for monitoring and feature usage tracking
+  - Next.js 16 + React on Vercel (Hobby plan)
+  - Neon Postgres "neon-aero-coin" (fra1 Frankfurt), Vercel integration, all environments
+  - Neon built-in auth for optional user accounts (profiles synced to Postgres)
+  - Drizzle ORM for DB access
+  - Datadog for monitoring and feature usage tracking (map view toggle tracking)
+  - Kiwi/Tequila API as primary flight data source (virtual interlining, LCC coverage)
+  - Amadeus API as supplement for full-service carrier validation
   - No Middle East routing by default (curated exclusion list, admin-updatable)
-  - Anonymous-first UX — no login required to search routes
-  - Rate-limited anonymous access, accounts unlock more queries + contributions
+  - Anonymous-first UX — no login required to search routes (stressed travelers)
+  - Rate-limited anonymous access, accounts unlock more queries + safety signal contributions
   - EU nationalities as primary target for visa data
   - Non-EU users get "double-check visa info" warning
-  - Flight data from best available API (Kiwi, Skyscanner, or Amadeus — to be researched)
-  - SEO-optimized (SSR, meta tags, structured data) — users find this tool via panic searches like "cheap flights back to Europe avoid Middle East"
-  - Aggressive API response caching — normalize queries by region/date-range to deduplicate similar requests (e.g., Da Lat March 7 and March 8 share 90% of the same flight options)
-  - Cache at the route-segment level (origin airport + destination + date window), not at the user-query level
+  - SEO-optimized (SSR, meta tags, structured data) — panic search keywords
+  - Aggressive API response caching at route-segment level (airport + destination + date window)
+  - Similar queries deduplicated — two users in Da Lat on March 7 and 8 share cached results
+  - Cache TTL ~6-12h for flight prices
 
 acceptance_criteria:
-  - User can input current city, target EU city, travel date, flexibility window, and nationality
+  - User can input current city (searchable list), target EU city (or "Anywhere"), nationality, deadline date, flexibility window
   - System returns ranked multi-leg route options (up to 3 flights) avoiding excluded regions
   - Each route shows per-leg breakdown: transport type, duration, price, visa status
-  - Visa feasibility displayed per transit/stopover country (free-entry / e-visa / warning / easy / hard)
+  - Visa feasibility displayed per transit/stopover country (free / evisa / warning / easy / hard)
   - Travel time from user's city to departure airport is validated for feasibility
   - Cost-of-living estimate shown for stopover countries
   - Nearby EU airports shown as alternatives with ground transport cost to target city
-  - Anonymous users can search without login
-  - Logged-in users can flag countries as unsafe (crowd-sourced safety signal)
+  - Anonymous users can search without login — no friction
+  - Logged-in users (Neon Auth) can flag countries as unsafe
   - Admin dashboard shows crowd safety signals for exclusion list updates
-  - Optional map view toggleable, usage tracked via Datadog
-  - Rate limiting protects anonymous endpoint from abuse
+  - Optional map view toggleable, usage tracked via Datadog to decide if it becomes default
+  - Rate limiting protects anonymous endpoints from abuse/DDoS
 
 ontology_schema:
   name: RouteOptimizer
@@ -59,7 +63,7 @@ ontology_schema:
       description: "Countries/airports excluded from routing (default: Middle East conflict zones)"
     - name: visa_rules
       type: object
-      description: "Per-country visa rules for EU nationalities: free / e-visa / warning / easy / hard"
+      description: "Per-country visa rules for EU nationalities: free / evisa / warning / easy / hard"
     - name: cost_of_living
       type: object
       description: "Daily cost estimate for foreigners per country (for stopover cost calculation)"
@@ -69,6 +73,9 @@ ontology_schema:
     - name: flight_option
       type: object
       description: "Single flight: origin, destination, airline, price, duration, departure time"
+    - name: flight_cache
+      type: object
+      description: "Cached flight segment results keyed by airport+destination+date_window, TTL 6-12h"
 
 evaluation_principles:
   - name: route_safety
@@ -89,6 +96,9 @@ evaluation_principles:
   - name: data_accuracy
     description: "Flight prices, visa rules, and cost-of-living data must be current and reliable"
     weight: 0.8
+  - name: cache_efficiency
+    description: "Minimize redundant API calls through segment-level caching and query normalization"
+    weight: 0.7
 
 exit_conditions:
   - name: routes_found
@@ -102,7 +112,16 @@ exit_conditions:
     criteria: "Graceful degradation with cached data or user notification"
 
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   generated: "2026-03-07"
   source: "ouroboros:interview (conversation-based)"
-  ambiguity_score: 0.15
+  ambiguity_score: 0.12
+  infrastructure:
+    hosting: "Vercel (Hobby)"
+    domain: "https://go-back-to-europe.vercel.app/"
+    database: "Neon Postgres neon-aero-coin (fra1)"
+    auth: "Neon built-in auth"
+    orm: "Drizzle"
+    flight_api_primary: "Kiwi/Tequila"
+    flight_api_secondary: "Amadeus"
+    monitoring: "Datadog"
