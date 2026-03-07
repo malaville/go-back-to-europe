@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutes } from "@/lib/route-engine";
+import { ddlog, ddflush } from "@/lib/datadog-server";
 
 type SearchRequestBody = {
   fromCity: string;
@@ -92,12 +93,17 @@ export async function POST(request: NextRequest) {
       longLandTransport: longLandTransport ?? false,
     });
 
+    ddlog("info", "search", { fromCity, targetCity: isAnywhere ? "Anywhere" : targetCity, nationality, deadlineDate, flexDays, routeCount: routes.length });
+    await ddflush();
+
     // Return with no-cache headers to ensure fresh data
     const response = NextResponse.json(routes, { status: 200 });
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
     response.headers.set("Pragma", "no-cache");
     return response;
   } catch (error) {
+    ddlog("error", "search failed", { error: String(error) });
+    await ddflush();
     console.error("[search] Route search failed:", error);
     return NextResponse.json([], { status: 200 });
   }

@@ -24,6 +24,17 @@ export default function DatadogInit() {
         defaultPrivacyLevel: 'allow',
       });
     });
+
+    import('@datadog/browser-logs').then(({ datadogLogs }) => {
+      datadogLogs.init({
+        clientToken: 'pub764d1bca499a1f5ebf7dc5d4d7f8e18c',
+        site: 'datadoghq.eu',
+        service: 'skipthegulf',
+        env: 'production',
+        forwardErrorsToLogs: true,
+        sessionSampleRate: 100,
+      });
+    });
   }, []);
 
   return null;

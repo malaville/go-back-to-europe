@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutes } from "@/lib/route-engine";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
+import { ddlog, ddflush } from "@/lib/datadog-server";
 
 function lookupAirportCode(cityName: string): string {
   if (!cityName) return "";
@@ -110,6 +111,9 @@ export async function GET(request: NextRequest) {
         : null,
     })),
   }));
+
+  ddlog("info", "query", { from: fromCity, to: isAnywhere ? "Anywhere" : targetCity, nat: nationality, date: deadlineDate, flex: flexDays, routeCount: results.length });
+  await ddflush();
 
   const response = NextResponse.json({
     query: { from: fromCity, to: isAnywhere ? "Anywhere in Europe" : targetCity, nat: nationality, date: deadlineDate, flex: flexDays },
