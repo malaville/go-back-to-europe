@@ -164,7 +164,6 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
     : isTomorrow
     ? "Tomorrow"
     : departDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  const departHour = String(departDate.getHours()).padStart(2, "0");
 
   return (
     <div className={`rounded-2xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
@@ -201,7 +200,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
           <div className="text-xl font-bold text-slate-900">~€{route.totalPrice}</div>
           <div className="text-xs text-slate-500">{route.estimatedTotalDuration}</div>
           <div className="text-[10px] text-slate-400">
-            {departDateStr} {departHour}:00
+            {departDateStr}
           </div>
           {route.legs.length > 1 && (
             <div className="text-[10px] text-slate-400">{route.totalDuration}</div>

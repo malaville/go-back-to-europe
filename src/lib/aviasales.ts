@@ -81,6 +81,7 @@ const AIRLINE_NAMES: Record<string, string> = {
   G9: "Air Arabia",
   SV: "Saudia",
   RJ: "Royal Jordanian",
+  VF: "Fly Georgia",
 };
 
 export function airlineName(iataCode: string): string {

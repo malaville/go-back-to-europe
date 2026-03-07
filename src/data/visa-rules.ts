@@ -15,7 +15,11 @@ export type VisaRuleData = {
  */
 
 // List of EU nationalities covered
-const EU_NATIONALITIES = ["FR", "DE", "IT", "ES", "NL", "GB", "PL", "RO", "SE", "BE", "AT"];
+const EU_NATIONALITIES = [
+  "FR", "DE", "IT", "ES", "NL", "GB", "PL", "RO", "SE", "BE", "AT",
+  "FI", "DK", "IE", "GR", "PT", "HU", "CZ", "HR", "BG", "SK", "LT", "LV", "EE", "SI", "LU", "MT", "CY",
+  "NO", "IS", "CH", // EEA + Switzerland
+];
 
 // Base rules (apply to all EU nationalities unless overridden)
 type BaseRule = Omit<VisaRuleData, "nationality">;

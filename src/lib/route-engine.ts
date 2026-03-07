@@ -219,25 +219,25 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "SIN-CAN": 225, "SIN-PVG": 300,
   // From HKG (to Europe)
   "HKG-PAR": 720, "HKG-LON": 720, "HKG-AMS": 700,
-  "HKG-BER": 680, "HKG-FCO": 690, "HKG-BCN": 720,
+  "HKG-BER": 680, "HKG-ROM": 690, "HKG-BCN": 720,
   // From DEL (to Europe)
   "DEL-PAR": 510, "DEL-LON": 510, "DEL-AMS": 510,
-  "DEL-BER": 450, "DEL-FCO": 480, "DEL-BCN": 540,
+  "DEL-BER": 450, "DEL-ROM": 480, "DEL-BCN": 540,
   // From BOM (to Europe)
   "BOM-PAR": 540, "BOM-LON": 540, "BOM-AMS": 540,
-  "BOM-BER": 480, "BOM-FCO": 480,
+  "BOM-BER": 480, "BOM-ROM": 480,
   // From ADD (to Europe) — Ethiopian Airlines hub
   "ADD-PAR": 480, "ADD-LON": 480, "ADD-AMS": 510,
-  "ADD-BER": 450, "ADD-FCO": 420, "ADD-BCN": 480,
+  "ADD-BER": 450, "ADD-ROM": 420, "ADD-BCN": 480,
   // From ALA (to Europe) — Air Astana hub
   "ALA-PAR": 420, "ALA-LON": 420, "ALA-AMS": 390,
   "ALA-BER": 360, "ALA-IST": 330,
   // From TAS (to Europe) — Uzbekistan Airways
   "TAS-PAR": 390, "TAS-LON": 390, "TAS-AMS": 360,
-  "TAS-BER": 330, "TAS-FCO": 360,
+  "TAS-BER": 330, "TAS-ROM": 360,
   // From CMB (to Europe) — SriLankan Airlines
   "CMB-PAR": 600, "CMB-LON": 600, "CMB-AMS": 600,
-  "CMB-FCO": 570,
+  "CMB-ROM": 570,
   // From SEL (to Europe)
   "SEL-PAR": 750, "SEL-AMS": 690, "SEL-LON": 700, "SEL-BER": 660,
   // From TYO (to Europe)
@@ -249,14 +249,14 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "TBS-VIE": 240, "TBS-AMS": 330,
   // From IST (to Europe)
   "IST-PAR": 220, "IST-AMS": 220, "IST-LON": 240, "IST-BER": 180,
-  "IST-FCO": 165, "IST-BCN": 210, "IST-MAD": 240, "IST-LIS": 270,
+  "IST-ROM": 165, "IST-BCN": 210, "IST-MAD": 240, "IST-LIS": 270,
   "IST-WAW": 150, "IST-VIE": 150, "IST-PRG": 165, "IST-BUD": 135,
   // Extended EU destinations from existing hubs
-  "SEL-FCO": 720, "SEL-BCN": 750, "SEL-MAD": 780, "SEL-LIS": 780,
+  "SEL-ROM": 720, "SEL-BCN": 750, "SEL-MAD": 780, "SEL-LIS": 780,
   "SEL-WAW": 630, "SEL-VIE": 660, "SEL-PRG": 660, "SEL-BUD": 660,
-  "TYO-FCO": 720, "TYO-BER": 690, "TYO-BCN": 750,
-  "TPE-BER": 750, "TPE-FCO": 750,
-  "TBS-FCO": 240, "TBS-BCN": 300, "TBS-MAD": 330, "TBS-LIS": 360,
+  "TYO-ROM": 720, "TYO-BER": 690, "TYO-BCN": 750,
+  "TPE-BER": 750, "TPE-ROM": 750,
+  "TBS-ROM": 240, "TBS-BCN": 300, "TBS-MAD": 330, "TBS-LIS": 360,
   "TBS-PRG": 240, "TBS-BUD": 210,
   "HKG-MAD": 750, "HKG-LIS": 780, "HKG-WAW": 660, "HKG-VIE": 680,
   "HKG-PRG": 680, "HKG-BUD": 680,
@@ -265,18 +265,18 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "BOM-MAD": 540, "BOM-LIS": 540, "BOM-WAW": 450, "BOM-VIE": 450,
   "ADD-MAD": 480, "ADD-LIS": 480, "ADD-WAW": 450, "ADD-VIE": 420,
   "ADD-PRG": 450, "ADD-BUD": 420,
-  "ALA-FCO": 360, "ALA-BCN": 390, "ALA-MAD": 420, "ALA-WAW": 300,
+  "ALA-ROM": 360, "ALA-BCN": 390, "ALA-MAD": 420, "ALA-WAW": 300,
   "ALA-VIE": 330, "ALA-PRG": 330, "ALA-BUD": 300,
   "TAS-MAD": 390, "TAS-WAW": 270, "TAS-VIE": 300,
   "TAS-PRG": 300, "TAS-BUD": 270,
   "CMB-BER": 570, "CMB-BCN": 600, "CMB-MAD": 600,
   // From CAN — Guangzhou (China Southern hub)
   "CAN-PAR": 720, "CAN-LON": 720, "CAN-AMS": 690,
-  "CAN-BER": 660, "CAN-FCO": 690, "CAN-BCN": 720,
+  "CAN-BER": 660, "CAN-ROM": 690, "CAN-BCN": 720,
   "CAN-MAD": 720, "CAN-LIS": 750,
   // From PVG — Shanghai (China Eastern hub)
   "PVG-PAR": 750, "PVG-LON": 720, "PVG-AMS": 690,
-  "PVG-BER": 660, "PVG-FCO": 690, "PVG-BCN": 720,
+  "PVG-BER": 660, "PVG-ROM": 690, "PVG-BCN": 720,
   "PVG-MAD": 750, "PVG-LIS": 780,
   "PVG-WAW": 600, "PVG-VIE": 630, "PVG-PRG": 630, "PVG-BUD": 630,
   "CAN-WAW": 630, "CAN-VIE": 660, "CAN-PRG": 660, "CAN-BUD": 660,
@@ -679,7 +679,9 @@ async function fetchNonstopPrice(
 
 /**
  * Detect if an airline likely transits through its hub for a given segment.
- * Only flags long-haul segments (>8h) where neither endpoint is the hub.
+ * Flags segments where neither endpoint is the airline's hub.
+ * Uses a lower threshold (5h) for known single-hub carriers like Pegasus/Turkish
+ * and 8h for multi-route carriers.
  */
 function detectHiddenStop(
   airlineCode: string,
@@ -687,10 +689,13 @@ function detectHiddenStop(
   to: string,
   durationMinutes: number
 ): string | null {
-  if (durationMinutes < 480) return null; // short-haul, likely direct
-
   const hubs = AIRLINE_HUBS[airlineCode];
   if (!hubs) return null;
+
+  // Single-hub carriers (TK, PC, ET) almost always transit via their hub
+  const singleHubCarriers = new Set(["TK", "PC", "ET", "UL", "KC"]);
+  const threshold = singleHubCarriers.has(airlineCode) ? 300 : 480; // 5h vs 8h
+  if (durationMinutes < threshold) return null;
 
   const fromApi = apiCode(from);
   const toApi = apiCode(to);
