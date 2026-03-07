@@ -1,107 +1,90 @@
 # Reddit Communication — Live Status
 
-> Started: 2026-03-08
+> Started: 2026-03-07 (posted evening)
 > Strategy: Post → Measure (Datadog) → Adapt hourly
 
 ---
 
 ## Progress
 
-| # | Time | Subreddit | Status | Upvotes | Comments | Queries/hr |
-|---|------|-----------|--------|---------|----------|------------|
-| 1 | 08:00 | r/flights | 🔴 Banned | — | — | — |
-| 2 | 10:00 | r/travel | 🟡 Posted | — | — | — |
-| 3 | 14:00 | r/digitalnomad | ⬜ Pending | — | — | — |
-| 4 | 17:00 | r/Thailand | ⬜ Pending | — | — | — |
-| 5 | Day 2 09:00 | r/bali | ⬜ Pending | — | — | — |
-| 6 | Day 2 14:00 | r/solotravel | ⬜ Pending | — | — | — |
+| # | Time | Subreddit | Status | Upvotes | Comments | Unique users |
+|---|------|-----------|--------|---------|----------|--------------|
+| 1 | — | r/flights | 🟡 Unbanned — megathread only, no promo | — | — | — |
+| 2 | 17:00 | r/travel | 🟢 Performing | 21 | 38 | 25 |
+| 3 | — | r/digitalnomad | ⬜ Pending | — | — | — |
+| 4 | — | r/Thailand | ⬜ Pending | — | — | — |
+| 5 | — | r/bali | ⬜ Pending | — | — | — |
+| 6 | — | r/solotravel | ⬜ Pending | — | — | — |
 
 Status key: ⬜ Pending · 🟡 Posted · 🟢 Performing · 🔴 Flopped · 🚀 Viral
 
 ---
 
-## Datadog Hourly Log
+## r/travel Post Analysis (snapshot 17:56)
 
-### Day 1 — Sat March 8
+**Post:** "for people stuck in SEA trying to get back to Europe — what routes actually work right now"
+**Post ID:** t3_1rn51hu
+**Score:** 21 upvotes, 38 comments, 25 unique users, 43K views
 
-| Hour | Queries | Signups | Top route searched | Errors | Notes / Decision |
-|------|---------|---------|-------------------|--------|------------------|
-| 08:00 | | | | | |
-| 09:00 | | | | | |
-| 10:00 | | | | | |
-| 11:00 | | | | | |
-| 12:00 | | | | | |
-| 13:00 | | | | | **Decision point: which angle wins?** |
-| 14:00 | | | | | |
-| 15:00 | | | | | |
-| 16:00 | | | | | |
-| 17:00 | | | | | |
-| 18:00 | | | | | |
-| 19:00 | | | | | |
-| 20:00 | | | | | **Day 1 review** |
+### Sentiment Breakdown
 
-### Day 2 — Sun March 9
+**Positive / Engaged (majority):**
+- "You are an angel. Useful info!" — u/nasansia1
+- "This is helpful advice. Feel free to post it in the megathread in r/flights" — u/DeltaFoxtrotZero (mod?)
+- User shared LOT + Eva Air Budapest→Warsaw→Seoul route (real stranded story)
+- Multiple users sharing actionable route intel (HK→London €250, Vietnam Airlines over Russia)
+- u/DEUTSCHLANDDD: "Finding a different route is not the hard part. Finding one under 1.5k is the hard part" — price is the real pain
 
-| Hour | Queries | Signups | Top route searched | Errors | Notes / Decision |
-|------|---------|---------|-------------------|--------|------------------|
-| 09:00 | | | | | |
-| 10:00 | | | | | |
-| 11:00 | | | | | **Comment farming — reply to all Day 1 posts** |
-| 12:00 | | | | | |
-| 13:00 | | | | | |
-| 14:00 | | | | | **Follow-up post on best-performing sub** |
-| 15:00 | | | | | |
-| 16:00 | | | | | |
-| 17:00 | | | | | |
-| 18:00 | | | | | **48h review — what worked?** |
+**Skeptical / Pushback:**
+- u/pliumbum: "You can literally filter countries out on Google Flights. I feel like you've massively overcomplicated this"
+- u/Wetrapordie: "Just look for non-arab airlines? They all work"
+- Response to skeptics: "Have you checked the price and availability for the next week?" — community self-defending
 
----
+**Actionable intel from comments:**
+1. **HK→London/Budapest under €250** on Chinese airlines (u/alkhdaniel) — need to add HKG as origin
+2. **Kutaisi vs Tbilisi** — Wizz flies Kutaisi only, Tbilisi flights aren't cheap. Need Kutaisi ground connection
+3. **DPS→IST nonstop** on Turkish Airlines — need to verify this route exists in our data
+4. **Vietnam Airlines over Russia** — confirmed working, need to ensure VN is in our airline data
+5. **China 144h visa-free transit** — multiple confirmations this works for EU passports
+6. **Price is the #1 concern**, not route-finding. People know alternatives exist but can't afford them
 
-## Totals
+### Key Quotes for Product Direction
 
-| Metric | Day 1 | Day 2 | Total |
-|--------|-------|-------|-------|
-| API queries | | | |
-| Signups | | | |
-| Reddit upvotes (all posts) | | | |
-| Reddit comments | | | |
-| Comments replied to | | | |
+> "the problem is that every single person stuck in SEA is booking those exact flights and the demand is just way bigger than the supply right now"
+
+> "Finding a different route is not the hard part. Finding a route that's not charging more than 1.5k is the hard part"
+
+> "HK to London/Budapest under €250... Chinese airlines aka fly over Russia"
 
 ---
 
 ## Winning Angle
 
-> _Fill after 13:00 Day 1: which resonated — "I built a tool" or "PSA: here are routes"?_
+**"PSA: here are routes"** is working better than "I built a tool". The thread is organically becoming a route-sharing hub. Tool mention is secondary — credibility comes from knowing the routes.
 
-Answer:
+**Price sensitivity is the #1 concern.** Route discovery is solved for savvy travelers. The real value add is: cheapest option that avoids the Gulf.
 
 ---
 
 ## Learnings → Actions
 
-| # | What we learned | Action taken |
-|---|----------------|--------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| # | What we learned | Action |
+|---|----------------|--------|
+| 1 | HK→Europe is cheapest corridor right now (€250 Chinese airlines) | Add HKG as a starting point, not just transit hub |
+| 2 | Kutaisi ≠ Tbilisi — Wizz only flies Kutaisi | Add Kutaisi airport, ground connection TBS→KUT |
+| 3 | DPS has daily nonstop to IST (Turkish) | Verify DPS→IST in SEGMENT_DURATIONS |
+| 4 | Price matters more than route discovery | Highlight cheapest routes more prominently |
+| 5 | "Just use Google Flights" is the main objection | Need clear differentiation (visa checks, hidden stops, Gulf filter) |
+| 6 | Invited to post in r/flights megathread | Do it — free distribution with mod blessing |
+| 7 | Vietnam Airlines over Russia confirmed working | Ensure VN carrier routes are in data |
 
 ---
 
-## Signup Messages (copy interesting ones here)
+## Next Steps (Priority Order)
 
-| Time | Name | Route | Message |
-|------|------|-------|---------|
-| | | | |
-| | | | |
-| | | | |
-
----
-
-## Abort / Pivot Triggers
-
-- If **0 queries after 2 posts** → title/content problem. Rewrite and try r/digitalnomad with totally different angle.
-- If **queries but 0 signups** → community page isn't compelling. Simplify to just email + "get price alerts".
-- If **post removed by mods** → message mods, explain free tool. If denied, skip that sub.
-- If **one post goes viral (100+ upvotes)** → cancel remaining schedule, spend all time answering comments there.
+1. **Post in r/flights megathread** — mod invited us, do it now
+2. **Post r/digitalnomad** — different angle (budget tips, bus hack, Tbilisi)
+3. **Reply to every comment** in r/travel thread — especially price concerns
+4. **Add HKG as origin airport** — cheapest corridor per community intel
+5. **Post r/Thailand** at peak hours
+6. **Monitor Datadog** for query spikes from Reddit referrers

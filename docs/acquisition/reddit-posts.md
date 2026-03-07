@@ -5,7 +5,7 @@
 
 ---
 
-## Post 1: r/flights (BANNED — do not repost)
+## Post 1: r/flights (UNBANNED — megathread only, no promo, give advice)
 
 Title: how are you guys dealing with getting back to Europe from SEA?
 
@@ -120,6 +120,59 @@ the short version: Tbilisi and Istanbul are your best transit options. china wor
 i made a tool that does all of this automatically: [skipthegulf.com](https://skipthegulf.com). put in where you are, where you're going, your passport. it finds routes, checks visas, flags hidden stops.
 
 if you're flexible on where you fly from, try searching from multiple cities. the difference between Bali and Bangkok as origin can be 100+ EUR easy.
+
+---
+
+---
+
+## r/travel Sentiment Analysis (snapshot 18:24 — 25 upvotes, 40 comments, 18 unique users)
+
+### Comment-by-comment breakdown
+
+| User | Sentiment | Key quote | Actionable intel |
+|------|-----------|-----------|-----------------|
+| u/alkhdaniel | Neutral/corrective | "most routes from BKK or SIN work perfectly fine... those booked with QR, EK or EY are facing issues" | Reframe: problem isn't route-finding, it's rebooking + price |
+| u/D0ntC4llMeShirley | Positive, sharing intel | "HK to London/Budapest under €250... Chinese airlines aka flying over Russia" | **HKG is the cheapest corridor right now** — must add as origin |
+| u/joereadsstuff | Positive | "Tbilisi is such a good call! People forget Wizz and easyJet fly there" | Tbilisi angle resonates — lean into it |
+| u/Wetrapordie (OP) | Engaged, sharing back | "Seoul and Osaka work too, Korean Air and JAL go over the arctic" | Seoul/Osaka as hubs confirmed by community |
+| u/drhip | Dismissive | "Just look for non-arab airlines? They all work" | **Main objection: "this is obvious"** — need to counter with visa traps + price angle |
+| u/ALA02 | Positive, factual | "Vietnam Airlines can still fly over Russia" | Vietnam Airlines routes confirmed working |
+| u/Pan0ptica | Positive, practical | "China is the way. Visa free transit is easy" | China 144h transit = strong talking point |
+| u/KirkieSB | Positive, sharing | "Denpasar has daily nonstop to Istanbul (Turkish Airlines)" | **DPS→IST nonstop confirmed** — add to route data |
+| u/Forgotten_Dog1954 | Enthusiastic | "You are an angel. Useful info!" | Pure positive signal |
+| u/marcantow | MOD — supportive | "This is helpful advice. Feel free to post in the megathread in r/flights" | **Mod endorsement + r/flights invite** |
+| u/DEUTSCHLANDDD | Price-focused | "Finding a route that's not charging more than 1.5k is the hard part" | **#1 pain point is price, not routes** |
+| u/juuruuzu (OP reply) | Humorous agreement | "Otherwise I would just take BKK→Paris and a big Xanax" | Price pain is real and emotional |
+| u/gompgo | Personal story | "stranded Feb 28 at Budapest... LOT + Eva Air... took 3 days to reach home" | Real stranded stories = credibility fuel |
+| u/MagesticCarajillo | Neutral | "A friend in India flying to China to take a flight to London" | India→China→Europe corridor exists |
+| u/ARUMI_Sun_Moon | Positive, factual | "Flying Tokyo→Brussels this week. Eastern Asia flights to Europe still going" | Tokyo as hub confirmed |
+| u/4BennyBlanco4 | Joke | "Silk Road... camels, carts" | Comic relief — thread is lighthearted, not panicked |
+| u/WordsWithWings | Unknown | (no extracted text) | — |
+| u/hat1337 | Unknown | (no extracted text) | — |
+
+### Hot topics (ranked by engagement + emotion)
+
+1. **PRICE** — The dominant concern by far. "Under €250", "not charging more than 1.5k", "can't afford direct options". Everyone knows alternatives exist. Nobody can afford them. **This is our #1 hook.**
+
+2. **Hong Kong corridor** — Multiple users independently confirming HK→Europe on Chinese airlines for €200-350. This is the "insider tip" that gets shares. **Use this as the lead in every post.**
+
+3. **China 144h visa-free transit** — Validated by multiple users. Works for EU passports. Feels like a hack. **Strong "did you know?" angle.**
+
+4. **Tbilisi as gateway** — Resonates strongly. Wizz Air + easyJet connections. Exotic enough to feel like a discovery. **Good for r/digitalnomad ("stay a few days").**
+
+5. **Hidden stops / visa traps** — Delhi transit for GB passports, "direct" flights that aren't. This is our **differentiation vs "just use Google Flights"** objection.
+
+6. **Real stranded stories** — u/gompgo sleeping in Budapest, people cancelling flights. Emotional resonance. **Use these as social proof, not our own pitch.**
+
+7. **"This is obvious" objection** — u/drhip, u/alkhdaniel. ~15% of comments. Counter: "finding the route isn't hard, finding one under €500 is." **Always lead with price, not route discovery.**
+
+### Winning formula for next posts
+
+- **Lead with a specific cheap price** ("HK→London for €220 on March 23")
+- **Acknowledge the objection upfront** ("yes you can Google Flights this, but...")
+- **Add value Google Flights can't** (visa traps, hidden stops, price comparison across hubs)
+- **Include a personal story** (stranded, stressed, relatable)
+- **Keep tone hostel-bar, not brand** (typos ok, casual, helpful)
 
 ---
 

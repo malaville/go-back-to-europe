@@ -1,39 +1,37 @@
 # SkipTheGulf.com — Status Tracker
 
-> Last updated: 2026-03-07
+> Last updated: 2026-03-07 18:00
 
-## Current State: BLOCKED — 3 new critical bugs found
-
-QA score: **5.5/10** (down from 8.3 — date/price bugs found). See `docs/PRICE-DISCREPANCY-REPORT.md` and `docs/qa-test-personas.md`.
+## Current State: LIVE — r/travel post performing (21 upvotes, 38 comments)
 
 ---
 
-## BLOCKING — Fix Before Any Promotion
+## BLOCKING — Fix Before Further Promotion
 
 | # | Bug | Severity | Status |
 |---|-----|----------|--------|
 | 1 | XY (flynas) and Gulf carriers filtered from results | Critical | 🟢 FIXED |
 | 2 | "Nonstop" tag on routes with hidden stops | Critical | 🟢 FIXED |
 | 3 | CMB→LHR hidden stop via Delhi — Indian e-visa warning now shown for GB | Critical | 🟢 FIXED |
-| 14 | **60-100% of routes arrive AFTER user's deadline.** Sanna (Mar 12 deadline): 17/17 routes late. James anywhere (Mar 20): 23/25 late. Dates range up to Nov 2026. | Critical | 🔴 TODO |
-| 15 | Booking link goes to full-route Aviasales search — every route uses same link regardless of actual route | Critical | 🔴 TODO |
-| 16 | Aviasales page shows Gulf carriers (EK, QR, EY, WY) as cheapest results | Critical | 🔴 TODO |
-| 17 | flex parameter is 100% cosmetic — flex=3 and flex=7 return identical results (confirmed) | Critical | 🔴 TODO |
-| 18 | flex=3 + Da Lat = 0 routes (7h bus exceeds 6h cap) but user gets no explanation why | High | 🔴 TODO |
-
-See `docs/PRICE-DISCREPANCY-REPORT.md` for full analysis.
+| 14 | Routes arriving after user's deadline | Critical | 🟢 FIXED (departureDate > deadline → filtered out) |
+| 15 | Aviasales booking links — dead code after frontend removal | Critical | 🟢 FIXED (searchUrl fully removed) |
+| 16 | Aviasales page shows Gulf carriers | Critical | 🟢 FIXED (Aviasales removed entirely, Google Flights verifyUrl only) |
+| 17 | flex parameter cosmetic — flex=3 and flex=7 identical | Critical | 🟢 FIXED (flex controls ground transport budget + desperate case retry) |
+| 18 | flex=3 + Da Lat = 0 routes with no explanation | High | 🟢 FIXED (desperate case retry expands ground budget for isolated origins) |
 
 ## HIGH PRIORITY — Fix This Week
 
 | # | Bug | Severity | Status |
 |---|-----|----------|--------|
-| 4 | ~~Multi-word city URL encoding~~ — not a bug, works with proper encoding | n/a | 🟢 NOT A BUG |
-| 5 | W9 airline code unverified on IST→LHR route, tagged "Cheapest" | High | 🔴 TODO |
-| 6 | "Fastest" tag misassigned across multiple queries (assigned to slower route) | Medium | 🔴 TODO |
+| 5 | W9 airline code unverified on IST→LHR route | High | 🔴 TODO |
+| 6 | "Fastest" tag misassigned (assigned to slower route) | Medium | 🔴 TODO |
 | 7 | TBS→HEL on Lufthansa — hidden stop via FRA/MUC not detected | Medium | 🔴 TODO |
-| 8 | Absurd detour routes (e.g. BKK→Bali→SIN→LHR) appearing in results | Medium | 🔴 TODO |
-| 9 | Vietnam visa for FI passport shows "evisa" — should be "free" (45-day exemption) | Medium | 🔴 TODO |
-| 10 | flex parameter cosmetic — promoted to blocking bug #17 | n/a | See #17 |
+| 8 | Absurd detour routes (BKK→Bali→SIN→LHR) | Medium | 🔴 TODO |
+| 9 | Vietnam visa for FI passport shows "evisa" — should be "free" | Medium | 🔴 TODO |
+| 19 | Only 11 SEA starting cities — missing Phuket, Koh Samui, Da Nang, Siem Reap, 100+ spots | High | 🟡 IN PROGRESS (checklist at docs/sea-tourist-spots.md, 3 added so far) |
+| 20 | HKG not available as origin (cheapest corridor per Reddit intel) | High | 🔴 TODO |
+| 21 | DPS→IST nonstop (Turkish Airlines) not in route data | Medium | 🔴 TODO |
+| 22 | Kutaisi (KUT) missing — Wizz Air hub, not same as Tbilisi | Medium | 🔴 TODO |
 
 ## LOW PRIORITY
 
@@ -41,21 +39,37 @@ See `docs/PRICE-DISCREPANCY-REPORT.md` for full analysis.
 |---|------|--------|
 | 11 | Frankfurt not available as destination | 🔴 TODO |
 | 12 | ticketType "separate" on single-leg nonstop flights | 🔴 TODO |
-| 13 | test-100.sh Python analysis broken (shell var interpolation, URL encoding) | 🔴 TODO |
+| 13 | test-100.sh Python analysis broken | 🔴 TODO |
 
 ---
 
 ## DONE (Recent)
 
-- 🟢 Milan destination fixed (was 0 routes, now 25+)
-- 🟢 "Nonstop" tag fixed for gateway routes (DPS→SIN→AMS no longer tagged Nonstop)
-- 🟢 Route count improved dramatically (Bali: 7→25 routes)
-- 🟢 Istanbul ranking improved (no longer buried last)
-- 🟢 Gateway routing working for Vientiane, Yangon, Manila, Hanoi
-- 🟢 Speed acceptable: avg 533ms, warms to ~497ms with caching
-- 🟢 QA test personas documented in `docs/qa-test-personas.md`
-- 🟢 100-query test plan built in `docs/test-100.sh`
-- 🟢 API integration docs in `docs/STATS.md` and `docs/api-integrations.md`
+- 🟢 **Aviasales fully removed** — searchUrl artifact cleaned from engine, types, API routes
+- 🟢 **Deadline enforcement** — routes departing after deadline filtered out
+- 🟢 **`today` parameter** — injectable for deterministic tests, filters past departures
+- 🟢 **Bus/boat heuristic** — replaced land-only with haversine-based ground transport (Indonesia, Philippines now supported)
+- 🟢 **Desperate case retry** — isolated origins (0 ground + few flights) auto-expand ground budget
+- 🟢 **Island ferry detection** — USM, HKT, DPS routes labeled as ferry transport
+- 🟢 **Koh Tao/Koh Samui/Phuket** added as starting cities with USM/HKT airport data
+- 🟢 **5 persona test suites** — 70 tests passing, covering Bali, Vientiane, Bangkok, Da Lat, Koh Tao
+- 🟢 **Ground reachability test suite** — haversine accuracy verified against 11 real-world SEA distances
+- 🟢 Milan, Nonstop tag, route count, Istanbul ranking, gateway routing, speed — all previously fixed
+
+---
+
+## Reddit Acquisition
+
+| Subreddit | Status | Score | Comments |
+|-----------|--------|-------|----------|
+| r/travel | 🟢 Performing | 21 | 38 |
+| r/flights | 🟡 Invited to megathread | — | — |
+| r/digitalnomad | ⬜ Ready to post | — | — |
+| r/Thailand | ⬜ Ready to post | — | — |
+| r/bali | ⬜ Ready to post | — | — |
+| r/solotravel | ⬜ Ready to post | — | — |
+
+See `REDDIT-COMMUNICATION-STATUS.md` for full analysis.
 
 ---
 
@@ -67,30 +81,30 @@ See `docs/PRICE-DISCREPANCY-REPORT.md` for full analysis.
 | Google Flights URL | 🟢 Integrated, working | — |
 | SerpAPI | 🟢 Account active, API key received | Build `src/lib/serpapi.ts` for fare context |
 | AirLabs | 🔴 Waitlisted | Wait for access |
-| Sherpa (visa) | 🟡 Affiliate program offered | Apply via link, get personalized affiliate URL. 30% commission/visa, quarterly payouts ($500 min). |
-| 12Go Asia (ground transport) | 🟢 Affiliate account active | Set password, generate referral links. Payout threshold: 300 THB. Stats at agent.12go.asia |
+| Sherpa (visa) | 🟡 Affiliate program offered | Apply via link |
+| 12Go Asia (ground transport) | 🟢 Affiliate account active | Generate referral links |
 
 ---
 
 ## Next Top Tasks (Priority Order)
 
-### 1. ~~Fix 3 blocking bugs (#1-3 above)~~ 🟢 DONE
+### 1. Reply to all r/travel comments + post in r/flights megathread
+Mod invited us. Prioritize answering price concerns (that's the #1 pain point).
 
-### 2. Post on Reddit — READY
-6 posts drafted in `reddit-posts.md`. Copy-paste and post in order, 2h apart. r/flights first.
+### 2. Add missing SEA cities (Phuket, Da Nang, Siem Reap, etc.)
+Checklist at `docs/sea-tourist-spots.md`. ~120 spots identified, 14 currently in cities.ts.
 
-### 3. Create SEO landing pages
-`/flights-bangkok-to-paris-no-gulf` etc. — zero-competition keywords with crisis intent.
+### 3. Post r/digitalnomad + r/Thailand
+Use budget angle for digitalnomad, local angle for Thailand.
 
-### 4. Fix high-priority bugs (#5-10)
-W9 airline verification, Fastest tag, detour routes, visa data, flex parameter.
+### 4. Add HKG as origin + DPS→IST route
+Reddit intel: HK→Europe is cheapest corridor right now (€250 on Chinese airlines).
 
-### 5. Submit to Hacker News & Product Hunt
-"Show HN" post. Prepare to answer technical questions about the route graph engine.
+### 5. Fix high-priority bugs (#5-9, #20-22)
+W9 verification, tag accuracy, detour routes, visa data, Kutaisi.
 
-### 6. SerpAPI integration
-Verify phone, build client, use for fare context ("price is typical / unusually low / surge pricing").
+### 6. Create SEO landing pages
+`/flights-bangkok-to-paris-no-gulf` etc. Zero-competition keywords with crisis intent.
 
-### 7. ~~Email capture~~ 🟢 DONE
-Community page at `/community` with 3 signup hooks (route alerts, beta tester, connect with travelers).
-CTA card appears after search results. Data stored in `signups` table (PostgreSQL).
+### 7. Hacker News "Show HN" post
+Prepare technical writeup about the route graph engine.
