@@ -12,6 +12,7 @@ import {
   airlineName,
 } from "./aviasales";
 import { visaRules } from "@/data/visa-rules";
+import { cities } from "@/data/cities";
 
 // ── Airlines that hub through the Middle East ─────────────────────────────
 // Flights on these carriers between non-ME points almost always connect
@@ -173,6 +174,43 @@ const GROUND_CONNECTIONS: GroundConnection[] = [
   },
 ];
 
+// ── Geographic ground-reachability engine ─────────────────────────────────
+// Dynamically computes overland travel to major airport hubs based on
+// haversine distance, replacing the old hardcoded-only BFS approach.
+
+// Build airport → {lat, lng, country} lookup from cities data
+const AIRPORT_COORDS: Map<string, { lat: number; lng: number; country: string }> = new Map();
+for (const city of cities) {
+  for (const ap of city.nearbyAirports) {
+    AIRPORT_COORDS.set(ap.code, { lat: city.lat, lng: city.lng, country: city.country });
+  }
+}
+
+/** Haversine distance in km between two lat/lng points */
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Land-connected groups — only airports in the same group can have ground routes.
+// Myanmar excluded (unsafe borders). Islands (ID, PH) have no overland connections.
+const MAINLAND_SEA_COUNTRIES = new Set(["TH", "VN", "KH", "LA", "MY", "SG"]);
+
+function areLandConnected(countryA: string, countryB: string): boolean {
+  return MAINLAND_SEA_COUNTRIES.has(countryA) && MAINLAND_SEA_COUNTRIES.has(countryB);
+}
+
+// Ground estimation parameters
+const ROAD_FACTOR = 1.4;      // straight-line → road distance multiplier
+const BUS_SPEED_KMH = 50;     // average speed including stops/borders
+const PRICE_PER_KM = 0.015;   // ~$15 per 1000km, matches SEA bus pricing
+const MIN_GROUND_MINUTES = 60; // don't show trivially short ground legs
+
 // ── Segment durations (minutes) ───────────────────────────────────────────
 
 const SEGMENT_DURATIONS: Record<string, number> = {
@@ -312,6 +350,27 @@ const SEGMENT_DURATIONS: Record<string, number> = {
 /** Look up segment duration, trying both orderings of city codes. */
 function getSegmentDuration(from: string, to: string): number | null {
   return SEGMENT_DURATIONS[`${from}-${to}`] ?? SEGMENT_DURATIONS[`${to}-${from}`] ?? null;
+}
+
+// Major SEA hubs: airports appearing as origin in ≥3 SEGMENT_DURATIONS entries.
+// These are worth bussing to because they have significant flight connectivity.
+const MAJOR_HUBS: Set<string> = (() => {
+  const originCount = new Map<string, number>();
+  for (const key of Object.keys(SEGMENT_DURATIONS)) {
+    const origin = key.split("-")[0];
+    originCount.set(origin, (originCount.get(origin) ?? 0) + 1);
+  }
+  const hubs = new Set<string>();
+  for (const [code, count] of originCount) {
+    if (count >= 3) hubs.add(code);
+  }
+  return hubs;
+})();
+
+// Build a lookup from hardcoded GROUND_CONNECTIONS for override matching
+const GROUND_OVERRIDE: Map<string, GroundConnection> = new Map();
+for (const gc of GROUND_CONNECTIONS) {
+  GROUND_OVERRIDE.set(`${gc.fromCode}-${gc.toCode}`, gc);
 }
 
 // ── Airport → country code mapping ───────────────────────────────────────
@@ -733,9 +792,10 @@ function getFlightNeighbors(airport: string): string[] {
 }
 
 /**
- * BFS on ground connections from an origin airport.
- * Returns all reachable airports within time budget, max 2 ground legs.
- * Each result includes the chain of ground legs to reach it.
+ * Compute ground-reachable major airports from an origin.
+ * Uses haversine distance + road factor to estimate overland travel time.
+ * Hardcoded GROUND_CONNECTIONS serve as overrides with more accurate data.
+ * Also chains hardcoded connections via BFS (max 4 legs) for known routes.
  */
 type GroundPath = {
   airport: string;
@@ -744,11 +804,88 @@ type GroundPath = {
   totalPrice: number;
 };
 
-function findGroundPaths(origin: string, maxMinutes: number): GroundPath[] {
-  const results: GroundPath[] = [];
-  const visited = new Set<string>([origin]);
+type GroundFilterReason = {
+  hub: string;
+  city: string;
+  reason: string;
+  distanceKm?: number;
+  roadKm?: number;
+  estimatedMinutes?: number;
+};
 
-  // BFS queue: [current airport, legs so far, total time, total price]
+function computeGroundReachable(origin: string, maxMinutes: number): { paths: GroundPath[]; filtered: GroundFilterReason[] } {
+  const results = new Map<string, GroundPath>(); // airport → best path
+  const filtered: GroundFilterReason[] = [];
+
+  const originCoords = AIRPORT_COORDS.get(origin);
+  const originCountry = AIRPORT_COUNTRY[origin];
+
+  // ── Phase 1: Dynamic distance-based reachability to major hubs ────────
+  if (originCoords && originCountry) {
+    // Convert API codes in MAJOR_HUBS to real airport codes for lookup
+    for (const hubApi of MAJOR_HUBS) {
+      const hub = fromApiCode(hubApi);
+      if (hub === origin) continue;
+
+      const hubCoords = AIRPORT_COORDS.get(hub);
+      const hubCountry = AIRPORT_COUNTRY[hub];
+      const hubCity = AIRPORT_CITY[hub] ?? hub;
+
+      if (!hubCoords || !hubCountry) {
+        // Hub not in cities data (transit hubs like IST, DEL — not SEA ground targets)
+        continue;
+      }
+
+      // Land connectivity check
+      if (!areLandConnected(originCountry, hubCountry)) {
+        filtered.push({ hub, city: hubCity, reason: `Not land-connected (${originCountry} ↔ ${hubCountry})` });
+        continue;
+      }
+
+      const straightKm = haversineKm(originCoords.lat, originCoords.lng, hubCoords.lat, hubCoords.lng);
+      const roadKm = straightKm * ROAD_FACTOR;
+      const estimatedMinutes = Math.round((roadKm / BUS_SPEED_KMH) * 60);
+
+      if (estimatedMinutes < MIN_GROUND_MINUTES) {
+        filtered.push({ hub, city: hubCity, reason: `Too short (${estimatedMinutes}min)`, distanceKm: Math.round(straightKm), roadKm: Math.round(roadKm), estimatedMinutes });
+        continue;
+      }
+
+      if (estimatedMinutes > maxMinutes) {
+        filtered.push({ hub, city: hubCity, reason: `Too far (${Math.round(estimatedMinutes / 60)}h > ${Math.round(maxMinutes / 60)}h budget)`, distanceKm: Math.round(straightKm), roadKm: Math.round(roadKm), estimatedMinutes });
+        continue;
+      }
+
+      // Check for hardcoded override with better data
+      const override = GROUND_OVERRIDE.get(`${origin}-${hub}`);
+      const price = override ? override.price : Math.round(roadKm * PRICE_PER_KM);
+      const minutes = override ? override.durationMinutes : estimatedMinutes;
+      const note = override ? override.note : "Estimated overland — plan your own stops along the way";
+      const transport = override ? override.transport : "bus" as const;
+
+      const leg: GroundConnection = {
+        fromCode: origin,
+        fromCity: AIRPORT_CITY[origin] ?? origin,
+        toCode: hub,
+        toCity: hubCity,
+        transport,
+        durationMinutes: minutes,
+        price,
+        note,
+      };
+
+      results.set(hub, {
+        airport: hub,
+        legs: [leg],
+        totalMinutes: minutes,
+        totalPrice: price,
+      });
+    }
+  }
+
+  // ── Phase 2: BFS on hardcoded connections (max 4 legs) ────────────────
+  // This catches non-hub airports and chains like DLI→SGN→PNH
+  const visited = new Set<string>([origin, ...results.keys()]);
   const queue: GroundPath[] = [{
     airport: origin,
     legs: [],
@@ -759,7 +896,6 @@ function findGroundPaths(origin: string, maxMinutes: number): GroundPath[] {
   while (queue.length > 0) {
     const current = queue.shift()!;
 
-    // Find ground connections from current airport
     for (const gc of GROUND_CONNECTIONS) {
       if (gc.fromCode !== current.airport) continue;
       if (visited.has(gc.toCode)) continue;
@@ -774,17 +910,22 @@ function findGroundPaths(origin: string, maxMinutes: number): GroundPath[] {
         totalPrice: current.totalPrice + gc.price,
       };
 
-      results.push(path);
+      // Only add if not already reachable via dynamic computation,
+      // or if BFS chain is faster
+      const existing = results.get(gc.toCode);
+      if (!existing || path.totalMinutes < existing.totalMinutes) {
+        results.set(gc.toCode, path);
+      }
       visited.add(gc.toCode);
 
-      // Max 2 ground legs
-      if (path.legs.length < 2) {
+      // Max 4 ground legs for BFS chains
+      if (path.legs.length < 4) {
         queue.push(path);
       }
     }
   }
 
-  return results;
+  return { paths: [...results.values()], filtered };
 }
 
 // ── Route assembly ───────────────────────────────────────────────────────
@@ -1186,8 +1327,8 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
     destinations: [...destApiCodes],
   });
 
-  // ── Step 2: Ground BFS — find all start airports ───────────────────────
-  const groundPaths = findGroundPaths(fromAirport, maxGroundMinutes);
+  // ── Step 2: Ground reachability — find all start airports ──────────────
+  const { paths: groundPaths, filtered: groundFiltered } = computeGroundReachable(fromAirport, maxGroundMinutes);
 
   // Start airports: origin itself + all ground-reachable airports
   type StartPoint = {
@@ -1207,15 +1348,17 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
     })),
   ];
 
-  trace("2_ground_bfs", `Origin ${fromAirport} (${AIRPORT_CITY[fromAirport] ?? fromAirport}). Ground budget: ${maxGroundMinutes}min. Found ${groundPaths.length} ground-reachable airports.`, {
+  trace("2_ground_reachability", `Origin ${fromAirport} (${AIRPORT_CITY[fromAirport] ?? fromAirport}). Ground budget: ${Math.round(maxGroundMinutes / 60)}h. Found ${groundPaths.length} ground-reachable airports.`, {
     origin: fromAirport,
+    originCountry: AIRPORT_COUNTRY[fromAirport],
     startAirports: startPoints.map(sp => ({
       airport: sp.airport,
       city: AIRPORT_CITY[sp.airport] ?? sp.airport,
-      groundRoute: sp.groundLegs.map(g => `${g.fromCode}→${g.toCode} (${g.transport}, ${formatDuration(g.durationMinutes)}, $${g.price})`),
+      groundRoute: sp.groundLegs.map(g => `${g.fromCode}→${g.toCode} (${g.transport}, ${formatDuration(g.durationMinutes)}, $${g.price}${g.note.startsWith("Estimated") ? " — estimated" : ""})`),
       totalGroundMinutes: sp.groundMinutes,
       totalGroundPrice: sp.groundPrice,
     })),
+    filtered: groundFiltered,
   });
 
   // ── Step 3-5: Layered graph exploration ────────────────────────────────
