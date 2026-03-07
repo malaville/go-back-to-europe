@@ -259,6 +259,7 @@ function SearchPage() {
             )}
             <RouteResults
               routes={routes}
+              highlighted={highlighted}
               fromCity={searchData.fromCity}
               targetCity={searchData.targetCity}
             />
