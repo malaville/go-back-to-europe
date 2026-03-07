@@ -112,6 +112,36 @@ export const cities: CityData[] = [
     ],
   },
   {
+    name: "Koh Tao",
+    country: "TH",
+    region: "sea",
+    lat: 10.0956,
+    lng: 99.8374,
+    nearbyAirports: [
+      { code: "USM", name: "Samui Airport (ferry from Koh Tao)", distanceKm: 70, travelTimeHours: 2.5 },
+    ],
+  },
+  {
+    name: "Koh Samui",
+    country: "TH",
+    region: "sea",
+    lat: 9.5120,
+    lng: 100.0136,
+    nearbyAirports: [
+      { code: "USM", name: "Samui Airport", distanceKm: 5, travelTimeHours: 0.2 },
+    ],
+  },
+  {
+    name: "Phuket",
+    country: "TH",
+    region: "sea",
+    lat: 7.8804,
+    lng: 98.3923,
+    nearbyAirports: [
+      { code: "HKT", name: "Phuket International Airport", distanceKm: 32, travelTimeHours: 0.7 },
+    ],
+  },
+  {
     name: "Yangon",
     country: "MM",
     region: "sea",

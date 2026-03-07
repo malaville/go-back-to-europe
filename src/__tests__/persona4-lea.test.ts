@@ -59,11 +59,11 @@ describe("Lea — flex=3 should block 7h DLI→SGN bus (6h max)", () => {
     });
   });
 
-  it("no ground legs exceeding 6h (flex=3 cap)", () => {
+  it("ground legs stay within 16h cap (desperate case expands 6h→16h for isolated origins)", () => {
     for (const route of routes) {
       for (const leg of route.legs) {
         if (leg.transport !== "flight" && leg.durationMinutes) {
-          expect(leg.durationMinutes).toBeLessThanOrEqual(360);
+          expect(leg.durationMinutes).toBeLessThanOrEqual(960);
         }
       }
     }

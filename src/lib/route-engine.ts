@@ -190,7 +190,7 @@ for (const city of cities) {
 }
 
 /** Haversine distance in km between two lat/lng points */
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+export function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLng = (lng2 - lng1) * Math.PI / 180;
@@ -200,17 +200,20 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// Land-connected groups — only airports in the same group can have ground routes.
-// Myanmar excluded (unsafe borders). Islands (ID, PH) have no overland connections.
-const MAINLAND_SEA_COUNTRIES = new Set(["TH", "VN", "KH", "LA", "MY", "SG"]);
+// Countries where bus/boat ground travel is feasible.
+// Myanmar excluded (unsafe borders).
+const GROUND_TRAVEL_COUNTRIES = new Set(["TH", "VN", "KH", "LA", "MY", "SG", "ID", "PH"]);
 
-function areLandConnected(countryA: string, countryB: string): boolean {
-  return MAINLAND_SEA_COUNTRIES.has(countryA) && MAINLAND_SEA_COUNTRIES.has(countryB);
+function canGroundTravel(countryA: string, countryB: string): boolean {
+  return GROUND_TRAVEL_COUNTRIES.has(countryA) && GROUND_TRAVEL_COUNTRIES.has(countryB);
 }
 
+// Island airports — any ground route to/from these involves a ferry
+const ISLAND_AIRPORTS = new Set(["USM", "HKT", "DPS", "MNL", "LOP", "LBJ"]);
+
 // Ground estimation parameters
-const ROAD_FACTOR = 1.4;      // straight-line → road distance multiplier
-const BUS_SPEED_KMH = 50;     // average speed including stops/borders
+const ROAD_FACTOR = 1.4;      // straight-line → road distance multiplier (applies to bus/boat — ferries cut across water)
+const BUS_SPEED_KMH = 50;     // average speed including stops/borders/ferries
 const PRICE_PER_KM = 0.015;   // ~$15 per 1000km, matches SEA bus pricing
 const MIN_GROUND_MINUTES = 60; // don't show trivially short ground legs
 
@@ -322,6 +325,10 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "PNH-HKG": 150,
   // Vientiane (VTE)
   "VTE-BKK": 70, "VTE-HAN": 120, "VTE-SGN": 130,
+  // Koh Samui (USM)
+  "USM-BKK": 75, "USM-SIN": 150, "USM-HKG": 180,
+  // Phuket (HKT)
+  "HKT-BKK": 85, "HKT-SIN": 105, "HKT-KUL": 90, "HKT-HKG": 210,
   // Chiang Mai (CNX)
   "CNX-BKK": 75, "CNX-SGN": 180, "CNX-SIN": 180,
   // Yangon (RGN)
@@ -389,6 +396,8 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   BKK: "TH",
   DMK: "TH",
   CNX: "TH",
+  USM: "TH",
+  HKT: "TH",
   SGN: "VN",
   HAN: "VN",
   DLI: "VN",
@@ -487,6 +496,8 @@ const AIRPORT_CITY: Record<string, string> = {
   DPS: "Bali",
   MNL: "Manila",
   VTE: "Vientiane",
+  USM: "Koh Samui",
+  HKT: "Phuket",
   RGN: "Yangon",
   CDG: "Paris",
   ORY: "Paris",
@@ -571,6 +582,8 @@ const FALLBACK_FLIGHT_PRICES: Record<string, { price: number; duration: number }
   "RGN-BKK": { price: 50, duration: 100 },
   "HAN-BKK": { price: 60, duration: 130 },
   "CNX-BKK": { price: 30, duration: 80 },
+  "USM-BKK": { price: 70, duration: 75 },
+  "HKT-BKK": { price: 40, duration: 85 },
 };
 
 // ── Fifth-freedom routes ─────────────────────────────────────────────────
@@ -835,7 +848,7 @@ type GroundFilterReason = {
   estimatedMinutes?: number;
 };
 
-function computeGroundReachable(origin: string, maxMinutes: number): { paths: GroundPath[]; filtered: GroundFilterReason[] } {
+export function computeGroundReachable(origin: string, maxMinutes: number): { paths: GroundPath[]; filtered: GroundFilterReason[] } {
   const results = new Map<string, GroundPath>(); // airport → best path
   const filtered: GroundFilterReason[] = [];
 
@@ -858,9 +871,9 @@ function computeGroundReachable(origin: string, maxMinutes: number): { paths: Gr
         continue;
       }
 
-      // Land connectivity check
-      if (!areLandConnected(originCountry, hubCountry)) {
-        filtered.push({ hub, city: hubCity, reason: `Not land-connected (${originCountry} ↔ ${hubCountry})` });
+      // Ground travel feasibility check
+      if (!canGroundTravel(originCountry, hubCountry)) {
+        filtered.push({ hub, city: hubCity, reason: `No ground travel (${originCountry} ↔ ${hubCountry})` });
         continue;
       }
 
@@ -882,8 +895,12 @@ function computeGroundReachable(origin: string, maxMinutes: number): { paths: Gr
       const override = GROUND_OVERRIDE.get(`${origin}-${hub}`);
       const price = override ? override.price : Math.round(roadKm * PRICE_PER_KM);
       const minutes = override ? override.durationMinutes : estimatedMinutes;
-      const note = override ? override.note : "Estimated overland — plan your own stops along the way";
-      const transport = override ? override.transport : "bus" as const;
+      const crossWater = originCountry !== hubCountry || originCountry === "ID" || originCountry === "PH"
+        || ISLAND_AIRPORTS.has(origin) || ISLAND_AIRPORTS.has(hub);
+      const note = override ? override.note : crossWater
+        ? "Estimated bus/boat — plan your own stops along the way"
+        : "Estimated overland — plan your own stops along the way";
+      const transport = override ? override.transport : crossWater ? "ferry" as const : "bus" as const;
 
       const leg: GroundConnection = {
         fromCode: origin,
@@ -1386,7 +1403,25 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
   });
 
   // ── Step 2: Ground reachability — find all start airports ──────────────
-  const { paths: groundPaths, filtered: groundFiltered } = computeGroundReachable(fromAirport, maxGroundMinutes);
+  let effectiveGroundMinutes = maxGroundMinutes;
+  let { paths: groundPaths, filtered: groundFiltered } = computeGroundReachable(fromAirport, effectiveGroundMinutes);
+
+  // Desperate case: origin has no ground-reachable airports and few flight options.
+  // Retry with relaxed budget (up to groundCapMinutes) to unlock more gateways.
+  if (groundPaths.length === 0) {
+    const flightNeighborCount = getFlightNeighbors(fromAirport).length;
+    if (flightNeighborCount <= 5) {
+      effectiveGroundMinutes = groundCapMinutes;
+      const retry = computeGroundReachable(fromAirport, effectiveGroundMinutes);
+      groundPaths = retry.paths;
+      groundFiltered = retry.filtered;
+      trace("2_ground_retry", `Desperate case: 0 ground airports + ${flightNeighborCount} flight neighbors. Retrying with ${Math.round(effectiveGroundMinutes / 60)}h ground budget. Found ${groundPaths.length} airports.`, {
+        originalBudgetH: Math.round(maxGroundMinutes / 60),
+        expandedBudgetH: Math.round(effectiveGroundMinutes / 60),
+        newGroundPaths: groundPaths.map(gp => `${gp.airport} (${AIRPORT_CITY[gp.airport] ?? gp.airport}, ${Math.round(gp.totalMinutes / 60)}h)`),
+      });
+    }
+  }
 
   // Start airports: origin itself + all ground-reachable airports
   type StartPoint = {
