@@ -17,7 +17,7 @@ export default function DatadogInit() {
         site: 'datadoghq.eu',
         service: 'skipthegulf',
         env: 'production',
-        sessionSampleRate: 1,
+        sessionSampleRate: 100,
         sessionReplaySampleRate: 0,
         trackUserInteractions: true,
         trackBfcacheViews: true,
