@@ -62,14 +62,15 @@
 
 | Subreddit | Status | Score | Comments |
 |-----------|--------|-------|----------|
-| r/travel | 🟢 Performing | 21 | 38 |
-| r/flights | 🟡 Invited to megathread | — | — |
+| r/travel | 🟢 Stickied + locked by mod | 25 | 40 |
+| r/flights | 🟢 Posted in megathread (11:44) | — | — |
 | r/digitalnomad | ⬜ Ready to post | — | — |
 | r/Thailand | ⬜ Ready to post | — | — |
 | r/bali | ⬜ Ready to post | — | — |
 | r/solotravel | ⬜ Ready to post | — | — |
 
 See `REDDIT-COMMUNICATION-STATUS.md` for full analysis.
+See `marcantow-story.md` for voice/story reference.
 
 ---
 

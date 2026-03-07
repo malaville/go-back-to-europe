@@ -187,6 +187,10 @@ if you're flexible on where you fly from, try searching from multiple cities. th
 | T+8h | r/bali | Bali-specific reality, BKK tip |
 | T+24h | r/solotravel | short, what's working |
 
+## Voice & Story
+
+See [marcantow-story.md](marcantow-story.md) for the real backstory, emotional hooks, and per-subreddit angles.
+
 ## Rules
 
 - Talk like you're in a hostel common area explaining this to someone
@@ -195,3 +199,6 @@ if you're flexible on where you fly from, try searching from multiple cities. th
 - Don't be defensive about limitations — "yeah that's broken, fixing it today"
 - If a post gets removed, message mods. explain it's free, you're just a dev trying to help
 - No edits like "wow this blew up", just keep answering questions
+- **NEVER ask leading questions like "do you know a good website for X?"** — Reddit smells self-promo instantly and will downvote you (-3 learned the hard way). Always GIVE the answer directly. People will ask "how do you know all this?" on their own.
+- **Never pretend you don't know something you clearly know.** Your post proves you've mapped the routes — don't play dumb in the comments to fish for tool mentions.
+- **If a comment gets downvoted, stop replying in that sub-thread.** Don't dig deeper. The win is already elsewhere.

@@ -9,8 +9,8 @@
 
 | # | Time | Subreddit | Status | Upvotes | Comments | Unique users |
 |---|------|-----------|--------|---------|----------|--------------|
-| 1 | — | r/flights | 🟡 Unbanned — megathread only, no promo | — | — | — |
-| 2 | 17:00 | r/travel | 🟢 Performing | 21 | 38 | 25 |
+| 1 | 11:44 | r/flights | 🟡 Posted in megathread (no promo, advice only) | — | — | — |
+| 2 | 17:00 | r/travel | 🟢 Performing (stickied + locked by mod) | 25 | 40 | 18 |
 | 3 | — | r/digitalnomad | ⬜ Pending | — | — | — |
 | 4 | — | r/Thailand | ⬜ Pending | — | — | — |
 | 5 | — | r/bali | ⬜ Pending | — | — | — |
@@ -24,7 +24,8 @@ Status key: ⬜ Pending · 🟡 Posted · 🟢 Performing · 🔴 Flopped · �
 
 **Post:** "for people stuck in SEA trying to get back to Europe — what routes actually work right now"
 **Post ID:** t3_1rn51hu
-**Score:** 21 upvotes, 38 comments, 25 unique users, 43K views
+**Score:** 25 upvotes, 40 comments, 18 unique users, 43K views
+**Status:** Stickied + Locked + Archived by mod (Forgotten_Dog1954)
 
 ### Sentiment Breakdown
 
@@ -80,9 +81,17 @@ Status key: ⬜ Pending · 🟡 Posted · 🟢 Performing · 🔴 Flopped · �
 
 ---
 
+## Voice & Story
+
+See [marcantow-story.md](marcantow-story.md) for real backstory and per-subreddit angles.
+
+## r/flights Megathread Post (posted 2026-03-07 11:44)
+
+Posted in megathread with personal story angle (Saudi routing anxiety, France Travail call from Bangkok hostel, need Da Lat→Paris under €400). Shared route intel (HK corridor, BKK→IST, Vietnam Airlines over Russia), visa traps, and open invite: "drop your location + passport, happy to look it up." No link to skipthegulf.com — waiting for someone to ask.
+
 ## Next Steps (Priority Order)
 
-1. **Post in r/flights megathread** — mod invited us, do it now
+1. ~~Post in r/flights megathread~~ — DONE
 2. **Post r/digitalnomad** — different angle (budget tips, bus hack, Tbilisi)
 3. **Reply to every comment** in r/travel thread — especially price concerns
 4. **Add HKG as origin airport** — cheapest corridor per community intel
