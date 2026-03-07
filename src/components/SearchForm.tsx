@@ -24,6 +24,7 @@ export default function SearchForm({ onSearch, isSearching, initialData }: Searc
   const [nationality, setNationality] = useState(initialData?.nationality ?? "FR");
   const [deadlineDate, setDeadlineDate] = useState(initialData?.deadlineDate ?? "");
   const [flexDays, setFlexDays] = useState(initialData?.flexDays ?? 7);
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +32,46 @@ export default function SearchForm({ onSearch, isSearching, initialData }: Searc
     onSearch({ fromCity, targetCity, nationality, deadlineDate, flexDays });
   };
 
-  // Default date: 14 days from now
+  // Helper to format date as YYYY-MM-DD
+  const formatDate = (date: Date): string => date.toISOString().split("T")[0];
+
+  // Calculate deadline dates
+  const today = new Date();
+  const dateNow = formatDate(today);
+  const date7Days = (() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 7);
+    return formatDate(d);
+  })();
+  const date14Days = (() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 14);
+    return formatDate(d);
+  })();
+  const date30Days = (() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 30);
+    return formatDate(d);
+  })();
+
+  // Min date for custom picker
   const defaultMinDate = new Date();
   defaultMinDate.setDate(defaultMinDate.getDate() + 1);
-  const minDate = defaultMinDate.toISOString().split("T")[0];
+  const minDate = formatDate(defaultMinDate);
+
+  // Handle quick-select button
+  const handleQuickSelect = (days: number) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + days);
+    setDeadlineDate(formatDate(d));
+    setFlexDays(7);
+    setShowCustomDatePicker(false);
+  };
+
+  // Format deadline for display
+  const deadlineDisplay = deadlineDate
+    ? new Date(deadlineDate).toLocaleDateString("en-GB", { weekday: "short", month: "short", day: "numeric" })
+    : "";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -78,41 +115,80 @@ export default function SearchForm({ onSearch, isSearching, initialData }: Searc
         </select>
       </div>
 
-      {/* Deadline Date */}
+      {/* Deadline Date - Quick Select Buttons */}
       <div>
-        <label htmlFor="deadline" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-slate-700 mb-3">
           I need to be home by
+          {deadlineDate && <span className="text-blue-600 font-semibold ml-2">{deadlineDisplay}</span>}
         </label>
-        <input
-          id="deadline"
-          type="date"
-          value={deadlineDate}
-          onChange={(e) => setDeadlineDate(e.target.value)}
-          min={minDate}
-          required
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-        />
-      </div>
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <button
+            type="button"
+            onClick={() => handleQuickSelect(0)}
+            className={`rounded-lg px-3 py-3 text-sm font-medium transition-all ${
+              deadlineDate === dateNow
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Now
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickSelect(7)}
+            className={`rounded-lg px-3 py-3 text-sm font-medium transition-all ${
+              deadlineDate === date7Days
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Less than 7 days
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickSelect(14)}
+            className={`rounded-lg px-3 py-3 text-sm font-medium transition-all ${
+              deadlineDate === date14Days
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            In two weeks
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickSelect(30)}
+            className={`rounded-lg px-3 py-3 text-sm font-medium transition-all ${
+              deadlineDate === date30Days
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            In one month
+          </button>
+        </div>
 
-      {/* Flexibility Window */}
-      <div>
-        <label htmlFor="flex-days" className="block text-sm font-medium text-slate-700 mb-1.5">
-          Flexibility: I can leave up to{" "}
-          <span className="font-semibold text-blue-600">{flexDays} days</span> before deadline
-        </label>
-        <input
-          id="flex-days"
-          type="range"
-          min={1}
-          max={30}
-          value={flexDays}
-          onChange={(e) => setFlexDays(Number(e.target.value))}
-          className="w-full h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer accent-blue-500"
-        />
-        <div className="flex justify-between text-xs text-slate-400 mt-1">
-          <span>1 day</span>
-          <span>15 days</span>
-          <span>30 days</span>
+        {/* Custom Date Picker */}
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowCustomDatePicker(!showCustomDatePicker)}
+            className="w-full rounded-lg border-2 border-dashed border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:border-blue-400 hover:bg-blue-50 transition-all"
+          >
+            {showCustomDatePicker ? "Close" : "Before a specific date..."}
+          </button>
+          {showCustomDatePicker && (
+            <input
+              type="date"
+              value={deadlineDate}
+              onChange={(e) => {
+                setDeadlineDate(e.target.value);
+                setFlexDays(7);
+              }}
+              min={minDate}
+              className="w-full mt-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            />
+          )}
         </div>
       </div>
 
