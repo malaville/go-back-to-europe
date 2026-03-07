@@ -1233,7 +1233,8 @@ function buildRouteFromEdges(
     const priceResult = priceMap.get(edgeKey);
     if (!priceResult) return null;
 
-    if (!firstFlightDepartDate && priceResult.departDate) {
+    if (!firstFlightDepartDate && priceResult.departDate
+        && priceResult.departDate >= todayStr && priceResult.departDate <= deadlineDate) {
       firstFlightDepartDate = priceResult.departDate;
     }
 
@@ -1274,8 +1275,12 @@ function buildRouteFromEdges(
       price: correctedPrice,
       visaStatus: visa.status,
       visaNote: visa.note,
-      departDate: priceResult.departDate,
-      departTime: priceResult.departTime,
+      // Clear dates outside the user's travel window — cached API returns
+      // cheapest-ever dates (e.g. Aug) which are misleading for March travel
+      departDate: priceResult.departDate && priceResult.departDate >= todayStr && priceResult.departDate <= deadlineDate
+        ? priceResult.departDate : undefined,
+      departTime: priceResult.departDate && priceResult.departDate >= todayStr && priceResult.departDate <= deadlineDate
+        ? priceResult.departTime : undefined,
       flightNumber: priceResult.flightNumber,
     });
   }
