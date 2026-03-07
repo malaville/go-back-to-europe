@@ -1,8 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
 import type { RouteOption, RouteLeg } from "@/data/route-types";
 import { activeAdvisories } from "@/data/advisories";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
+
+/** Strip affiliate marker from URLs when visitor came from Reddit */
+function useIsRedditReferrer(): boolean {
+  return useMemo(() => {
+    if (typeof document === "undefined") return false;
+    return /reddit\.com/i.test(document.referrer);
+  }, []);
+}
+
 
 function transportIcon(transport: RouteLeg["transport"]) {
   switch (transport) {
@@ -104,7 +114,7 @@ function daysUntil(isoDate?: string): string | null {
   return `up to ${days} days`;
 }
 
-function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }: { leg: RouteLeg; isLast: boolean; departureDate?: string; isFirstGround?: boolean; firstFlightDate?: string }) {
+function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate, isReddit }: { leg: RouteLeg; isLast: boolean; departureDate?: string; isFirstGround?: boolean; firstFlightDate?: string; isReddit?: boolean }) {
   return (
     <div className="relative">
       <div className="flex items-start gap-3">
@@ -166,7 +176,7 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }:
                 >
                   Verify price
                 </a>
-                {leg.searchUrl && (
+                {leg.searchUrl && !isReddit && (
                   <a
                     href={leg.searchUrl}
                     target="_blank"
@@ -185,7 +195,7 @@ function LegCard({ leg, isLast, departureDate, isFirstGround, firstFlightDate }:
   );
 }
 
-function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
+function RouteCard({ route, rank, isReddit }: { route: RouteOption; rank: number; isReddit: boolean }) {
   const lastLeg = route.legs[route.legs.length - 1];
   const isRecommended = route.tags.includes("Recommended");
 
@@ -257,7 +267,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
           const isFirstGround = leg.transport !== "flight" && !route.legs.slice(0, i).some(l => l.transport !== "flight");
           const firstFlightDate = route.legs.find(l => l.transport === "flight")?.departDate ?? route.departureDate;
           return (
-            <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} isFirstGround={isFirstGround} firstFlightDate={firstFlightDate} />
+            <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} departureDate={route.departureDate} isFirstGround={isFirstGround} firstFlightDate={firstFlightDate} isReddit={isReddit} />
           );
         })}
 
@@ -338,6 +348,8 @@ type RouteResultsProps = {
 };
 
 export default function RouteResults({ routes, fromCity, targetCity }: RouteResultsProps) {
+  const isReddit = useIsRedditReferrer();
+
   if (routes.length === 0) {
     return (
       <div className="text-center py-12">
@@ -362,7 +374,7 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
       </div>
 
       {routes.map((route, i) => (
-        <RouteCard key={route.id} route={route} rank={i + 1} />
+        <RouteCard key={route.id} route={route} rank={i + 1} isReddit={isReddit} />
       ))}
 
       <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 mt-2">

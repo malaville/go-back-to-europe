@@ -13,9 +13,9 @@
 
 so like many of you i got stuck in Bangkok after the Gulf shutdown. cancelled Emirates, cancelled Qatar, the whole thing.
 
-i spent the past week building [skipthegulf.com](https://skipthegulf.com), you put where you are, where you wanna go, your passport, and it finds routes that don't touch Gulf airspace at all. i'm french, i'm flexible, i don't even like flying honestly (french are obsessed with trains). but being flexible and "having to skip the Gulf" was really hard to get around mentally — so many options, so many things to check, you just stare at Google Flights for hours.
+i spent the past week building [skipthegulf.com](https://skipthegulf.com), you put where you are, where you wanna go, your passport, and it finds routes that don't touch Gulf airspace at all. i'm french, i'm flexible, i don't even like flying honestly (french are obsessed with trains). but being flexible and "having to skip the Gulf" was really hard to get around mentally ... so many options, so many things to check, you just stare at Google Flights for hours.
 
-the thing that surprised me most building this: a LOT of flights that look direct actually have hidden stops. like Air India Colombo→London? that stops in Delhi. and if you're British you need an Indian e-visa for that. the tool catches these and warns you.
+the thing that surprised me most building this: a LOT of flights that look direct actually have hidden stops. like Air India Colombo→London? that stops in Delhi (and I have asthma...lol) and if you're British you need an Indian e-visa for that. the tool catches these and warns you.
 
 it also checks visa rules for transit countries based on your nationality. turns out Tbilisi is kind of the MVP hub right now — most EU passports don't need a visa and there's surprisingly good connections.
 
@@ -25,7 +25,7 @@ prices come from Aviasales so treat them as ballpark, always double check on Goo
 
 it's free, no account needed, no ads. just trying to help people get home honestly.
 
-if you try it let me know what's broken or missing, i'm actively improving it. there's also a [/community](https://skipthegulf.com/community) page if you want route alerts or just to connect with others in the same situation — helps me know what to build next too.
+if you try it let me know what's broken or missing, i'm actively improving it (literally today). there's also a [/community](https://skipthegulf.com/community) page if you want route alerts or just to connect with others in the same situation — helps me know what to build next too.
 
 ---
 
@@ -35,7 +35,7 @@ if you try it let me know what's broken or missing, i'm actively improving it. t
 
 **Body:**
 
-been deep into this for the past week helping friends figure out how to get home after the Gulf airspace closure. here's what i've found:
+been helping friends figure out how to get home after the Gulf airspace closure. ended up building a whole tool today because the manual research was killing me. here's what i've found:
 
 **tbilisi** is the move right now. seriously. cheap flights from BKK, no visa for most EU passports, and from there you can get to basically anywhere in Europe. georgian airways and turkish have good options.
 
