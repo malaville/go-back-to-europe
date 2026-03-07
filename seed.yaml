@@ -1,0 +1,108 @@
+goal: >
+  Build a mobile-first web app that helps travelers in Southeast Asia find safe,
+  affordable multi-leg routes back to Europe, avoiding conflict zones (Middle East),
+  with visa feasibility checks, cost-of-living data for stopovers, and crowd-sourced
+  safety signals from logged-in users.
+
+constraints:
+  - Next.js + React on Vercel
+  - Vercel-partner database (Neon Postgres or similar)
+  - Datadog for monitoring and feature usage tracking
+  - No Middle East routing by default (curated exclusion list, admin-updatable)
+  - Anonymous-first UX — no login required to search routes
+  - Rate-limited anonymous access, accounts unlock more queries + contributions
+  - EU nationalities as primary target for visa data
+  - Non-EU users get "double-check visa info" warning
+  - Flight data from best available API (Kiwi, Skyscanner, or Amadeus — to be researched)
+  - SEO-optimized (SSR, meta tags, structured data) — users find this tool via panic searches like "cheap flights back to Europe avoid Middle East"
+  - Aggressive API response caching — normalize queries by region/date-range to deduplicate similar requests (e.g., Da Lat March 7 and March 8 share 90% of the same flight options)
+  - Cache at the route-segment level (origin airport + destination + date window), not at the user-query level
+
+acceptance_criteria:
+  - User can input current city, target EU city, travel date, flexibility window, and nationality
+  - System returns ranked multi-leg route options (up to 3 flights) avoiding excluded regions
+  - Each route shows per-leg breakdown: transport type, duration, price, visa status
+  - Visa feasibility displayed per transit/stopover country (free-entry / e-visa / warning / easy / hard)
+  - Travel time from user's city to departure airport is validated for feasibility
+  - Cost-of-living estimate shown for stopover countries
+  - Nearby EU airports shown as alternatives with ground transport cost to target city
+  - Anonymous users can search without login
+  - Logged-in users can flag countries as unsafe (crowd-sourced safety signal)
+  - Admin dashboard shows crowd safety signals for exclusion list updates
+  - Optional map view toggleable, usage tracked via Datadog
+  - Rate limiting protects anonymous endpoint from abuse
+
+ontology_schema:
+  name: RouteOptimizer
+  description: Domain model for multi-leg travel route optimization from SEA to Europe
+  fields:
+    - name: user_location
+      type: object
+      description: "User's current city with coordinates and nearby airports"
+    - name: target_destination
+      type: object
+      description: "Target EU city with acceptable nearby airports (e.g., Paris -> CDG, ORY, AMS, BXL, LYS)"
+    - name: travel_window
+      type: object
+      description: "Deadline date + flexibility window (e.g., arrive by March 25, flexible from March 15)"
+    - name: nationality
+      type: string
+      description: "User's passport nationality for visa eligibility checks"
+    - name: route
+      type: object
+      description: "Complete route: ground-to-airport + flight legs + ground-to-target"
+    - name: route_legs
+      type: array
+      description: "Ordered list of legs: ground transport, flights, layovers with duration/price/visa"
+    - name: excluded_regions
+      type: array
+      description: "Countries/airports excluded from routing (default: Middle East conflict zones)"
+    - name: visa_rules
+      type: object
+      description: "Per-country visa rules for EU nationalities: free / e-visa / warning / easy / hard"
+    - name: cost_of_living
+      type: object
+      description: "Daily cost estimate for foreigners per country (for stopover cost calculation)"
+    - name: safety_signals
+      type: array
+      description: "Crowd-sourced country safety flags from logged-in users with timestamps"
+    - name: flight_option
+      type: object
+      description: "Single flight: origin, destination, airline, price, duration, departure time"
+
+evaluation_principles:
+  - name: route_safety
+    description: "Routes must not transit through excluded/conflict regions"
+    weight: 1.0
+  - name: visa_feasibility
+    description: "All transit/stopover countries must be visa-accessible for user's nationality"
+    weight: 0.9
+  - name: total_cost_optimization
+    description: "Total trip cost (flights + ground + stopover living) should be minimized"
+    weight: 0.8
+  - name: travel_time_feasibility
+    description: "User must be able to physically reach each departure airport in time"
+    weight: 0.9
+  - name: user_experience
+    description: "Stressed travelers get instant results without friction (no login wall)"
+    weight: 0.85
+  - name: data_accuracy
+    description: "Flight prices, visa rules, and cost-of-living data must be current and reliable"
+    weight: 0.8
+
+exit_conditions:
+  - name: routes_found
+    description: "At least one valid route is returned to the user"
+    criteria: "Route avoids excluded regions, passes visa checks, and is time-feasible"
+  - name: no_routes_available
+    description: "No valid route exists within constraints"
+    criteria: "System clearly explains why and suggests relaxing constraints (dates, destination, budget)"
+  - name: api_failure
+    description: "Flight API is unavailable"
+    criteria: "Graceful degradation with cached data or user notification"
+
+metadata:
+  version: "1.0.0"
+  generated: "2026-03-07"
+  source: "ouroboros:interview (conversation-based)"
+  ambiguity_score: 0.15
