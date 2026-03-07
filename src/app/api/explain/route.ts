@@ -8,12 +8,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutesWithExplain } from "@/lib/route-engine";
+import { lookupAirportByCity } from "@/lib/travelpayouts-data";
 
-function lookupAirportCode(cityName: string): string {
+async function lookupAirportCode(cityName: string): Promise<string> {
   if (!cityName) return "";
   const normalized = cityName.toLowerCase().trim();
   const match = cities.find((c) => c.name.toLowerCase() === normalized);
-  return match?.nearbyAirports[0]?.code ?? "";
+  if (match?.nearbyAirports[0]?.code) return match.nearbyAirports[0].code;
+  return lookupAirportByCity(cityName);
 }
 
 function getDepartMonth(deadlineDate: string, flexDays: number): string {
@@ -43,13 +45,13 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const fromAirport = lookupAirportCode(fromCity);
+  const fromAirport = await lookupAirportCode(fromCity);
   if (!fromAirport) {
     return NextResponse.json({ error: `Unknown origin: "${fromCity}"` }, { status: 400 });
   }
 
   const isAnywhere = !targetCity || targetCity.toLowerCase().includes("anywhere") || targetCity.toLowerCase().includes("europe");
-  const targetAirport = isAnywhere ? "" : lookupAirportCode(targetCity);
+  const targetAirport = isAnywhere ? "" : await lookupAirportCode(targetCity);
 
   if (!isAnywhere && !targetAirport) {
     return NextResponse.json({ error: `Unknown destination: "${targetCity}"` }, { status: 400 });

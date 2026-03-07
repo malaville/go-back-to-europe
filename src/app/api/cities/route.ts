@@ -1,11 +1,5 @@
-import { db } from "@/db";
-import { cities } from "@/db/schema";
-import { ilike, or, eq, and, inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
-
-function sanitizeLikePattern(input: string): string {
-  return input.replace(/%/g, "\\%").replace(/_/g, "\\_");
-}
+import { searchCities } from "@/lib/travelpayouts-data";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -13,28 +7,25 @@ export async function GET(request: NextRequest) {
   const region = searchParams.get("region"); // comma-separated: "sea" | "europe" | "east_asia"
 
   try {
-    let results;
+    const regions = region ? region.split(",") : undefined;
+    const results = await searchCities(query, { regions, limit: 15 });
 
-    const regionCondition = region
-      ? region.includes(",")
-        ? inArray(cities.region, region.split(","))
-        : eq(cities.region, region)
-      : null;
+    // Map to the format the frontend expects
+    const mapped = results.map(c => ({
+      name: c.name,
+      country: c.country,
+      region: regions?.[0] ?? "sea",
+      lat: c.lat,
+      lng: c.lng,
+      nearbyAirports: c.airports.map(a => ({
+        code: a.code,
+        name: a.name,
+        distanceKm: 0,
+        travelTimeHours: 0,
+      })),
+    }));
 
-    if (query.length > 0) {
-      const sanitized = sanitizeLikePattern(query);
-      const nameCondition = ilike(cities.name, `%${sanitized}%`);
-      const whereClause = regionCondition
-        ? and(nameCondition, regionCondition)
-        : nameCondition;
-      results = await db.select().from(cities).where(whereClause);
-    } else if (regionCondition) {
-      results = await db.select().from(cities).where(regionCondition);
-    } else {
-      results = await db.select().from(cities);
-    }
-
-    return NextResponse.json(results);
+    return NextResponse.json(mapped);
   } catch (error) {
     console.error("Failed to fetch cities:", error);
     return NextResponse.json({ error: "Failed to fetch cities" }, { status: 500 });

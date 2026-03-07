@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cities } from "@/data/cities";
 import { searchRoutes } from "@/lib/route-engine";
 import { ddlog, ddflush } from "@/lib/datadog-server";
+import { lookupAirportByCity } from "@/lib/travelpayouts-data";
 
 type SearchRequestBody = {
   fromCity: string;
@@ -17,20 +18,23 @@ type SearchRequestBody = {
 };
 
 /**
- * Find a city's primary airport code from the static cities data.
- * Returns the first airport code from `nearbyAirports`, or "" if not found.
+ * Find a city's primary airport code.
+ * Tries static cities first (for route engine compatibility), then Travelpayouts API.
  */
-function lookupAirportCode(cityName: string): string {
+function lookupAirportCodeStatic(cityName: string): string {
   if (!cityName) return "";
-
   const normalized = cityName.toLowerCase().trim();
   const match = cities.find((c) => c.name.toLowerCase() === normalized);
-
   if (match && match.nearbyAirports.length > 0) {
     return match.nearbyAirports[0].code;
   }
-
   return "";
+}
+
+async function lookupAirportCode(cityName: string): Promise<string> {
+  const staticResult = lookupAirportCodeStatic(cityName);
+  if (staticResult) return staticResult;
+  return lookupAirportByCity(cityName);
 }
 
 /**
@@ -58,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Look up airport codes
-    const fromAirport = lookupAirportCode(fromCity);
+    const fromAirport = await lookupAirportCode(fromCity);
     if (!fromAirport) {
       console.warn(`[search] Could not find airport for city: ${fromCity}`);
       return NextResponse.json([], { status: 200 });
@@ -69,7 +73,7 @@ export async function POST(request: NextRequest) {
       targetCity.toLowerCase().includes("anywhere") ||
       targetCity.toLowerCase().includes("europe");
 
-    const targetAirport = isAnywhere ? "" : lookupAirportCode(targetCity);
+    const targetAirport = isAnywhere ? "" : await lookupAirportCode(targetCity);
 
     // If a specific destination was requested but not found, return empty
     if (!isAnywhere && !targetAirport) {
