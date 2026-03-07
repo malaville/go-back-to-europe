@@ -31,6 +31,7 @@ const MIDDLE_EAST_HUB_AIRLINES = new Set([
   "ME", // Middle East Airlines — Beirut hub
   "KU", // Kuwait Airways — Kuwait City hub
   "OV", // SalamAir — Muscat hub
+  "XY", // flynas — Riyadh hub
 ]);
 
 // ── Airline hub cities ────────────────────────────────────────────────────
