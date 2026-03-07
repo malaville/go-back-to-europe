@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
   const targetCity = params.get("to") ?? "";
   const nationality = params.get("nat") ?? "FR";
   const flexDays = Number(params.get("flex") ?? "7");
+  const longLandTransport = params.get("land") === "1";
 
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 14);
@@ -65,6 +66,7 @@ export async function GET(request: NextRequest) {
     departMonth,
     deadlineDate,
     flexDays,
+    longLandTransport,
   });
 
   const response = NextResponse.json({

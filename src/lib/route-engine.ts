@@ -1290,6 +1290,7 @@ type SearchParams = {
   departMonth: string; // YYYY-MM
   deadlineDate: string; // ISO date for calculating departure date
   flexDays: number; // days of flexibility before deadline
+  longLandTransport?: boolean; // user willing to take 16-30h overland legs
 };
 
 export async function searchRoutes(params: SearchParams): Promise<RouteOption[]> {
@@ -1302,7 +1303,7 @@ export async function searchRoutesWithExplain(params: SearchParams): Promise<{ r
 }
 
 async function _searchRoutesInternal(params: SearchParams, explain: boolean): Promise<{ routes: RouteOption[]; explain?: ExplainTrace }> {
-  const { fromAirport, targetAirport, nationality, departMonth, deadlineDate, flexDays } = params;
+  const { fromAirport, targetAirport, nationality, departMonth, deadlineDate, flexDays, longLandTransport } = params;
   const t0 = Date.now();
   const steps: ExplainStep[] = [];
   function trace(step: string, detail: string, data?: unknown) {
@@ -1317,12 +1318,11 @@ async function _searchRoutesInternal(params: SearchParams, explain: boolean): Pr
   flightDepartDate.setDate(flightDepartDate.getDate() - 2);
   const fallbackDepartDate = flightDepartDate.toISOString().split("T")[0];
 
-  // Ground travel time budget: min(flexDays * 120min, 16h)
-  // Capped at 16h — longer overland trips dominate results and are
-  // impractical (e.g., 25h DLI→BKK through Laos/Cambodia).
-  // 16h covers all practical connections: DLI→SGN 7h, DLI→PNH 11h,
-  // VTE→BKK 10h, KUL↔SIN 5h, CNX→BKK 12h.
-  const maxGroundMinutes = Math.min(flexDays * 120, 16 * 60);
+  // Ground travel time budget:
+  // Default: max 16h — covers DLI→SGN 7h, DLI→PNH 11h, VTE→BKK 10h, KUL↔SIN 5h
+  // Long land transport: max 30h — adds DLI→BKK 25h, DLI→HAN 29h, but not 35h+ treks
+  const groundCapMinutes = longLandTransport ? 30 * 60 : 16 * 60;
+  const maxGroundMinutes = Math.min(flexDays * 120, groundCapMinutes);
 
   // Destination set
   const destinationAirports: string[] =

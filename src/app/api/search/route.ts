@@ -12,6 +12,7 @@ type SearchRequestBody = {
   nationality: string;
   deadlineDate: string; // ISO date string  e.g. "2026-04-15"
   flexDays: number;
+  longLandTransport?: boolean;
 };
 
 /**
@@ -49,7 +50,7 @@ function getDepartMonth(deadlineDate: string, flexDays: number): string {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as SearchRequestBody;
-    const { fromCity, targetCity, nationality, deadlineDate, flexDays } = body;
+    const { fromCity, targetCity, nationality, deadlineDate, flexDays, longLandTransport } = body;
 
     if (!fromCity || !deadlineDate) {
       return NextResponse.json([], { status: 200 });
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
       departMonth,
       deadlineDate,
       flexDays: flexDays ?? 7,
+      longLandTransport: longLandTransport ?? false,
     });
 
     // Return with no-cache headers to ensure fresh data

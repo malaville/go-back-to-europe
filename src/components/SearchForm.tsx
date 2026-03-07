@@ -10,6 +10,7 @@ export type SearchFormData = {
   nationality: string;
   deadlineDate: string;
   flexDays: number;
+  longLandTransport: boolean;
 };
 
 type SearchFormProps = {
@@ -24,12 +25,13 @@ export default function SearchForm({ onSearch, isSearching, initialData }: Searc
   const [nationality, setNationality] = useState(initialData?.nationality ?? "FR");
   const [deadlineDate, setDeadlineDate] = useState(initialData?.deadlineDate ?? "");
   const [flexDays, setFlexDays] = useState(initialData?.flexDays ?? 7);
+  const [longLandTransport, setLongLandTransport] = useState(initialData?.longLandTransport ?? false);
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fromCity || !deadlineDate) return;
-    onSearch({ fromCity, targetCity, nationality, deadlineDate, flexDays });
+    onSearch({ fromCity, targetCity, nationality, deadlineDate, flexDays, longLandTransport });
   };
 
   // Helper to format date as YYYY-MM-DD
@@ -191,6 +193,24 @@ export default function SearchForm({ onSearch, isSearching, initialData }: Searc
           )}
         </div>
       </div>
+
+      {/* Long land transport toggle */}
+      <label className="flex items-center gap-3 cursor-pointer select-none">
+        <div className="relative">
+          <input
+            type="checkbox"
+            checked={longLandTransport}
+            onChange={(e) => setLongLandTransport(e.target.checked)}
+            className="sr-only peer"
+          />
+          <div className="w-10 h-6 bg-slate-200 rounded-full peer-checked:bg-blue-600 transition-colors" />
+          <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-4" />
+        </div>
+        <div>
+          <span className="text-sm font-medium text-slate-700">Include long overland routes</span>
+          <p className="text-[11px] text-slate-400 leading-tight">Show routes with up to 30h by bus, van, or train to reach bigger airports</p>
+        </div>
+      </label>
 
       {/* Submit Button */}
       <button

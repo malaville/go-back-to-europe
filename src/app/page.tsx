@@ -53,6 +53,7 @@ function useSearchState() {
     const nat = searchParams.get("nat");
     const date = searchParams.get("date");
     const flex = searchParams.get("flex");
+    const land = searchParams.get("land");
     if (!from || !date) return null;
     return {
       fromCity: from,
@@ -60,6 +61,7 @@ function useSearchState() {
       nationality: nat || "FR",
       deadlineDate: date,
       flexDays: flex ? Number(flex) : 7,
+      longLandTransport: land === "1",
     };
   }, [searchParams]);
 
@@ -70,6 +72,7 @@ function useSearchState() {
     params.set("nat", data.nationality);
     params.set("date", data.deadlineDate);
     params.set("flex", String(data.flexDays));
+    if (data.longLandTransport) params.set("land", "1");
     if (explainMode) params.set("explain", "true");
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [router, explainMode]);
@@ -116,6 +119,7 @@ function Home() {
           nat: data.nationality,
           date: data.deadlineDate,
           flex: String(data.flexDays),
+          ...(data.longLandTransport ? { land: "1" } : {}),
         });
         const res = await fetch(`/api/explain?${params.toString()}`);
         if (!res.ok) throw new Error("Search failed");

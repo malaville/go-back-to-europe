@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
   const targetCity = params.get("to") ?? "";
   const nationality = params.get("nat") ?? "FR";
   const flexDays = Number(params.get("flex") ?? "7");
+  const longLandTransport = params.get("land") === "1";
 
   // Default date: 14 days from now
   const defaultDate = new Date();
@@ -77,6 +78,7 @@ export async function GET(request: NextRequest) {
     departMonth,
     deadlineDate,
     flexDays,
+    longLandTransport,
   });
 
   // Flatten into LLM-friendly format using frontend display keys
