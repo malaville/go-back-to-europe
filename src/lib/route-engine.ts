@@ -46,50 +46,76 @@ const GROUND_CONNECTIONS: GroundConnection[] = [
 
 const SEGMENT_DURATIONS: Record<string, number> = {
   // From SGN
-  "SGN-BKK": 105,
-  "SGN-SIN": 125,
-  "SGN-KUL": 130,
-  "SGN-SEL": 310,
-  "SGN-TPE": 210,
-  "SGN-TYO": 340,
+  "SGN-BKK": 105, "SGN-SIN": 125, "SGN-KUL": 130,
+  "SGN-SEL": 310, "SGN-TPE": 210, "SGN-TYO": 340,
+  "SGN-HKG": 165, "SGN-DEL": 330, "SGN-BOM": 360,
+  "SGN-CMB": 240,
   // From BKK
-  "BKK-SEL": 310,
-  "BKK-IST": 570,
-  "BKK-TBS": 510,
-  // DOH removed — Doha is in the Middle East
-  "BKK-TPE": 220,
+  "BKK-SEL": 310, "BKK-TPE": 220, "BKK-TYO": 360,
+  "BKK-IST": 570, "BKK-TBS": 510,
+  "BKK-HKG": 165, "BKK-DEL": 255, "BKK-BOM": 270,
+  "BKK-ADD": 540, "BKK-ALA": 390, "BKK-TAS": 420,
+  "BKK-CMB": 210,
   // From KUL
-  "KUL-IST": 675,
-  // KUL-DOH removed
-  // From SIN (direct to Europe)
-  "SIN-PAR": 800,
-  "SIN-LON": 780,
-  "SIN-AMS": 750,
+  "KUL-IST": 675, "KUL-HKG": 225, "KUL-DEL": 330,
+  "KUL-CMB": 210, "KUL-ADD": 540,
+  // From SIN
+  "SIN-PAR": 800, "SIN-LON": 780, "SIN-AMS": 750,
+  "SIN-HKG": 225, "SIN-DEL": 330, "SIN-CMB": 210,
+  "SIN-ADD": 570,
+  // From HKG (to Europe)
+  "HKG-PAR": 720, "HKG-LON": 720, "HKG-AMS": 700,
+  "HKG-BER": 680, "HKG-FCO": 690, "HKG-BCN": 720,
+  // From DEL (to Europe)
+  "DEL-PAR": 510, "DEL-LON": 510, "DEL-AMS": 510,
+  "DEL-BER": 450, "DEL-FCO": 480, "DEL-BCN": 540,
+  // From BOM (to Europe)
+  "BOM-PAR": 540, "BOM-LON": 540, "BOM-AMS": 540,
+  "BOM-BER": 480, "BOM-FCO": 480,
+  // From ADD (to Europe) — Ethiopian Airlines hub
+  "ADD-PAR": 480, "ADD-LON": 480, "ADD-AMS": 510,
+  "ADD-BER": 450, "ADD-FCO": 420, "ADD-BCN": 480,
+  // From ALA (to Europe) — Air Astana hub
+  "ALA-PAR": 420, "ALA-LON": 420, "ALA-AMS": 390,
+  "ALA-BER": 360, "ALA-IST": 330,
+  // From TAS (to Europe) — Uzbekistan Airways
+  "TAS-PAR": 390, "TAS-LON": 390, "TAS-AMS": 360,
+  "TAS-BER": 330, "TAS-FCO": 360,
+  // From CMB (to Europe) — SriLankan Airlines
+  "CMB-PAR": 600, "CMB-LON": 600, "CMB-AMS": 600,
+  "CMB-FCO": 570,
   // From SEL (to Europe)
-  "SEL-PAR": 750,
-  "SEL-AMS": 690,
-  "SEL-LON": 700,
-  "SEL-BER": 660,
+  "SEL-PAR": 750, "SEL-AMS": 690, "SEL-LON": 700, "SEL-BER": 660,
   // From TYO (to Europe)
-  "TYO-PAR": 750,
-  "TYO-AMS": 720,
-  "TYO-LON": 720,
+  "TYO-PAR": 750, "TYO-AMS": 720, "TYO-LON": 720,
   // From TPE (to Europe)
-  "TPE-PAR": 780,
-  "TPE-AMS": 790,
-  "TPE-LON": 770,
+  "TPE-PAR": 780, "TPE-AMS": 790, "TPE-LON": 770,
   // From TBS (to Europe)
-  "TBS-PAR": 310,
-  "TBS-BER": 270,
-  "TBS-WAW": 240,
-  "TBS-VIE": 240,
-  "TBS-AMS": 330,
+  "TBS-PAR": 310, "TBS-BER": 270, "TBS-WAW": 240,
+  "TBS-VIE": 240, "TBS-AMS": 330,
   // From IST (to Europe)
-  "IST-PAR": 220,
-  "IST-AMS": 220,
-  "IST-LON": 240,
-  "IST-BER": 180,
-  // DOH routes removed — Middle East
+  "IST-PAR": 220, "IST-AMS": 220, "IST-LON": 240, "IST-BER": 180,
+  "IST-FCO": 165, "IST-BCN": 210, "IST-MAD": 240, "IST-LIS": 270,
+  "IST-WAW": 150, "IST-VIE": 150, "IST-PRG": 165, "IST-BUD": 135,
+  // Extended EU destinations from existing hubs
+  "SEL-FCO": 720, "SEL-BCN": 750, "SEL-MAD": 780, "SEL-LIS": 780,
+  "SEL-WAW": 630, "SEL-VIE": 660, "SEL-PRG": 660, "SEL-BUD": 660,
+  "TYO-FCO": 720, "TYO-BER": 690, "TYO-BCN": 750,
+  "TPE-BER": 750, "TPE-FCO": 750,
+  "TBS-FCO": 240, "TBS-BCN": 300, "TBS-MAD": 330, "TBS-LIS": 360,
+  "TBS-PRG": 240, "TBS-BUD": 210,
+  "HKG-MAD": 750, "HKG-LIS": 780, "HKG-WAW": 660, "HKG-VIE": 680,
+  "HKG-PRG": 680, "HKG-BUD": 680,
+  "DEL-MAD": 540, "DEL-LIS": 540, "DEL-WAW": 420, "DEL-VIE": 450,
+  "DEL-PRG": 450, "DEL-BUD": 430,
+  "BOM-MAD": 540, "BOM-LIS": 540, "BOM-WAW": 450, "BOM-VIE": 450,
+  "ADD-MAD": 480, "ADD-LIS": 480, "ADD-WAW": 450, "ADD-VIE": 420,
+  "ADD-PRG": 450, "ADD-BUD": 420,
+  "ALA-FCO": 360, "ALA-BCN": 390, "ALA-MAD": 420, "ALA-WAW": 300,
+  "ALA-VIE": 330, "ALA-PRG": 330, "ALA-BUD": 300,
+  "TAS-MAD": 390, "TAS-WAW": 270, "TAS-VIE": 300,
+  "TAS-PRG": 300, "TAS-BUD": 270,
+  "CMB-BER": 570, "CMB-BCN": 600, "CMB-MAD": 600,
 };
 
 /** Look up segment duration, trying both orderings of city codes. */
@@ -117,7 +143,14 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   TSA: "TW",
   IST: "TR",
   TBS: "GE",
-  // DOH removed — Middle East
+  HKG: "HK",
+  DEL: "IN",
+  BOM: "IN",
+  ADD: "ET",
+  ALA: "KZ",
+  TAS: "UZ",
+  CMB: "LK",
+  HEL: "FI",
   DPS: "ID",
   MNL: "PH",
   VTE: "LA",
@@ -175,7 +208,14 @@ const AIRPORT_CITY: Record<string, string> = {
   TSA: "Taipei",
   IST: "Istanbul",
   TBS: "Tbilisi",
-  DOH: "Doha",
+  HKG: "Hong Kong",
+  DEL: "Delhi",
+  BOM: "Mumbai",
+  ADD: "Addis Ababa",
+  ALA: "Almaty",
+  TAS: "Tashkent",
+  CMB: "Colombo",
+  HEL: "Helsinki",
   DPS: "Bali",
   MNL: "Manila",
   VTE: "Vientiane",
@@ -294,7 +334,22 @@ function getCandidatePatterns(departureHub: string): RoutePattern[] {
   patterns.push({ hubs: ["NRT"], tag: "Via Tokyo" });
   patterns.push({ hubs: ["TPE"], tag: "Via Taipei" });
 
-  // ── 3-leg via Caucasus (avoiding Middle East entirely)
+  // ── 3-leg via Hong Kong
+  patterns.push({ hubs: ["HKG"], tag: "Via Hong Kong" });
+
+  // ── 3-leg via South Asia
+  patterns.push({ hubs: ["DEL"], tag: "Via Delhi" });
+  patterns.push({ hubs: ["BOM"], tag: "Via Mumbai" });
+  patterns.push({ hubs: ["CMB"], tag: "Via Colombo" });
+
+  // ── 3-leg via Africa
+  patterns.push({ hubs: ["ADD"], tag: "Via Addis Ababa" });
+
+  // ── 3-leg via Central Asia
+  patterns.push({ hubs: ["ALA"], tag: "Via Almaty" });
+  patterns.push({ hubs: ["TAS"], tag: "Via Tashkent" });
+
+  // ── 3-leg via Caucasus
   patterns.push({ hubs: ["TBS"], tag: "Via Tbilisi" });
   patterns.push({
     hubs: ["IST"],
@@ -304,12 +359,14 @@ function getCandidatePatterns(departureHub: string): RoutePattern[] {
     ],
   });
 
-  // ── 4-leg budget routes
+  // ── 4-leg budget/adventure routes
   patterns.push({ hubs: ["BKK", "ICN"], tag: "Budget via Bangkok + Seoul" });
-  patterns.push({
-    hubs: ["BKK", "TBS"],
-    tag: "Budget via Bangkok + Tbilisi",
-  });
+  patterns.push({ hubs: ["BKK", "TBS"], tag: "Budget via Bangkok + Tbilisi" });
+  patterns.push({ hubs: ["BKK", "DEL"], tag: "Via Bangkok + Delhi" });
+  patterns.push({ hubs: ["BKK", "ADD"], tag: "Via Bangkok + Addis Ababa" });
+  patterns.push({ hubs: ["BKK", "ALA"], tag: "Via Bangkok + Almaty" });
+  patterns.push({ hubs: ["BKK", "HKG"], tag: "Via Bangkok + Hong Kong" });
+  patterns.push({ hubs: ["SIN", "CMB"], tag: "Via Singapore + Colombo" });
   patterns.push({
     hubs: ["KUL", "IST"],
     tag: "Budget via KL + Istanbul",
@@ -374,7 +431,7 @@ export async function searchRoutes(params: {
   const { fromCity, fromAirport, targetCity, targetAirport, nationality, departMonth } = params;
 
   // Determine which EU airports to search
-  const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN"];
+  const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN", "MAD", "LIS", "WAW", "VIE", "PRG", "BUD"];
   const destinationAirports: string[] =
     targetAirport && targetAirport.length > 0
       ? [targetAirport]

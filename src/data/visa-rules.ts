@@ -42,7 +42,32 @@ export const visaRules: VisaRuleData[] = [
   { nationality: "FR", destinationCountry: "KZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
   { nationality: "FR", destinationCountry: "UZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
 
+  // East Asia (continued)
+  { nationality: "FR", destinationCountry: "HK", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { nationality: "FR", destinationCountry: "MO", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { nationality: "FR", destinationCountry: "MN", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
+
+  // South Asia (continued)
+  { nationality: "FR", destinationCountry: "NP", category: "easy", maxDays: 90, notes: "Visa on arrival at airport, ~$30" },
+  { nationality: "FR", destinationCountry: "MV", category: "free", maxDays: 30, notes: "Visa on arrival, free" },
+
+  // Central Asia (continued)
+  { nationality: "FR", destinationCountry: "KG", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
+  { nationality: "FR", destinationCountry: "TJ", category: "evisa", maxDays: 45, notes: "E-visa available online" },
+
+  // Africa
+  { nationality: "FR", destinationCountry: "ET", category: "evisa", maxDays: 90, notes: "E-visa available online, ~$82" },
+  { nationality: "FR", destinationCountry: "KE", category: "evisa", maxDays: 90, notes: "E-visa or ETA required" },
+  { nationality: "FR", destinationCountry: "TZ", category: "evisa", maxDays: 90, notes: "E-visa available, ~$50" },
+  { nationality: "FR", destinationCountry: "MA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { nationality: "FR", destinationCountry: "TN", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { nationality: "FR", destinationCountry: "ZA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { nationality: "FR", destinationCountry: "MU", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
+  { nationality: "FR", destinationCountry: "RW", category: "evisa", maxDays: 30, notes: "E-visa or visa on arrival, ~$30" },
+
   // Caucasus / Near-Europe
   { nationality: "FR", destinationCountry: "GE", category: "free", maxDays: 365, notes: "Visa exemption for 1 year" },
   { nationality: "FR", destinationCountry: "TR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days in 180-day period" },
+  { nationality: "FR", destinationCountry: "AM", category: "free", maxDays: 180, notes: "Visa exemption for 180 days" },
+  { nationality: "FR", destinationCountry: "AZ", category: "evisa", maxDays: 30, notes: "E-visa available, ~$26" },
 ];
