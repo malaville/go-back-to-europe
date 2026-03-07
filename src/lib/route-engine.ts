@@ -5,7 +5,7 @@
 // sorted RouteOption[] results.
 // ---------------------------------------------------------------------------
 
-import type { RouteOption, RouteLeg } from "@/data/mock-routes";
+import type { RouteOption, RouteLeg } from "@/data/route-types";
 import {
   getCheapestFlight,
   getLatestOneWayPrice,
@@ -29,6 +29,61 @@ const MIDDLE_EAST_HUB_AIRLINES = new Set([
   "RJ", // Royal Jordanian — Amman hub
   "ME", // Middle East Airlines — Beirut hub
 ]);
+
+// ── Airline hub cities ────────────────────────────────────────────────────
+// When an airline is returned for a segment and neither endpoint is its hub,
+// the flight almost certainly connects through the hub (hidden stop).
+const AIRLINE_HUBS: Record<string, string[]> = {
+  MU: ["PVG"],     // China Eastern → Shanghai
+  CZ: ["CAN"],     // China Southern → Guangzhou
+  CA: ["PEK"],     // Air China → Beijing
+  HU: ["PEK"],     // Hainan Airlines → Beijing
+  TK: ["IST"],     // Turkish Airlines → Istanbul
+  PC: ["IST"],     // Pegasus → Istanbul
+  ET: ["ADD"],     // Ethiopian Airlines → Addis Ababa
+  UL: ["CMB"],     // SriLankan Airlines → Colombo
+  AI: ["DEL", "BOM"], // Air India → Delhi/Mumbai
+  SU: ["SVO"],     // Aeroflot → Moscow
+  KC: ["ALA"],     // Air Astana → Almaty
+};
+
+// ── Airline alliances ────────────────────────────────────────────────────
+const AIRLINE_ALLIANCES: Record<string, string> = {
+  // Star Alliance
+  LH: "Star Alliance", SQ: "Star Alliance", NH: "Star Alliance",
+  TG: "Star Alliance", AI: "Star Alliance", OS: "Star Alliance",
+  SK: "Star Alliance", AY: "Star Alliance", TP: "Star Alliance",
+  ET: "Star Alliance", LO: "Star Alliance", CA: "Star Alliance",
+  BR: "Star Alliance", OZ: "Star Alliance",
+  // SkyTeam
+  AF: "SkyTeam", KL: "SkyTeam", MU: "SkyTeam", CZ: "SkyTeam",
+  KE: "SkyTeam", VN: "SkyTeam", GA: "SkyTeam", AZ: "SkyTeam",
+  // oneworld
+  BA: "oneworld", CX: "oneworld", JL: "oneworld", MH: "oneworld",
+  UL: "oneworld", IB: "oneworld", QF: "oneworld",
+};
+
+// ── Minimum connection time per airport (minutes) ────────────────────────
+const MIN_CONNECTION_MINUTES: Record<string, number> = {
+  SIN: 120,  // Changi — efficient
+  HKG: 150,  // HK — efficient but immigration
+  ICN: 120,  // Incheon — fast
+  NRT: 150,  // Narita — slower
+  TPE: 120,  // Taoyuan — decent
+  CAN: 180,  // Guangzhou — large, TWOV processing
+  PVG: 210,  // Shanghai — massive, TWOV customs
+  DEL: 240,  // Delhi — slow immigration
+  BOM: 210,  // Mumbai — large
+  ADD: 210,  // Addis — slower processing
+  CMB: 180,  // Colombo — medium
+  ALA: 150,  // Almaty — smaller, faster
+  TAS: 150,  // Tashkent — smaller
+  TBS: 150,  // Tbilisi — small
+  IST: 180,  // Istanbul — huge
+  BKK: 150,  // Suvarnabhumi
+  KUL: 150,  // KLIA
+};
+const DEFAULT_CONNECTION_MINUTES = 180;
 
 // ── Ground-transport connections ──────────────────────────────────────────
 // Small airports that need a ground leg to reach an international hub.
@@ -476,6 +531,51 @@ async function fetchSegmentPrice(
   return null;
 }
 
+/**
+ * Fetch price for a NONSTOP segment only — requires number_of_changes === 0.
+ * Only uses /v2/prices/latest since /v1/prices/cheap doesn't report changes.
+ */
+async function fetchNonstopPrice(
+  from: string,
+  to: string,
+): Promise<SegmentPriceResult | null> {
+  const latest = await getLatestOneWayPrice(from, to, MIDDLE_EAST_HUB_AIRLINES, 0);
+  if (latest) {
+    return {
+      price: latest.price,
+      airline: latest.airline,
+      airlineFullName: latest.airlineName,
+    };
+  }
+  return null;
+}
+
+/**
+ * Detect if an airline likely transits through its hub for a given segment.
+ * Only flags long-haul segments (>8h) where neither endpoint is the hub.
+ */
+function detectHiddenStop(
+  airlineCode: string,
+  from: string,
+  to: string,
+  durationMinutes: number
+): string | null {
+  if (durationMinutes < 480) return null; // short-haul, likely direct
+
+  const hubs = AIRLINE_HUBS[airlineCode];
+  if (!hubs) return null;
+
+  const fromApi = apiCode(from);
+  const toApi = apiCode(to);
+
+  for (const hub of hubs) {
+    if (fromApi === hub || toApi === hub) return null; // direct to/from hub
+  }
+
+  const hubCity = AIRPORT_CITY[hubs[0]] || hubs[0];
+  return `Likely connects via ${hubCity}`;
+}
+
 // ── Main search function ─────────────────────────────────────────────────
 
 export async function searchRoutes(params: {
@@ -538,8 +638,13 @@ export async function searchRoutes(params: {
       return { from: wp, to: waypoints[i + 1] };
     }).filter((s): s is { from: string; to: string } => s !== null);
 
+    const isNonstop = pattern.hubs.length === 0;
     const priceResults = await Promise.all(
-      segmentCodes.map((seg) => fetchSegmentPrice(seg.from, seg.to, departMonth))
+      segmentCodes.map((seg) =>
+        isNonstop
+          ? fetchNonstopPrice(seg.from, seg.to)
+          : fetchSegmentPrice(seg.from, seg.to, departMonth)
+      )
     );
 
     // If any segment has no price, skip this route
@@ -579,6 +684,8 @@ export async function searchRoutes(params: {
 
       const visa = resolveVisaStatus(seg.to, nationality);
 
+      const hiddenStop = detectHiddenStop(priceResult.airline, seg.from, seg.to, duration);
+
       legs.push({
         from: AIRPORT_CITY[seg.from] ?? seg.from,
         to: AIRPORT_CITY[seg.to] ?? seg.to,
@@ -587,6 +694,7 @@ export async function searchRoutes(params: {
         transport: "flight",
         airline: priceResult.airlineFullName,
         airlineCode: priceResult.airline,
+        hiddenStop: hiddenStop ?? undefined,
         duration: formatDuration(duration),
         durationMinutes: duration,
         price: priceResult.price,
@@ -598,19 +706,84 @@ export async function searchRoutes(params: {
     // Totals
     const totalPrice = legs.reduce((sum, l) => sum + l.price, 0);
     const totalDurationMinutes = legs.reduce((sum, l) => sum + l.durationMinutes, 0);
-    const layoverText = legs.length > 1 ? " (+ layovers)" : "";
-    const totalDuration = formatDuration(totalDurationMinutes) + layoverText;
+
+    // Estimated total including layovers
+    let layoverMinutes = 0;
+    const flightLegs = legs.filter((l) => l.transport === "flight");
+    if (flightLegs.length > 1) {
+      // Add connection time at each intermediate airport
+      for (let i = 0; i < flightLegs.length - 1; i++) {
+        const connectAt = flightLegs[i].toCode;
+        layoverMinutes += MIN_CONNECTION_MINUTES[connectAt] ?? DEFAULT_CONNECTION_MINUTES;
+      }
+    }
+    // Also add ground→flight connection time if applicable
+    if (groundLeg && flightLegs.length > 0) {
+      layoverMinutes += MIN_CONNECTION_MINUTES[flightLegs[0].fromCode] ?? DEFAULT_CONNECTION_MINUTES;
+    }
+
+    const estimatedTotalMinutes = totalDurationMinutes + layoverMinutes;
+    const estimatedTotalDuration = legs.length > 1
+      ? `~${formatDuration(estimatedTotalMinutes)}`
+      : formatDuration(totalDurationMinutes);
+    const totalDuration = legs.length > 1
+      ? `${formatDuration(totalDurationMinutes)} flying`
+      : formatDuration(totalDurationMinutes);
+
+    // Ticket type — detect alliance connections
+    const airlineCodes = flightLegs
+      .map((l) => l.airlineCode)
+      .filter((c): c is string => !!c);
+
+    let ticketType: "separate" | "alliance" | "single-carrier" = "separate";
+    if (airlineCodes.length > 0) {
+      if (airlineCodes.every((c) => c === airlineCodes[0])) {
+        ticketType = "single-carrier";
+      } else {
+        const alliances = airlineCodes.map((c) => AIRLINE_ALLIANCES[c]).filter(Boolean);
+        if (
+          alliances.length === airlineCodes.length &&
+          alliances.every((a) => a === alliances[0])
+        ) {
+          ticketType = "alliance";
+        }
+      }
+    }
 
     // Warnings
     const warnings: string[] = [...(pattern.warnings ?? [])];
-    if (totalDurationMinutes > 1200) {
+    if (estimatedTotalMinutes > 1440) {
       warnings.push(
         "Long total travel time — consider an overnight stop at a layover city"
       );
     }
+    if (ticketType === "separate" && flightLegs.length > 1) {
+      warnings.push(
+        "Separate tickets — no rebooking protection if you miss a connection. Book with extra layover time."
+      );
+    }
+    // Flag hidden stops
+    for (const leg of flightLegs) {
+      if (leg.hiddenStop) {
+        warnings.push(`${leg.from}→${leg.to} on ${leg.airline}: ${leg.hiddenStop}`);
+      }
+    }
+
+    // Build Aviasales affiliate search URL (origin → final destination)
+    const searchMonth = departMonth.split("-")[1] || "03";
+    const searchDate = `15${searchMonth}`; // 15th of departure month
+    const firstFrom = legs[0].fromCode;
+    const lastTo = legs[legs.length - 1].toCode;
+    const searchUrl = `https://www.aviasales.com/search/${firstFrom}${searchDate}${lastTo}1?marker=708661`;
 
     // Tags
     const tags: string[] = [pattern.tag];
+    if (ticketType === "single-carrier") {
+      tags.push("Single ticket");
+    } else if (ticketType === "alliance") {
+      const allianceName = AIRLINE_ALLIANCES[airlineCodes[0]];
+      if (allianceName) tags.push(allianceName);
+    }
 
     // Generate a deterministic ID
     const legCodes = legs.map((l) => l.fromCode).join("-") + "-" + legs[legs.length - 1].toCode;
@@ -622,6 +795,10 @@ export async function searchRoutes(params: {
       totalPrice,
       totalDurationMinutes,
       totalDuration,
+      estimatedTotalMinutes,
+      estimatedTotalDuration,
+      searchUrl,
+      ticketType,
       warnings,
       tags,
     };
@@ -634,63 +811,94 @@ export async function searchRoutes(params: {
   const routes = rawResults
     .filter((r): r is RouteOption => r !== null)
     .sort((a, b) => {
-      const aHasWarning = a.warnings.some((w) => w.includes("conflict"));
-      const bHasWarning = b.warnings.some((w) => w.includes("conflict"));
-      if (aHasWarning && !bHasWarning) return 1;
-      if (!aHasWarning && bHasWarning) return -1;
+      const aHasConflict = a.warnings.some((w) => w.includes("conflict"));
+      const bHasConflict = b.warnings.some((w) => w.includes("conflict"));
+      if (aHasConflict && !bHasConflict) return 1;
+      if (!aHasConflict && bHasConflict) return -1;
       return a.totalPrice - b.totalPrice;
     });
 
-  // Tag the cheapest, fastest, and most comfortable
-  if (routes.length > 0) {
-    // Cheapest
-    routes[0].tags.push("Cheapest");
+  if (routes.length === 0) return routes;
 
-    // Fastest
-    const fastest = routes.reduce((min, r) =>
-      r.totalDurationMinutes < min.totalDurationMinutes ? r : min
-    );
-    if (!fastest.tags.includes("Cheapest")) {
-      fastest.tags.push("Fastest");
-    } else if (routes.length > 1) {
-      // Find next fastest that isn't already tagged cheapest
-      const nextFastest = routes
-        .filter((r) => r !== fastest)
-        .reduce((min, r) =>
-          r.totalDurationMinutes < min.totalDurationMinutes ? r : min
-        );
-      nextFastest.tags.push("Fastest");
+  // ── Compute recommendation score for each route ──────────────────────
+  const medianPrice = routes[Math.floor(routes.length / 2)].totalPrice;
+  const sortedByTime = [...routes].sort((a, b) => a.estimatedTotalMinutes - b.estimatedTotalMinutes);
+  const medianTime = sortedByTime[Math.floor(sortedByTime.length / 2)].estimatedTotalMinutes;
+
+  let bestScore = -1;
+  let bestRoute: RouteOption | null = null;
+
+  for (const route of routes) {
+    let score = 0;
+
+    // All visa-free transits (+20)
+    if (route.legs.every((l) => l.visaStatus === "free" || l.visaStatus === "none")) {
+      score += 20;
     }
 
-    // Most comfortable = fewest legs (and within that, shortest duration)
-    const comfortable = routes.reduce((best, r) => {
-      if (r.legs.length < best.legs.length) return r;
-      if (
-        r.legs.length === best.legs.length &&
-        r.totalDurationMinutes < best.totalDurationMinutes
-      )
-        return r;
-      return best;
-    });
-    if (
-      !comfortable.tags.includes("Cheapest") &&
-      !comfortable.tags.includes("Fastest")
-    ) {
-      comfortable.tags.push("Most comfortable");
-    }
+    // Fewer stops (+15 nonstop, +10 one-stop)
+    const fLegs = route.legs.filter((l) => l.transport === "flight");
+    if (fLegs.length === 1) score += 15;
+    else if (fLegs.length === 2) score += 10;
 
-    // Adventure route = most legs
-    const adventure = routes.reduce((best, r) =>
-      r.legs.length > best.legs.length ? r : best
-    );
-    if (
-      adventure.legs.length > 2 &&
-      !adventure.tags.includes("Cheapest") &&
-      !adventure.tags.includes("Fastest") &&
-      !adventure.tags.includes("Most comfortable")
-    ) {
-      adventure.tags.push("Adventure route");
+    // Ticket type (+10 single, +5 alliance)
+    if (route.ticketType === "single-carrier") score += 10;
+    else if (route.ticketType === "alliance") score += 5;
+
+    // No conflict warnings (+10)
+    if (!route.warnings.some((w) => w.includes("conflict"))) score += 10;
+
+    // No hidden stops (+5)
+    if (!route.legs.some((l) => l.hiddenStop)) score += 5;
+
+    // Price below median (+15)
+    if (route.totalPrice <= medianPrice) score += 15;
+
+    // Time below median (+10)
+    if (route.estimatedTotalMinutes <= medianTime) score += 10;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestRoute = route;
     }
+  }
+
+  // ── Tag routes ───────────────────────────────────────────────────────
+
+  // Recommended (composite best)
+  if (bestRoute) {
+    bestRoute.tags.push("Recommended");
+  }
+
+  // Cheapest
+  routes[0].tags.push("Cheapest");
+
+  // Fastest (by estimated total)
+  const fastest = routes.reduce((min, r) =>
+    r.estimatedTotalMinutes < min.estimatedTotalMinutes ? r : min
+  );
+  if (!fastest.tags.includes("Cheapest")) {
+    fastest.tags.push("Fastest");
+  } else if (routes.length > 1) {
+    const nextFastest = routes
+      .filter((r) => r !== fastest)
+      .reduce((min, r) =>
+        r.estimatedTotalMinutes < min.estimatedTotalMinutes ? r : min
+      );
+    nextFastest.tags.push("Fastest");
+  }
+
+  // Adventure route = most legs
+  const adventure = routes.reduce((best, r) =>
+    r.legs.length > best.legs.length ? r : best
+  );
+  if (
+    adventure.legs.length > 2 &&
+    !adventure.tags.includes("Cheapest") &&
+    !adventure.tags.includes("Fastest") &&
+    !adventure.tags.includes("Recommended")
+  ) {
+    adventure.tags.push("Adventure route");
   }
 
   return routes;

@@ -1,6 +1,7 @@
 "use client";
 
-import type { RouteOption, RouteLeg } from "@/data/mock-routes";
+import type { RouteOption, RouteLeg } from "@/data/route-types";
+import { activeAdvisories } from "@/data/advisories";
 
 function transportIcon(transport: RouteLeg["transport"]) {
   switch (transport) {
@@ -56,9 +57,29 @@ function visaBadge(status: RouteLeg["visaStatus"], note?: string) {
   );
 }
 
+function ticketTypeBadge(type: RouteOption["ticketType"]) {
+  if (type === "single-carrier") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Protected connection
+      </span>
+    );
+  }
+  if (type === "alliance") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+        Alliance — ask about through-booking
+      </span>
+    );
+  }
+  return null;
+}
+
 /** Build a Google Flights search URL for a given leg */
 function googleFlightsUrl(leg: RouteLeg): string {
-  // Google Flights URL format: /flights/FROM-TO
   return `https://www.google.com/travel/flights?q=flights+from+${leg.fromCode}+to+${leg.toCode}`;
 }
 
@@ -98,6 +119,12 @@ function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
             <span className="font-semibold text-slate-800">${leg.price}</span>
             {visaBadge(leg.visaStatus, leg.visaNote)}
           </div>
+          {/* Hidden stop alert */}
+          {leg.hiddenStop && (
+            <p className="mt-1 text-xs text-amber-600 font-medium">
+              {leg.hiddenStop}
+            </p>
+          )}
           <div className="mt-1 flex items-center gap-3">
             {leg.visaNote && leg.visaStatus !== "none" && (
               <p className="text-xs text-slate-400">{leg.visaNote}</p>
@@ -121,34 +148,55 @@ function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {
 
 function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
   const lastLeg = route.legs[route.legs.length - 1];
+  const isRecommended = route.tags.includes("Recommended");
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+    <div className={`rounded-2xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
+      isRecommended ? "border-emerald-300 ring-2 ring-emerald-100" : "border-slate-200"
+    }`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3 bg-gradient-to-r from-blue-50 to-slate-50 border-b border-slate-100">
+      <div className={`flex items-center justify-between px-5 py-3 border-b ${
+        isRecommended
+          ? "bg-gradient-to-r from-emerald-50 to-blue-50 border-emerald-100"
+          : "bg-gradient-to-r from-blue-50 to-slate-50 border-slate-100"
+      }`}>
         <div className="flex items-center gap-2">
-          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-500 text-white text-sm font-bold">
+          <span className={`flex items-center justify-center w-7 h-7 rounded-full text-white text-sm font-bold ${
+            isRecommended ? "bg-emerald-500" : "bg-blue-500"
+          }`}>
             {rank}
           </span>
           <div className="flex flex-wrap gap-1.5">
             {route.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700"
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  tag === "Recommended"
+                    ? "bg-emerald-100 text-emerald-800"
+                    : "bg-blue-100 text-blue-700"
+                }`}
               >
-                {tag}
+                {tag === "Recommended" ? "\u2605 " + tag : tag}
               </span>
             ))}
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-slate-900">${route.totalPrice}</div>
-          <div className="text-xs text-slate-500">{route.totalDuration}</div>
+          <div className="text-xl font-bold text-slate-900">~${route.totalPrice}</div>
+          <div className="text-xs text-slate-500">{route.estimatedTotalDuration}</div>
+          {route.legs.length > 1 && (
+            <div className="text-[10px] text-slate-400">{route.totalDuration}</div>
+          )}
         </div>
       </div>
 
+      {/* Ticket type indicator */}
+      <div className="px-5 pt-2 flex items-center gap-2">
+        {ticketTypeBadge(route.ticketType)}
+      </div>
+
       {/* Legs */}
-      <div className="px-5 pt-4 pb-2">
+      <div className="px-5 pt-3 pb-2">
         {route.legs.map((leg, i) => (
           <LegCard key={`${leg.fromCode}-${leg.toCode}`} leg={leg} isLast={i === route.legs.length - 1} />
         ))}
@@ -166,7 +214,7 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
 
       {/* Warnings */}
       {route.warnings.length > 0 && (
-        <div className="mx-5 mb-4 mt-2 rounded-xl bg-amber-50 border border-amber-200 p-3">
+        <div className="mx-5 mb-3 mt-2 rounded-xl bg-amber-50 border border-amber-200 p-3 space-y-1.5">
           {route.warnings.map((warning, i) => (
             <div key={i} className="flex items-start gap-2 text-xs text-amber-800">
               <svg className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -178,11 +226,54 @@ function RouteCard({ route, rank }: { route: RouteOption; rank: number }) {
         </div>
       )}
 
-      {/* Safety note */}
-      <div className="mx-5 mb-4 mt-1 text-center">
-        <p className="text-[10px] text-slate-400">
-          Prices are estimates from cached data. Click &quot;Verify price&quot; on each leg to check current fares.
+      {/* Book / search button */}
+      <div className="px-5 pb-4 pt-1">
+        <a
+          href={route.searchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-center rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 transition-colors"
+        >
+          Search this route on Aviasales
+        </a>
+        <p className="text-[10px] text-slate-400 text-center mt-1.5">
+          Compare through-ticket prices — often cheaper than segment estimates
         </p>
+      </div>
+    </div>
+  );
+}
+
+function CrisisBanner() {
+  const advisory = activeAdvisories.find((a) => a.active);
+  if (!advisory) return null;
+
+  const severityStyles = {
+    info: "bg-blue-50 border-blue-200 text-blue-800",
+    high: "bg-amber-50 border-amber-200 text-amber-800",
+    critical: "bg-red-50 border-red-200 text-red-800",
+  };
+
+  return (
+    <div className={`rounded-xl border p-3 mb-4 ${severityStyles[advisory.severity]}`}>
+      <div className="flex items-start gap-2">
+        <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path d="M12 9v2m0 4h.01M12 3l9.5 16.5H2.5L12 3z" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <div className="text-xs leading-relaxed">
+          <span className="font-semibold">Travel Advisory: </span>
+          {advisory.message}
+          {advisory.link && (
+            <a
+              href={advisory.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-1 underline hover:no-underline"
+            >
+              Source
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -207,6 +298,8 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
 
   return (
     <div className="space-y-4">
+      <CrisisBanner />
+
       <div className="text-center pb-2">
         <h2 className="text-lg font-semibold text-slate-800">
           {routes.length} routes from {fromCity}
@@ -226,7 +319,7 @@ export default function RouteResults({ routes, fromCity, targetCity }: RouteResu
         </p>
       </div>
       <p className="text-center text-xs text-slate-400 pt-2">
-        Prices are estimates from cached flight data — click &quot;Verify price&quot; to check on Google Flights. Always confirm visa requirements before traveling.
+        Prices are per-segment estimates from cached data. Click &quot;Search this route&quot; to see through-ticket pricing on Aviasales. Always confirm visa requirements before traveling.
       </p>
     </div>
   );

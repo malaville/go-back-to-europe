@@ -196,7 +196,8 @@ export async function getCheapestFlight(
 export async function getLatestOneWayPrice(
   origin: string,
   destination: string,
-  excludeAirlines?: Set<string>
+  excludeAirlines?: Set<string>,
+  maxChanges?: number
 ): Promise<LatestPriceResult | null> {
   try {
     const params = new URLSearchParams({
@@ -216,9 +217,10 @@ export async function getLatestOneWayPrice(
     const json = await res.json();
     if (!json.success || !json.data || json.data.length === 0) return null;
 
-    // Find cheapest that isn't on a blocked airline
+    // Find cheapest that passes all filters
     for (const d of json.data) {
       if (excludeAirlines?.has(d.airline)) continue;
+      if (maxChanges !== undefined && (d.number_of_changes ?? 99) > maxChanges) continue;
       return {
         price: d.value,
         airline: d.airline,

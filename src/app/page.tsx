@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
 import RouteResults from "@/components/RouteResults";
 import RouteSkeletons from "@/components/RouteSkeletons";
-import type { RouteOption } from "@/data/mock-routes";
+import type { RouteOption } from "@/data/route-types";
 
 export default function Page() {
   return (
