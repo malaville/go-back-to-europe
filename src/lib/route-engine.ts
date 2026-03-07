@@ -110,8 +110,83 @@ const GROUND_CONNECTIONS: GroundConnection[] = [
     price: 10,
     note: "Regular buses, ~300km",
   },
-  // Add more ground connections here as needed:
-  // { fromCode: "XXX", fromCity: "...", toCode: "YYY", ... },
+  // Vientiane → Bangkok (short flight)
+  {
+    fromCode: "VTE",
+    fromCity: "Vientiane",
+    toCode: "BKK",
+    toCity: "Bangkok",
+    transport: "flight",
+    durationMinutes: 70,
+    price: 60,
+    note: "Lao Airlines or Bangkok Airways, ~1h",
+  },
+  // Phnom Penh → Bangkok (short flight)
+  {
+    fromCode: "PNH",
+    fromCity: "Phnom Penh",
+    toCode: "BKK",
+    toCity: "Bangkok",
+    transport: "flight",
+    durationMinutes: 90,
+    price: 40,
+    note: "AirAsia, ~1h flight",
+  },
+  // Bali → Singapore (short flight)
+  {
+    fromCode: "DPS",
+    fromCity: "Bali",
+    toCode: "SIN",
+    toCity: "Singapore",
+    transport: "flight",
+    durationMinutes: 180,
+    price: 65,
+    note: "Scoot, AirAsia, ~3h flight",
+  },
+  // Manila → Hong Kong (short flight)
+  {
+    fromCode: "MNL",
+    fromCity: "Manila",
+    toCode: "HKG",
+    toCity: "Hong Kong",
+    transport: "flight",
+    durationMinutes: 150,
+    price: 50,
+    note: "Cathay Pacific, AirAsia, ~2.5h flight",
+  },
+  // Yangon → Bangkok (short flight)
+  {
+    fromCode: "RGN",
+    fromCity: "Yangon",
+    toCode: "BKK",
+    toCity: "Bangkok",
+    transport: "flight",
+    durationMinutes: 100,
+    price: 50,
+    note: "Thai Lion Air, AirAsia, ~1h flight",
+  },
+  // Hanoi → Bangkok (short flight)
+  {
+    fromCode: "HAN",
+    fromCity: "Hanoi",
+    toCode: "BKK",
+    toCity: "Bangkok",
+    transport: "flight",
+    durationMinutes: 130,
+    price: 60,
+    note: "Thai AirAsia, ~2h flight",
+  },
+  // Chiang Mai → Bangkok (domestic flight)
+  {
+    fromCode: "CNX",
+    fromCity: "Chiang Mai",
+    toCode: "BKK",
+    toCity: "Bangkok",
+    transport: "flight",
+    durationMinutes: 80,
+    price: 30,
+    note: "Thai Lion Air, domestic, ~1h flight",
+  },
 ];
 
 // ── Segment durations (minutes) ───────────────────────────────────────────
@@ -205,6 +280,48 @@ const SEGMENT_DURATIONS: Record<string, number> = {
   "PVG-MAD": 750, "PVG-LIS": 780,
   "PVG-WAW": 600, "PVG-VIE": 630, "PVG-PRG": 630, "PVG-BUD": 630,
   "CAN-WAW": 630, "CAN-VIE": 660, "CAN-PRG": 660, "CAN-BUD": 660,
+
+  // ── Small SEA origins → transit hubs ──
+  // Hanoi (HAN)
+  "HAN-BKK": 120, "HAN-SIN": 210, "HAN-HKG": 135,
+  "HAN-CAN": 120, "HAN-PVG": 180,
+  // Bali (DPS)
+  "DPS-SIN": 155, "DPS-KUL": 180, "DPS-BKK": 210,
+  "DPS-HKG": 210, "DPS-CAN": 240,
+  // Manila (MNL)
+  "MNL-HKG": 135, "MNL-SIN": 210, "MNL-BKK": 210,
+  "MNL-CAN": 180, "MNL-TPE": 90,
+  // Phnom Penh (PNH)
+  "PNH-BKK": 65, "PNH-SIN": 120, "PNH-SGN": 75,
+  "PNH-HKG": 150,
+  // Vientiane (VTE)
+  "VTE-BKK": 70, "VTE-HAN": 120, "VTE-SGN": 130,
+  // Chiang Mai (CNX)
+  "CNX-BKK": 75, "CNX-SGN": 180, "CNX-SIN": 180,
+  // Yangon (RGN)
+  "RGN-BKK": 90, "RGN-SIN": 180, "RGN-HKG": 150,
+
+  // ── New EU destinations from existing hubs ──
+  // Helsinki (HEL)
+  "BKK-HEL": 630, "SIN-HEL": 660, "HKG-HEL": 660,
+  "DEL-HEL": 480, "ALA-HEL": 390, "TBS-HEL": 210, "IST-HEL": 240,
+  "CAN-HEL": 690, "PVG-HEL": 660,
+  // Athens (ATH)
+  "BKK-ATH": 600, "SIN-ATH": 630, "HKG-ATH": 720,
+  "DEL-ATH": 450, "ADD-ATH": 390, "TBS-ATH": 330, "IST-ATH": 90,
+  "ALA-ATH": 480, "CAN-ATH": 750, "PVG-ATH": 750,
+  // Stockholm (ARN)
+  "BKK-ARN": 720, "SIN-ARN": 750, "HKG-ARN": 720,
+  "DEL-ARN": 540, "ALA-ARN": 450, "TBS-ARN": 300, "IST-ARN": 360,
+  // Copenhagen (CPH)
+  "BKK-CPH": 600, "SIN-CPH": 630, "HKG-CPH": 660,
+  "DEL-CPH": 480, "ALA-CPH": 420, "TBS-CPH": 270, "IST-CPH": 300,
+  // Dublin (DUB)
+  "BKK-DUB": 720, "SIN-DUB": 750, "HKG-DUB": 810,
+  "DEL-DUB": 600, "ALA-DUB": 540, "TBS-DUB": 420, "IST-DUB": 450,
+  // Bucharest (OTP)
+  "BKK-OTP": 540, "SIN-OTP": 570, "HKG-OTP": 630,
+  "DEL-OTP": 360, "ALA-OTP": 300, "TBS-OTP": 150, "IST-OTP": 240,
 };
 
 /** Look up segment duration, trying both orderings of city codes. */
@@ -241,7 +358,6 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   CMB: "LK",
   CAN: "CN",
   PVG: "CN",
-  HEL: "FI",
   DPS: "ID",
   MNL: "PH",
   VTE: "LA",
@@ -270,6 +386,12 @@ const AIRPORT_COUNTRY: Record<string, string> = {
   VIE: "AT",
   BRU: "BE",
   CRL: "BE",
+  HEL: "FI",
+  ATH: "GR",
+  ARN: "SE",
+  CPH: "DK",
+  DUB: "IE",
+  OTP: "RO",
 };
 
 // EU / EEA / Schengen country codes — transit visa always "none"
@@ -308,7 +430,6 @@ const AIRPORT_CITY: Record<string, string> = {
   CMB: "Colombo",
   CAN: "Guangzhou",
   PVG: "Shanghai",
-  HEL: "Helsinki",
   DPS: "Bali",
   MNL: "Manila",
   VTE: "Vientiane",
@@ -336,6 +457,12 @@ const AIRPORT_CITY: Record<string, string> = {
   VIE: "Vienna",
   BRU: "Brussels",
   CRL: "Brussels",
+  HEL: "Helsinki",
+  ATH: "Athens",
+  ARN: "Stockholm",
+  CPH: "Copenhagen",
+  DUB: "Dublin",
+  OTP: "Bucharest",
 };
 
 // Airport code → city code used by the Aviasales API
@@ -589,7 +716,7 @@ export async function searchRoutes(params: {
   const { fromCity, fromAirport, targetCity, targetAirport, nationality, departMonth } = params;
 
   // Determine which EU airports to search
-  const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN", "MAD", "LIS", "WAW", "VIE", "PRG", "BUD"];
+  const EU_SEARCH_AIRPORTS = ["CDG", "AMS", "LHR", "BER", "FCO", "BCN", "MAD", "LIS", "WAW", "VIE", "PRG", "BUD", "HEL", "ATH", "ARN", "CPH", "DUB", "OTP"];
   const destinationAirports: string[] =
     targetAirport && targetAirport.length > 0
       ? [targetAirport]
@@ -901,5 +1028,6 @@ export async function searchRoutes(params: {
     adventure.tags.push("Adventure route");
   }
 
-  return routes;
+  // Cap results at ~20 to prevent combinatorial explosion
+  return routes.slice(0, 20);
 }

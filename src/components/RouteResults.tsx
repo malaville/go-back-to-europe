@@ -78,9 +78,10 @@ function ticketTypeBadge(type: RouteOption["ticketType"]) {
   return null;
 }
 
-/** Build a Google Flights search URL for a given leg */
+/** Build a Google Flights one-way search URL for a given leg */
 function googleFlightsUrl(leg: RouteLeg): string {
-  return `https://www.google.com/travel/flights?q=flights+from+${leg.fromCode}+to+${leg.toCode}`;
+  // Format: https://www.google.com/travel/flights?q=Flights+to+[DST]+from+[ORG]+oneway&curr=EUR
+  return `https://www.google.com/travel/flights?q=Flights+to+${leg.toCode}+from+${leg.fromCode}+oneway&curr=EUR`;
 }
 
 function LegCard({ leg, isLast }: { leg: RouteLeg; isLast: boolean }) {

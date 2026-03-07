@@ -69,6 +69,12 @@ export async function POST(request: NextRequest) {
 
     const targetAirport = isAnywhere ? "" : lookupAirportCode(targetCity);
 
+    // If a specific destination was requested but not found, return empty
+    if (!isAnywhere && !targetAirport) {
+      console.warn(`[search] Could not find airport for target city: ${targetCity}`);
+      return NextResponse.json([], { status: 200 });
+    }
+
     // Calculate departure month
     const departMonth = getDepartMonth(deadlineDate, flexDays ?? 7);
 

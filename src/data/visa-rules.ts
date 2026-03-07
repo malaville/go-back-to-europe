@@ -9,68 +9,88 @@ export type VisaRuleData = {
 };
 
 /**
- * Simplified visa rules for French (FR) nationals for common transit countries.
- * Categories:
- *  - "free"    = visa-free entry
- *  - "evisa"   = electronic visa available online
- *  - "warning" = entry possible but restrictions / instability
- *  - "easy"    = visa on arrival or simple process
- *  - "hard"    = complex visa process, may require embassy visit
+ * Visa rules for EU nationals (FR, DE, IT, ES, NL, GB, PL, RO, SE, BE, AT).
+ * Most SEA/transit countries treat all EU passports identically.
+ * Exceptions are noted where they exist (e.g., GB post-Brexit).
  */
-export const visaRules: VisaRuleData[] = [
+
+// List of EU nationalities covered
+const EU_NATIONALITIES = ["FR", "DE", "IT", "ES", "NL", "GB", "PL", "RO", "SE", "BE", "AT"];
+
+// Base rules (apply to all EU nationalities unless overridden)
+type BaseRule = Omit<VisaRuleData, "nationality">;
+
+const BASE_RULES: BaseRule[] = [
   // Southeast Asia
-  { nationality: "FR", destinationCountry: "TH", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
-  { nationality: "FR", destinationCountry: "VN", category: "evisa", maxDays: 90, notes: "E-visa available online, 90-day stay" },
-  { nationality: "FR", destinationCountry: "KH", category: "easy", maxDays: 30, notes: "Visa on arrival or e-visa, ~$30" },
-  { nationality: "FR", destinationCountry: "LA", category: "easy", maxDays: 30, notes: "Visa on arrival at airports, ~$40" },
-  { nationality: "FR", destinationCountry: "MM", category: "evisa", maxDays: 28, notes: "E-visa required; check travel advisories" },
-  { nationality: "FR", destinationCountry: "MY", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "SG", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "ID", category: "easy", maxDays: 30, notes: "Visa on arrival ~$35, extendable 30 days" },
-  { nationality: "FR", destinationCountry: "PH", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
+  { destinationCountry: "TH", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
+  { destinationCountry: "VN", category: "evisa", maxDays: 90, notes: "E-visa available online, 90-day stay" },
+  { destinationCountry: "KH", category: "easy", maxDays: 30, notes: "Visa on arrival or e-visa, ~$30" },
+  { destinationCountry: "LA", category: "easy", maxDays: 30, notes: "Visa on arrival at airports, ~$40" },
+  { destinationCountry: "MM", category: "evisa", maxDays: 28, notes: "E-visa required; check travel advisories" },
+  { destinationCountry: "MY", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "SG", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "ID", category: "easy", maxDays: 30, notes: "Visa on arrival ~$35, extendable 30 days" },
+  { destinationCountry: "PH", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
 
   // East Asia
-  { nationality: "FR", destinationCountry: "KR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "JP", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "TW", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "KR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "JP", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "TW", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
 
   // South Asia
-  { nationality: "FR", destinationCountry: "IN", category: "evisa", maxDays: 90, notes: "E-visa available, multiple categories" },
-  { nationality: "FR", destinationCountry: "LK", category: "evisa", maxDays: 30, notes: "ETA e-visa required, ~$50" },
+  { destinationCountry: "IN", category: "evisa", maxDays: 90, notes: "E-visa available, multiple categories" },
+  { destinationCountry: "LK", category: "evisa", maxDays: 30, notes: "ETA e-visa required, ~$50" },
 
   // Central Asia
-  { nationality: "FR", destinationCountry: "KZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
-  { nationality: "FR", destinationCountry: "UZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
+  { destinationCountry: "KZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
+  { destinationCountry: "UZ", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
 
   // East Asia (continued)
-  { nationality: "FR", destinationCountry: "HK", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "MO", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "MN", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
+  { destinationCountry: "HK", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "MO", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "MN", category: "free", maxDays: 30, notes: "Visa exemption for 30 days" },
 
   // South Asia (continued)
-  { nationality: "FR", destinationCountry: "NP", category: "easy", maxDays: 90, notes: "Visa on arrival at airport, ~$30" },
-  { nationality: "FR", destinationCountry: "MV", category: "free", maxDays: 30, notes: "Visa on arrival, free" },
+  { destinationCountry: "NP", category: "easy", maxDays: 90, notes: "Visa on arrival at airport, ~$30" },
+  { destinationCountry: "MV", category: "free", maxDays: 30, notes: "Visa on arrival, free" },
 
   // Central Asia (continued)
-  { nationality: "FR", destinationCountry: "KG", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
-  { nationality: "FR", destinationCountry: "TJ", category: "evisa", maxDays: 45, notes: "E-visa available online" },
+  { destinationCountry: "KG", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
+  { destinationCountry: "TJ", category: "evisa", maxDays: 45, notes: "E-visa available online" },
 
   // Africa
-  { nationality: "FR", destinationCountry: "ET", category: "evisa", maxDays: 90, notes: "E-visa available online, ~$82" },
-  { nationality: "FR", destinationCountry: "KE", category: "evisa", maxDays: 90, notes: "E-visa or ETA required" },
-  { nationality: "FR", destinationCountry: "TZ", category: "evisa", maxDays: 90, notes: "E-visa available, ~$50" },
-  { nationality: "FR", destinationCountry: "MA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "TN", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "ZA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
-  { nationality: "FR", destinationCountry: "MU", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
-  { nationality: "FR", destinationCountry: "RW", category: "evisa", maxDays: 30, notes: "E-visa or visa on arrival, ~$30" },
+  { destinationCountry: "ET", category: "evisa", maxDays: 90, notes: "E-visa available online, ~$82" },
+  { destinationCountry: "KE", category: "evisa", maxDays: 90, notes: "E-visa or ETA required" },
+  { destinationCountry: "TZ", category: "evisa", maxDays: 90, notes: "E-visa available, ~$50" },
+  { destinationCountry: "MA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "TN", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "ZA", category: "free", maxDays: 90, notes: "Visa exemption for 90 days" },
+  { destinationCountry: "MU", category: "free", maxDays: 60, notes: "Visa exemption for 60 days" },
+  { destinationCountry: "RW", category: "evisa", maxDays: 30, notes: "E-visa or visa on arrival, ~$30" },
 
   // China (144-hour visa-free transit)
-  { nationality: "FR", destinationCountry: "CN", category: "free", maxDays: 6, notes: "144h visa-free transit — must have onward ticket to third country within 144h" },
+  { destinationCountry: "CN", category: "free", maxDays: 6, notes: "144h visa-free transit — must have onward ticket to third country within 144h" },
 
   // Caucasus / Near-Europe
-  { nationality: "FR", destinationCountry: "GE", category: "free", maxDays: 365, notes: "Visa exemption for 1 year" },
-  { nationality: "FR", destinationCountry: "TR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days in 180-day period" },
-  { nationality: "FR", destinationCountry: "AM", category: "free", maxDays: 180, notes: "Visa exemption for 180 days" },
-  { nationality: "FR", destinationCountry: "AZ", category: "evisa", maxDays: 30, notes: "E-visa available, ~$26" },
+  { destinationCountry: "GE", category: "free", maxDays: 365, notes: "Visa exemption for 1 year" },
+  { destinationCountry: "TR", category: "free", maxDays: 90, notes: "Visa exemption for 90 days in 180-day period" },
+  { destinationCountry: "AM", category: "free", maxDays: 180, notes: "Visa exemption for 180 days" },
+  { destinationCountry: "AZ", category: "evisa", maxDays: 30, notes: "E-visa available, ~$26" },
 ];
+
+// Generate all combinations: base rules for all EU nationalities
+const baseRules: VisaRuleData[] = [];
+for (const nat of EU_NATIONALITIES) {
+  for (const rule of BASE_RULES) {
+    baseRules.push({ ...rule, nationality: nat });
+  }
+}
+
+// Exceptions (where specific nationalities differ from base rules)
+// Most SEA/transit countries treat all EU identically, so this is minimal
+const exceptions: VisaRuleData[] = [
+  // GB-specific exceptions if any (currently identical to others)
+  // Can add more if discovered
+];
+
+export const visaRules: VisaRuleData[] = [...baseRules, ...exceptions];

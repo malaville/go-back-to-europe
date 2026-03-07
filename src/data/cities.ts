@@ -326,4 +326,64 @@ export const cities: CityData[] = [
       { code: "VIE", name: "Vienna International Airport", distanceKm: 18, travelTimeHours: 0.4 },
     ],
   },
+  {
+    name: "Helsinki",
+    country: "FI",
+    region: "europe",
+    lat: 60.1695,
+    lng: 24.9354,
+    nearbyAirports: [
+      { code: "HEL", name: "Helsinki Airport", distanceKm: 17, travelTimeHours: 0.3 },
+    ],
+  },
+  {
+    name: "Athens",
+    country: "GR",
+    region: "europe",
+    lat: 37.9838,
+    lng: 23.7275,
+    nearbyAirports: [
+      { code: "ATH", name: "Athens International Airport", distanceKm: 33, travelTimeHours: 0.6 },
+    ],
+  },
+  {
+    name: "Stockholm",
+    country: "SE",
+    region: "europe",
+    lat: 59.3293,
+    lng: 18.0686,
+    nearbyAirports: [
+      { code: "ARN", name: "Stockholm Arlanda Airport", distanceKm: 40, travelTimeHours: 0.7 },
+    ],
+  },
+  {
+    name: "Copenhagen",
+    country: "DK",
+    region: "europe",
+    lat: 55.6761,
+    lng: 12.5683,
+    nearbyAirports: [
+      { code: "CPH", name: "Copenhagen Airport", distanceKm: 8, travelTimeHours: 0.2 },
+    ],
+  },
+  {
+    name: "Dublin",
+    country: "IE",
+    region: "europe",
+    lat: 53.3498,
+    lng: -6.2603,
+    nearbyAirports: [
+      { code: "DUB", name: "Dublin Airport", distanceKm: 13, travelTimeHours: 0.3 },
+    ],
+  },
+  {
+    name: "Bucharest",
+    country: "RO",
+    region: "europe",
+    lat: 44.4268,
+    lng: 26.1025,
+    nearbyAirports: [
+      { code: "OTP", name: "Henri Coanda International Airport", distanceKm: 16, travelTimeHours: 0.3 },
+    ],
+  },
 ];
