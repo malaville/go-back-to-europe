@@ -49,15 +49,22 @@ const jsonLd = {
   dateModified: "2026-03-08",
 };
 
-const ROUTES = [
+const ROUTES: Array<{
+  rank: number;
+  title: string;
+  price: string;
+  color: "green" | "blue" | "slate";
+  legs: Array<{ route: string; price: string; link?: string }>;
+  notes: string[];
+}> = [
   {
     rank: 1,
     title: "Chengdu + Zürich + train",
     price: "~€505/person",
     color: "green" as const,
     legs: [
-      { route: "BKK → Chengdu (CTU)", price: "€166" },
-      { route: "Chengdu → Zürich (ZRH)", price: "€309" },
+      { route: "BKK → Chengdu (CTU)", price: "€166", link: "https://www.google.com/travel/flights?q=BKK+to+CTU+2026-03-08+one+way" },
+      { route: "Chengdu → Zürich (ZRH)", price: "€309", link: "https://www.google.com/travel/flights?q=CTU+to+ZRH+2026-03-10+one+way" },
       { route: "Train ZRH → GVA", price: "~€30, 2h45" },
     ],
     notes: [
@@ -72,12 +79,13 @@ const ROUTES = [
     price: "~€820/person",
     color: "blue" as const,
     legs: [
-      { route: "BKK → Ürümqi (URC)", price: "€359" },
+      { route: "BKK → Ürümqi (URC)", price: "€359", link: "https://www.google.com/travel/flights?q=BKK+to+URC+2026-03-08+one+way" },
       {
         route: "Ürümqi → Tbilisi (TBS)",
         price: "€549 (China Southern nonstop)",
+        link: "https://www.google.com/travel/flights?q=URC+to+TBS+2026-03-10+one+way",
       },
-      { route: "easyJet TBS → GVA", price: "€44" },
+      { route: "easyJet TBS → GVA", price: "€44", link: "https://www.google.com/travel/flights?q=TBS+to+GVA+2026-03-12+one+way" },
     ],
     notes: [
       "The €44 easyJet Tbilisi→Geneva is the secret weapon",
@@ -233,23 +241,40 @@ export default function BangkokToGenevaPage() {
 
                 {/* Legs */}
                 <div className="space-y-1.5 mb-4">
-                  {route.legs.map((leg) => (
-                    <div
-                      key={leg.route}
-                      className={`flex items-center justify-between rounded-lg ${c.legBg} px-3 py-2`}
-                    >
-                      <span
-                        className={`text-xs font-medium ${c.legText}`}
+                  {route.legs.map((leg) => {
+                    const inner = (
+                      <>
+                        <span
+                          className={`text-xs font-medium ${c.legText}`}
+                        >
+                          {leg.route}
+                        </span>
+                        <span
+                          className={`text-xs font-bold ${c.legText} ml-2 flex-shrink-0`}
+                        >
+                          {leg.price} {leg.link ? "→" : ""}
+                        </span>
+                      </>
+                    );
+                    return leg.link ? (
+                      <a
+                        key={leg.route}
+                        href={leg.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex items-center justify-between rounded-lg ${c.legBg} px-3 py-2 hover:opacity-80 transition-opacity`}
                       >
-                        {leg.route}
-                      </span>
-                      <span
-                        className={`text-xs font-bold ${c.legText} ml-2 flex-shrink-0`}
+                        {inner}
+                      </a>
+                    ) : (
+                      <div
+                        key={leg.route}
+                        className={`flex items-center justify-between rounded-lg ${c.legBg} px-3 py-2`}
                       >
-                        {leg.price}
-                      </span>
-                    </div>
-                  ))}
+                        {inner}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Notes */}

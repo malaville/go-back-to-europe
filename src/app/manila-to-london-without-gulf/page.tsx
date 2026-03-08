@@ -145,6 +145,24 @@ export default function ManilaToLondonPage() {
                 <strong>Visa:</strong> None needed (direct flight)
               </p>
             </div>
+            <div className="flex gap-2 mt-3">
+              <a
+                href="https://www.google.com/travel/flights?q=MNL+to+LHR+2026-03-08+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-green-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-green-700 transition-colors"
+              >
+                Check today&apos;s prices
+              </a>
+              <a
+                href="https://www.google.com/travel/flights?q=MNL+to+LHR+2026-03-15+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-green-100 text-green-800 text-center py-2.5 px-3 text-xs font-semibold border border-green-300 hover:bg-green-200 transition-colors"
+              >
+                Check in a week
+              </a>
+            </div>
           </div>
         </section>
 
@@ -173,6 +191,24 @@ export default function ManilaToLondonPage() {
               <p className="text-xs text-slate-600 mt-1">
                 <strong>Visa:</strong> Taiwan is visa-free for most EU/EEA passports
               </p>
+            </div>
+            <div className="flex gap-2 mt-3">
+              <a
+                href="https://www.google.com/travel/flights?q=TPE+to+LHR+2026-03-08+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Check TPE&rarr;LHR today
+              </a>
+              <a
+                href="https://www.google.com/travel/flights?q=TPE+to+LHR+2026-03-15+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-slate-100 text-slate-700 text-center py-2.5 px-3 text-xs font-semibold border border-slate-300 hover:bg-slate-200 transition-colors"
+              >
+                Check in a week
+              </a>
             </div>
           </div>
         </section>
@@ -264,6 +300,32 @@ export default function ManilaToLondonPage() {
                 <strong>Azerbaijan:</strong> e-visa, ~$26, processed in a few
                 hours.
               </p>
+            </div>
+            <div className="flex flex-col gap-1.5 mt-3">
+              <a
+                href="https://www.google.com/travel/flights?q=MNL+to+XIY+2026-03-08+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-amber-600 text-white text-center py-2 px-3 text-xs font-semibold hover:bg-amber-700 transition-colors"
+              >
+                Check MNL&rarr;XIY flights
+              </a>
+              <a
+                href="https://www.google.com/travel/flights?q=XIY+to+GYD+2026-03-10+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"
+              >
+                Check XIY&rarr;GYD flights
+              </a>
+              <a
+                href="https://www.google.com/travel/flights?q=GYD+to+LGW+2026-03-12+one+way"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"
+              >
+                Check GYD&rarr;LGW flights
+              </a>
             </div>
             <div className="rounded-xl border border-amber-300 bg-amber-100/50 p-3 mt-3">
               <p className="text-xs text-amber-700">
