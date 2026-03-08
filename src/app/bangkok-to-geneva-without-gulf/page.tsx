@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 export const metadata: Metadata = {
   title:
@@ -63,8 +64,8 @@ const ROUTES: Array<{
     price: "~€505/person",
     color: "green" as const,
     legs: [
-      { route: "BKK → Chengdu (CTU)", price: "€166", link: "https://www.google.com/travel/flights?q=BKK+to+CTU+2026-03-08+one+way" },
-      { route: "Chengdu → Zürich (ZRH)", price: "€309", link: "https://www.google.com/travel/flights?q=CTU+to+ZRH+2026-03-10+one+way" },
+      { route: "BKK → Chengdu (CTU)", price: "€166", link: googleFlightsUrl("BKK", "CTU") },
+      { route: "Chengdu → Zürich (ZRH)", price: "€309", link: googleFlightsUrl("CTU", "ZRH") },
       { route: "Train ZRH → GVA", price: "~€30, 2h45" },
     ],
     notes: [
@@ -79,13 +80,13 @@ const ROUTES: Array<{
     price: "~€820/person",
     color: "blue" as const,
     legs: [
-      { route: "BKK → Ürümqi (URC)", price: "€359", link: "https://www.google.com/travel/flights?q=BKK+to+URC+2026-03-08+one+way" },
+      { route: "BKK → Ürümqi (URC)", price: "€359", link: googleFlightsUrl("BKK", "URC") },
       {
         route: "Ürümqi → Tbilisi (TBS)",
         price: "€549 (China Southern nonstop)",
-        link: "https://www.google.com/travel/flights?q=URC+to+TBS+2026-03-10+one+way",
+        link: googleFlightsUrl("URC", "TBS"),
       },
-      { route: "easyJet TBS → GVA", price: "€44", link: "https://www.google.com/travel/flights?q=TBS+to+GVA+2026-03-12+one+way" },
+      { route: "easyJet TBS → GVA", price: "€44", link: googleFlightsUrl("TBS", "GVA") },
     ],
     notes: [
       "The €44 easyJet Tbilisi→Geneva is the secret weapon",

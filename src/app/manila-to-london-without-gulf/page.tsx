@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 export const metadata: Metadata = {
   title:
@@ -48,7 +49,16 @@ const jsonLd = {
   dateModified: "2026-03-08",
 };
 
+function dateStr(daysFromNow: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromNow);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function ManilaToLondonPage() {
+  const today = dateStr(0);
+  const inAWeek = dateStr(7);
+
   return (
     <div className="min-h-screen flex flex-col">
       <script
@@ -147,7 +157,7 @@ export default function ManilaToLondonPage() {
             </div>
             <div className="flex gap-2 mt-3">
               <a
-                href="https://www.google.com/travel/flights?q=MNL+to+LHR+2026-03-08+one+way"
+                href={googleFlightsUrl("MNL", "LHR", today)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-green-700 transition-colors"
@@ -155,7 +165,7 @@ export default function ManilaToLondonPage() {
                 Check today&apos;s prices
               </a>
               <a
-                href="https://www.google.com/travel/flights?q=MNL+to+LHR+2026-03-15+one+way"
+                href={googleFlightsUrl("MNL", "LHR", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-100 text-green-800 text-center py-2.5 px-3 text-xs font-semibold border border-green-300 hover:bg-green-200 transition-colors"
@@ -194,7 +204,7 @@ export default function ManilaToLondonPage() {
             </div>
             <div className="flex gap-2 mt-3">
               <a
-                href="https://www.google.com/travel/flights?q=TPE+to+LHR+2026-03-08+one+way"
+                href={googleFlightsUrl("TPE", "LHR", today)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors"
@@ -202,7 +212,7 @@ export default function ManilaToLondonPage() {
                 Check TPE&rarr;LHR today
               </a>
               <a
-                href="https://www.google.com/travel/flights?q=TPE+to+LHR+2026-03-15+one+way"
+                href={googleFlightsUrl("TPE", "LHR", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-slate-100 text-slate-700 text-center py-2.5 px-3 text-xs font-semibold border border-slate-300 hover:bg-slate-200 transition-colors"
@@ -303,7 +313,7 @@ export default function ManilaToLondonPage() {
             </div>
             <div className="flex flex-col gap-1.5 mt-3">
               <a
-                href="https://www.google.com/travel/flights?q=MNL+to+XIY+2026-03-08+one+way"
+                href={googleFlightsUrl("MNL", "XIY", today)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-600 text-white text-center py-2 px-3 text-xs font-semibold hover:bg-amber-700 transition-colors"
@@ -311,7 +321,7 @@ export default function ManilaToLondonPage() {
                 Check MNL&rarr;XIY flights
               </a>
               <a
-                href="https://www.google.com/travel/flights?q=XIY+to+GYD+2026-03-10+one+way"
+                href={googleFlightsUrl("XIY", "GYD", dateStr(2))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"
@@ -319,7 +329,7 @@ export default function ManilaToLondonPage() {
                 Check XIY&rarr;GYD flights
               </a>
               <a
-                href="https://www.google.com/travel/flights?q=GYD+to+LGW+2026-03-12+one+way"
+                href={googleFlightsUrl("GYD", "LGW", dateStr(4))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"
