@@ -33,12 +33,24 @@ export const metadata: Metadata = {
     "Bali to London flights avoid conflict",
     "visa-free transit countries",
   ],
+  metadataBase: new URL("https://skipthegulf.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Skip the Gulf — Fly Asia to Europe Without Gulf Carriers",
     description:
       "Find safe, affordable routes from Southeast Asia to Europe — skipping Gulf carriers and Middle East hubs. Visa checks, cost estimates, and safety alerts included.",
     type: "website",
     locale: "en_US",
+    url: "https://skipthegulf.com",
+    siteName: "Skip the Gulf",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Skip the Gulf — Fly Asia to Europe Without Gulf Carriers",
+    description:
+      "Safe, affordable routes from Southeast Asia to Europe. No Gulf carriers. Visa checks included.",
   },
   robots: {
     index: true,
