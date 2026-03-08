@@ -277,7 +277,7 @@ export default function ManilaToLondonPage() {
             </div>
             <div className="flex flex-col gap-1.5 mt-3">
               <a
-                href={googleFlightsUrl("MNL", "XIY", today)}
+                href={googleFlightsUrl("MNL", "XIY", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-600 text-white text-center py-2 px-3 text-xs font-semibold hover:bg-amber-700 transition-colors"
@@ -285,7 +285,7 @@ export default function ManilaToLondonPage() {
                 Check MNL&rarr;XIY flights
               </a>
               <a
-                href={googleFlightsUrl("XIY", "GYD", dateStr(2))}
+                href={googleFlightsUrl("XIY", "GYD", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"
@@ -293,7 +293,7 @@ export default function ManilaToLondonPage() {
                 Check XIY&rarr;GYD flights
               </a>
               <a
-                href={googleFlightsUrl("GYD", "LGW", dateStr(4))}
+                href={googleFlightsUrl("GYD", "LGW", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-xl bg-amber-100 text-amber-800 text-center py-2 px-3 text-xs font-semibold border border-amber-300 hover:bg-amber-200 transition-colors"

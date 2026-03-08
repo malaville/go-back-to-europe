@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title:
     "Bangkok to Munich Without Gulf Airspace — Routes for Families (2026)",
   description:
-    "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €527/person. Plus Condor nonstop, Tbilisi gateway, and more.",
+    "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €750/person. Plus Condor nonstop, Tbilisi gateway, and more.",
   keywords: [
     "bangkok to munich flights",
     "BKK MUC no gulf",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bangkok to Munich Without the Gulf — What Actually Works",
     description:
-      "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €527/person. Plus Condor nonstop, Tbilisi gateway, and more.",
+      "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €750/person. Plus Condor nonstop, Tbilisi gateway, and more.",
     url: "https://skipthegulf.com/bangkok-to-munich-without-gulf",
     type: "article",
   },
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bangkok to Munich Without the Gulf — What Actually Works",
     description:
-      "Etihad cancelled your BKK→MUC flight? Here are 5 routes that actually work, from €527/person.",
+      "Etihad cancelled your BKK→MUC flight? Here are 5 routes that actually work, from €750/person.",
   },
 };
 
@@ -39,7 +39,7 @@ const jsonLd = {
   "@type": "Article",
   headline: "Bangkok to Munich Without the Gulf — What Actually Works",
   description:
-    "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €527/person. Plus Condor nonstop, Tbilisi gateway, and more.",
+    "Etihad cancelled your BKK→MUC flight? The Chengdu trick gets you there for €750/person. Plus Condor nonstop, Tbilisi gateway, and more.",
   author: { "@type": "Person", name: "Marc-Antoine" },
   publisher: { "@type": "Organization", name: "Skip the Gulf" },
   url: "https://skipthegulf.com/bangkok-to-munich-without-gulf",
@@ -47,7 +47,16 @@ const jsonLd = {
   dateModified: "2026-03-08",
 };
 
+function dateStr(daysFromNow: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromNow);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function BangkokToMunichPage() {
+  const today = dateStr(0);
+  const inAWeek = dateStr(7);
+
   return (
     <div className="min-h-screen flex flex-col">
       <script
@@ -102,7 +111,7 @@ export default function BangkokToMunichPage() {
             works.
           </p>
           <p className="text-xs text-slate-400 mt-2">
-            Prices approximate, March 2026. Always verify on Google Flights.
+            Prices for March 2026. Always verify on Google Flights.
           </p>
         </div>
 
@@ -114,7 +123,7 @@ export default function BangkokToMunichPage() {
                 1
               </span>
               <h3 className="text-lg font-bold text-green-900">
-                The Chengdu Trick &mdash; ~&euro;527/person
+                The Chengdu Trick &mdash; ~&euro;750–1,070/person
               </h3>
             </div>
             <div className="space-y-2 mb-3">
@@ -122,20 +131,20 @@ export default function BangkokToMunichPage() {
                 <p className="text-sm font-semibold text-slate-800">
                   BKK &rarr; Chengdu (CTU)
                 </p>
-                <p className="text-xs text-slate-500">~&euro;166, Chinese carriers</p>
+                <p className="text-xs text-slate-500">~&euro;167–325, Chinese carriers</p>
               </div>
               <div className="rounded-xl bg-white border border-green-200 p-3">
                 <p className="text-sm font-semibold text-slate-800">
                   Chengdu &rarr; Munich (via PVG or PEK)
                 </p>
                 <p className="text-xs text-slate-500">
-                  ~&euro;361, Chinese carriers (Air China, Sichuan Airlines)
+                  ~&euro;585–743, Chinese carriers (Air China, Sichuan Airlines)
                 </p>
               </div>
             </div>
             <p className="text-sm text-green-800 mb-2">
-              Family of 4: <strong>~&euro;2,100 total</strong>. Best budget
-              option by far.
+              Family of 4: <strong>~&euro;3,000–4,300 total</strong>. Best
+              budget option by far.
             </p>
             <p className="text-xs text-green-700 mb-2">
               China 144-hour visa-free transit applies &mdash; no visa needed if
@@ -150,7 +159,7 @@ export default function BangkokToMunichPage() {
             </div>
             <div className="flex gap-2 mt-3">
               <a
-                href={googleFlightsUrl("BKK", "CTU")}
+                href={googleFlightsUrl("BKK", "CTU", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-green-700 transition-colors"
@@ -158,7 +167,7 @@ export default function BangkokToMunichPage() {
                 BKK&rarr;CTU flights
               </a>
               <a
-                href={googleFlightsUrl("CTU", "MUC")}
+                href={googleFlightsUrl("CTU", "MUC", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-100 text-green-800 text-center py-2.5 px-3 text-xs font-semibold border border-green-300 hover:bg-green-200 transition-colors"
@@ -195,7 +204,7 @@ export default function BangkokToMunichPage() {
               slightly more expensive than Chengdu but simpler booking.
             </p>
             <a
-              href={googleFlightsUrl("TPE", "MUC")}
+              href={googleFlightsUrl("TPE", "MUC", inAWeek)}
               target="_blank"
               rel="noopener noreferrer"
               className="block rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors"
@@ -257,7 +266,7 @@ export default function BangkokToMunichPage() {
               </p>
             </div>
             <a
-              href={googleFlightsUrl("BKK", "FRA")}
+              href={googleFlightsUrl("BKK", "FRA", inAWeek)}
               target="_blank"
               rel="noopener noreferrer"
               className="block rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors mt-3"

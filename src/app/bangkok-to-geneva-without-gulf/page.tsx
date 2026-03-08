@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title:
     "Bangkok to Geneva Without Gulf Airspace — The Tbilisi Trick (2026)",
   description:
-    "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €505. Real routes found for a real stranded traveler.",
+    "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €830. Real routes found for a real stranded traveler.",
   keywords: [
     "bangkok to geneva flights",
     "BKK GVA no gulf",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title:
       "Bangkok to Geneva Without the Gulf — The Tbilisi Trick and More",
     description:
-      "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €505. Real routes avoiding Gulf airspace.",
+      "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €830. Real routes avoiding Gulf airspace.",
     url: "https://skipthegulf.com/bangkok-to-geneva-without-gulf",
     type: "article",
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title:
       "Bangkok to Geneva Without Gulf Airspace — The Tbilisi Trick (2026)",
     description:
-      "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €505. Real routes found for a real stranded traveler.",
+      "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €830. Real routes found for a real stranded traveler.",
   },
 };
 
@@ -42,7 +42,7 @@ const jsonLd = {
   headline:
     "Bangkok to Geneva Without the Gulf — The Tbilisi Trick and More",
   description:
-    "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €505. Real routes found for a real stranded traveler.",
+    "BKK→GVA via Tbilisi for €820, or via Chengdu+Zürich for €830. Real routes found for a real stranded traveler.",
   author: { "@type": "Person", name: "Marc-Antoine" },
   publisher: { "@type": "Organization", name: "Skip the Gulf" },
   url: "https://skipthegulf.com/bangkok-to-geneva-without-gulf",
@@ -60,25 +60,9 @@ const ROUTES: Array<{
 }> = [
   {
     rank: 1,
-    title: "Chengdu + Zürich + train",
-    price: "~€505/person",
-    color: "green" as const,
-    legs: [
-      { route: "BKK → Chengdu (CTU)", price: "€166", link: googleFlightsUrl("BKK", "CTU") },
-      { route: "Chengdu → Zürich (ZRH)", price: "€309", link: googleFlightsUrl("CTU", "ZRH") },
-      { route: "Train ZRH → GVA", price: "~€30, 2h45" },
-    ],
-    notes: [
-      "Cheapest option — under €510 all-in",
-      "China 144h visa-free transit (no visa needed for most EU/EEA passports)",
-      "Swiss trains are excellent — scenic ride along Lake Geneva",
-    ],
-  },
-  {
-    rank: 2,
     title: "Via Tbilisi + easyJet",
     price: "~€820/person",
-    color: "blue" as const,
+    color: "green" as const,
     legs: [
       { route: "BKK → Ürümqi (URC)", price: "€359", link: googleFlightsUrl("BKK", "URC") },
       {
@@ -91,7 +75,23 @@ const ROUTES: Array<{
     notes: [
       "The €44 easyJet Tbilisi→Geneva is the secret weapon",
       "Georgia visa-free for most EU/EEA passports",
-      "Tbilisi is worth a day or two — cheap food, incredible wine region",
+      "Tbilisi is worth a day or two, cheap food, incredible wine region",
+    ],
+  },
+  {
+    rank: 2,
+    title: "Chengdu + Zürich + train",
+    price: "~€830–1,030",
+    color: "blue" as const,
+    legs: [
+      { route: "BKK → Chengdu (CTU)", price: "€167–225", link: googleFlightsUrl("BKK", "CTU") },
+      { route: "Chengdu → Zürich (ZRH)", price: "€632–778", link: googleFlightsUrl("CTU", "ZRH") },
+      { route: "Train ZRH → GVA", price: "~€30, 2h45" },
+    ],
+    notes: [
+      "Cheapest with flexible dates (CTU drops to €100 end of month, ZRH to €632 midweek)",
+      "China 144h visa-free transit (no visa needed for most EU/EEA passports)",
+      "Swiss trains are excellent, scenic ride along Lake Geneva",
     ],
   },
   {
@@ -211,8 +211,8 @@ export default function BangkokToGenevaPage() {
             Etihad BKK&rarr;AUH&rarr;GVA flight got cancelled. Geneva
             isn&apos;t a huge airport, so direct non-Gulf flights from Asia are
             rare. But there&apos;s a trick via Tbilisi that gets you there
-            for under &euro;1,000 &mdash; and a Chengdu+train combo that does
-            it for &euro;505.
+            for under &euro;1,000, and a Chengdu+train combo starting around
+            &euro;830.
           </p>
         </div>
 
