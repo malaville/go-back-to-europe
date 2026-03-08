@@ -380,6 +380,22 @@ export default function CancelledFlightRightsPage() {
           </p>
         </section>
 
+        {/* Visa check */}
+        <section className="mb-8">
+          <a
+            href="https://apply.joinsherpa.com/travel-restrictions?affiliateId=skipthegulf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full rounded-2xl border-2 border-slate-200 bg-white text-center py-4 px-6 font-semibold text-sm text-slate-700 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+          >
+            Check visa requirements for your new route
+          </a>
+          <p className="text-xs text-slate-400 text-center mt-2">
+            Rebooked on a different route? Check transit visa rules before you
+            go. Powered by Sherpa.
+          </p>
+        </section>
+
         {/* Disclaimer */}
         <p className="text-[10px] text-slate-400 text-center leading-relaxed">
           Built by a stranded traveler in Bangkok, not a lawyer. Always
