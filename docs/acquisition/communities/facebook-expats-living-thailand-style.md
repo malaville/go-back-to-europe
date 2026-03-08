@@ -48,3 +48,12 @@ Ref: `facebook-expats-living-thailand-style.md`, `CLAUDE.md` Community Communica
 > happy to just help people figure out their routes too, with or without the site. let me know if that's cool with the group or not
 
 Status: pending user review
+
+## Draft: reply to admin welcome (2026-03-08)
+
+Ref: `facebook-expats-living-thailand-style.md`
+Context: Admin sent welcome message, first interaction. Don't pitch anything yet, just be human.
+
+> Merci ! Based in Bangkok, french guy. Been here a while now, kinda stuck with the gulf airspace situation but making the most of it. Happy to be in the group 🙏
+
+Status: pending user review
