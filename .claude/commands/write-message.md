@@ -62,9 +62,10 @@ Use ", " or ". " or "(...)" or line breaks to separate ideas. Never " - " or " -
 3. Draft the message.
 4. Re-read it and check every sentence against the AI slop markers list. Fix violations.
 5. Re-read it and ask: "would a human on reddit think this was written by AI?" If yes, rewrite.
-6. **Update the relevant docs** (status file, communication log, or community style file) with what was drafted, when, and which community files were referenced. Write the draft and context into the doc so the user can review it there.
-7. Open the updated doc at the draft line for the user to review: `code -g <file>:<line>`
-8. Present the draft in chat too. Ask the user to review before posting.
+6. **Provide a French equivalent** of the draft so the user can check the tone. marcantow is a native French speaker and may miss English connotations (e.g. "unhinged" sounds casual in English but is actually insulting). Translate the vibe, not word-for-word. Flag any words that could be misread or have a negative connotation the user might not expect.
+7. **Update the relevant docs** (status file, communication log, or community style file) with what was drafted, when, and which community files were referenced. Write the draft and context into the doc so the user can review it there.
+8. Open the updated doc at the draft line for the user to review: `code -g <file>:<line>`
+9. Present the draft in chat too, with the French equivalent below it. Ask the user to review before posting.
 
 ## Community guidelines persistence
 
