@@ -9,6 +9,11 @@ export default function DatadogInit() {
     if (process.env.NODE_ENV !== 'production') return;
     if (window.location.hostname !== 'skipthegulf.com') return;
     if (BOT_UA_PATTERNS.test(navigator.userAgent)) return;
+    if (new URLSearchParams(window.location.search).has('excludeFromDatadog')) {
+      document.cookie = 'dd_exclude=1; max-age=31536000; path=/';
+      return;
+    }
+    if (document.cookie.includes('dd_exclude=1')) return;
 
     import('@datadog/browser-rum').then(({ datadogRum }) => {
       datadogRum.init({
