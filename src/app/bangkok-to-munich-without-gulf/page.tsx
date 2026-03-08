@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 export const metadata: Metadata = {
   title:
@@ -147,6 +148,24 @@ export default function BangkokToMunichPage() {
                 Works best with flexible dates (cheapest-of-month prices).
               </p>
             </div>
+            <div className="flex gap-2 mt-3">
+              <a
+                href={googleFlightsUrl("BKK", "CTU")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-green-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-green-700 transition-colors"
+              >
+                BKK&rarr;CTU flights
+              </a>
+              <a
+                href={googleFlightsUrl("CTU", "MUC")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-xl bg-green-100 text-green-800 text-center py-2.5 px-3 text-xs font-semibold border border-green-300 hover:bg-green-200 transition-colors"
+              >
+                CTU&rarr;MUC flights
+              </a>
+            </div>
           </div>
         </section>
 
@@ -171,10 +190,18 @@ export default function BangkokToMunichPage() {
                 </p>
               </div>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 mb-3">
               Taiwan is visa-free for most EU/EEA passport holders. Reliable connection,
               slightly more expensive than Chengdu but simpler booking.
             </p>
+            <a
+              href={googleFlightsUrl("TPE", "MUC")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Check TPE&rarr;MUC flights
+            </a>
           </div>
         </section>
 
@@ -210,16 +237,33 @@ export default function BangkokToMunichPage() {
             </p>
             <div className="rounded-xl bg-blue-50 border border-blue-200 p-3">
               <p className="text-xs text-blue-800">
-                <strong>Call Condor directly:</strong>{" "}
+                <strong>Call Condor:</strong>{" "}
                 <a
-                  href="tel:+496171698100"
+                  href="tel:+4961716988988"
                   className="underline font-semibold"
                 >
-                  +49 6171 698100
+                  +49 6171 69889 88
+                </a>{" "}
+                (24h) or{" "}
+                <a
+                  href="https://wa.me/4961716988916"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline font-semibold"
+                >
+                  WhatsApp
                 </a>
                 . Phone fares are sometimes better than the website.
               </p>
             </div>
+            <a
+              href={googleFlightsUrl("BKK", "FRA")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors mt-3"
+            >
+              Check BKK&rarr;FRA flights
+            </a>
           </div>
         </section>
 

@@ -4,9 +4,9 @@ import { googleFlightsUrl } from "@/lib/google-flights-url";
 
 export const metadata: Metadata = {
   title:
-    "Manila to London Without Gulf Airspace — 5 Routes That Work in 2026",
+    "Manila to London Without Gulf Airspace — 4 Routes That Work in 2026",
   description:
-    "Stranded in Manila? Here are 5 non-Gulf routes to London, from Philippine Airlines nonstop to the €772 Baku Express via Xi'An.",
+    "Stranded in Manila? Here are 4 non-Gulf routes to London, from €772 via the Baku Express to Taipei connections from €960.",
   keywords: [
     "manila to london flights",
     "manila london no gulf",
@@ -20,18 +20,18 @@ export const metadata: Metadata = {
     canonical: "https://skipthegulf.com/manila-to-london-without-gulf",
   },
   openGraph: {
-    title: "Manila to London Without the Gulf — 5 Routes That Actually Work",
+    title: "Manila to London Without the Gulf — 4 Routes That Actually Work",
     description:
-      "Gulf airspace closed, MNL→LHR cancelled? Here are 5 tested non-Gulf routes from €772 to nonstop.",
+      "Gulf airspace closed, MNL→LHR cancelled? Here are 4 tested non-Gulf routes from €772.",
     url: "https://skipthegulf.com/manila-to-london-without-gulf",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Manila to London Without Gulf Airspace — 5 Routes That Work in 2026",
+      "Manila to London Without Gulf Airspace — 4 Routes That Work in 2026",
     description:
-      "Stranded in Manila? 5 non-Gulf routes to London, from PAL nonstop to the €772 Baku Express.",
+      "Stranded in Manila? 4 non-Gulf routes to London, from the €772 Baku Express to Taipei connections.",
   },
 };
 
@@ -39,9 +39,9 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline:
-    "Manila to London Without Gulf Airspace — 5 Routes That Work in 2026",
+    "Manila to London Without Gulf Airspace — 4 Routes That Work in 2026",
   description:
-    "5 tested non-Gulf routes from Manila to London, from Philippine Airlines nonstop to the €772 Baku Express via Xi'An and Baku.",
+    "4 tested non-Gulf routes from Manila to London, from the €772 Baku Express via Xi'An and Baku to Taipei connections from €960.",
   author: { "@type": "Person", name: "Marc-Antoine" },
   publisher: { "@type": "Organization", name: "Skip the Gulf" },
   url: "https://skipthegulf.com/manila-to-london-without-gulf",
@@ -128,7 +128,7 @@ export default function ManilaToLondonPage() {
           </div>
         </section>
 
-        {/* Route 1: PAL Nonstop */}
+        {/* Route 1: Via Taipei */}
         <section className="mb-6">
           <div className="rounded-2xl border-2 border-green-200 bg-green-50 p-5">
             <div className="flex items-center gap-2 mb-2">
@@ -136,36 +136,78 @@ export default function ManilaToLondonPage() {
                 1
               </span>
               <h3 className="text-lg font-bold text-green-900">
-                Philippine Airlines nonstop
+                Via Taipei
               </h3>
             </div>
             <p className="text-sm text-green-800 font-medium mb-2">
-              MNL &rarr; LHR direct &middot; ~13.5 hours
+              MNL &rarr; TPE &rarr; LHR &middot; multiple transit options
             </p>
             <p className="text-sm text-green-800 mb-3">
-              The obvious one. If seats exist and the price is reasonable, just
-              do this. No transit visa needed, no connections to worry about.
+              Fly Manila to Taipei, then pick your onward connection. Prices
+              vary wildly depending on transit hub, so check each option.
             </p>
-            <div className="rounded-xl bg-green-100 p-3">
+
+            <p className="text-xs text-green-700 font-semibold mb-2">
+              TPE &rarr; LHR options (non-Gulf only):
+            </p>
+            <div className="space-y-1.5 mb-3">
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via Shenzhen (SZX) &middot; Shenzhen Airlines &middot; 33h
+                </span>
+                <span className="text-xs font-bold text-green-900">~&euro;960</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via Tokyo/Vienna &middot; EVA+ANA+Austrian &middot; 49h
+                </span>
+                <span className="text-xs font-bold text-green-900">~&euro;1,085</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via Beijing (PEK) &middot; Air China &middot; 29–31h
+                </span>
+                <span className="text-xs font-bold text-green-900">&euro;1,250–1,440</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via Istanbul (IST) &middot; Turkish Airlines &middot; 20–25h
+                </span>
+                <span className="text-xs font-bold text-green-900">&euro;1,700–4,700</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via Frankfurt (FRA) &middot; China Airlines+LH &middot; 19h
+                </span>
+                <span className="text-xs font-bold text-green-900">~&euro;1,860</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">
+                <span className="text-xs text-green-800">
+                  via San Francisco (SFO) &middot; United &middot; 29h
+                </span>
+                <span className="text-xs font-bold text-green-900">~&euro;2,790</span>
+              </div>
+            </div>
+
+            <div className="rounded-xl bg-green-100 p-3 mb-3">
               <p className="text-xs text-green-700">
-                <strong>Price:</strong> ~€500–3,000+ depending on dates and
-                demand
-              </p>
-              <p className="text-xs text-green-700 mt-1">
-                <strong>Visa:</strong> None needed (direct flight)
+                <strong>Visa:</strong> Taiwan is visa-free for most EU/EEA
+                passports. China transit needs 144h visa-free (onward ticket
+                to a third country).
               </p>
             </div>
-            <div className="flex gap-2 mt-3">
+
+            <div className="flex gap-2">
               <a
-                href={googleFlightsUrl("MNL", "LHR", today)}
+                href={googleFlightsUrl("TPE", "LHR", today)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-green-700 transition-colors"
               >
-                Check today&apos;s prices
+                Check TPE&rarr;LHR today
               </a>
               <a
-                href={googleFlightsUrl("MNL", "LHR", inAWeek)}
+                href={googleFlightsUrl("TPE", "LHR", inAWeek)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 rounded-xl bg-green-100 text-green-800 text-center py-2.5 px-3 text-xs font-semibold border border-green-300 hover:bg-green-200 transition-colors"
@@ -176,90 +218,12 @@ export default function ManilaToLondonPage() {
           </div>
         </section>
 
-        {/* Route 2: Via Taipei */}
-        <section className="mb-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
-                2
-              </span>
-              <h3 className="text-lg font-bold text-slate-900">
-                Via Taipei (EVA Air)
-              </h3>
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-2">
-              MNL &rarr; TPE &rarr; LHR
-            </p>
-            <p className="text-sm text-slate-600 mb-3">
-              EVA Air flies Taipei to London and the connection works well from
-              Manila. Solid option if PAL nonstop is sold out or overpriced.
-            </p>
-            <div className="rounded-xl bg-slate-50 p-3">
-              <p className="text-xs text-slate-600">
-                <strong>Price:</strong> ~€400–1,100 depending on dates
-              </p>
-              <p className="text-xs text-slate-600 mt-1">
-                <strong>Visa:</strong> Taiwan is visa-free for most EU/EEA passports
-              </p>
-            </div>
-            <div className="flex gap-2 mt-3">
-              <a
-                href={googleFlightsUrl("TPE", "LHR", today)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 rounded-xl bg-blue-600 text-white text-center py-2.5 px-3 text-xs font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Check TPE&rarr;LHR today
-              </a>
-              <a
-                href={googleFlightsUrl("TPE", "LHR", inAWeek)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 rounded-xl bg-slate-100 text-slate-700 text-center py-2.5 px-3 text-xs font-semibold border border-slate-300 hover:bg-slate-200 transition-colors"
-              >
-                Check in a week
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Route 3: Via Singapore */}
-        <section className="mb-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
-                3
-              </span>
-              <h3 className="text-lg font-bold text-slate-900">
-                Via Singapore
-              </h3>
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-2">
-              MNL &rarr; SIN &rarr; LHR
-            </p>
-            <p className="text-sm text-slate-600 mb-3">
-              Singapore Airlines runs SIN&rarr;LHR daily. You can book it as
-              one ticket through SQ, or split-ticket Manila to Singapore on a
-              budget carrier and then SQ to London.
-            </p>
-            <div className="rounded-xl bg-slate-50 p-3">
-              <p className="text-xs text-slate-600">
-                <strong>Price:</strong> Varies widely — check SQ and split
-                options
-              </p>
-              <p className="text-xs text-slate-600 mt-1">
-                <strong>Visa:</strong> Singapore is visa-free for most passports
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Route 4: The Baku Express */}
+        {/* Route 2: The Baku Express */}
         <section className="mb-6">
           <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-5">
             <div className="flex items-center gap-2 mb-2">
               <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-xs font-bold">
-                4
+                2
               </span>
               <h3 className="text-lg font-bold text-amber-900">
                 The Baku Express
@@ -346,12 +310,43 @@ export default function ManilaToLondonPage() {
           </div>
         </section>
 
-        {/* Route 5: Via Bangkok + Royal Brunei */}
+        {/* Route 3: Via Singapore */}
+        <section className="mb-6">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
+                3
+              </span>
+              <h3 className="text-lg font-bold text-slate-900">
+                Via Singapore
+              </h3>
+            </div>
+            <p className="text-sm text-slate-600 font-medium mb-2">
+              MNL &rarr; SIN &rarr; LHR
+            </p>
+            <p className="text-sm text-slate-600 mb-3">
+              Singapore Airlines runs SIN&rarr;LHR daily. You can book it as
+              one ticket through SQ, or split-ticket Manila to Singapore on a
+              budget carrier and then SQ to London.
+            </p>
+            <div className="rounded-xl bg-slate-50 p-3">
+              <p className="text-xs text-slate-600">
+                <strong>Price:</strong> Varies widely, check SQ and split
+                options
+              </p>
+              <p className="text-xs text-slate-600 mt-1">
+                <strong>Visa:</strong> Singapore is visa-free for most passports
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Route 4: Via Bangkok + Royal Brunei */}
         <section className="mb-8">
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
             <div className="flex items-center gap-2 mb-2">
               <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
-                5
+                4
               </span>
               <h3 className="text-lg font-bold text-slate-900">
                 Via Bangkok + Royal Brunei
@@ -383,6 +378,15 @@ export default function ManilaToLondonPage() {
               What doesn&apos;t work
             </h3>
             <div className="space-y-3">
+              <div className="rounded-xl bg-red-100 p-3">
+                <p className="text-sm font-semibold text-red-800">
+                  Philippine Airlines &quot;nonstop&quot;
+                </p>
+                <p className="text-xs text-red-700 mt-1">
+                  PAL MNL&rarr;LHR routes through Doha. Not a true nonstop,
+                  and cancelled when Gulf airspace closes.
+                </p>
+              </div>
               <div className="rounded-xl bg-red-100 p-3">
                 <p className="text-sm font-semibold text-red-800">
                   Hong Kong &rarr; London (non-Gulf)
