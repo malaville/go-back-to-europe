@@ -148,7 +148,7 @@ export default function ManilaToLondonPage() {
             </p>
 
             <p className="text-xs text-green-700 font-semibold mb-2">
-              TPE &rarr; LHR options (non-Gulf only):
+              TPE &rarr; LHR prices today (non-Gulf only):
             </p>
             <div className="space-y-1.5 mb-3">
               <div className="flex items-center justify-between rounded-lg bg-green-100 px-3 py-2">

@@ -185,7 +185,7 @@ export default function BangkokToMunichPage() {
                 2
               </span>
               <h3 className="text-lg font-bold text-slate-900">
-                Via Taipei &mdash; ~&euro;573
+                Via Taipei &mdash; ~&euro;1,435+
               </h3>
             </div>
             <div className="space-y-2 mb-3">
@@ -194,13 +194,14 @@ export default function BangkokToMunichPage() {
                   BKK &rarr; TPE + TPE &rarr; MUC
                 </p>
                 <p className="text-xs text-slate-500">
-                  Single booking possible on some dates
+                  China Airlines+Lufthansa via Seoul, or Turkish via Istanbul
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-500 mb-3">
-              Taiwan is visa-free for most EU/EEA passport holders. Reliable connection,
-              slightly more expensive than Chengdu but simpler booking.
+              Non-Gulf options from Taipei to Munich start at &euro;1,435
+              (CI+LH via ICN). The &euro;518 Emirates route goes through
+              Dubai. Taiwan is visa-free for most EU/EEA passport holders.
             </p>
             <a
               href={googleFlightsUrl("TPE", "MUC", inAWeek)}
