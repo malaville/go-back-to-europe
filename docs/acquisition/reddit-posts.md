@@ -191,6 +191,30 @@ if you're flexible on where you fly from, try searching from multiple cities. th
 
 See [marcantow-story.md](marcantow-story.md) for the real backstory, emotional hooks, and per-subreddit angles.
 
+## r/travel — Subreddit Rules (enforced strictly)
+
+r/travel prioritizes high-quality, researched discussions. Breaking these = removal or ban.
+
+- **Search first**: Check sub/FAQ before posting. Include specifics (dates, budget, research done) or posts get removed.
+- **Descriptive titles**: Vague queries fail. Include airports, airlines, citizenship for visa/flight topics.
+- **No clickbait/promotion/politics**: Self-promo, surveys, rants → bans.
+- **Research first**: Google/direct sources (airlines/embassies) before posting. Cite unclear findings.
+- **No AI content**: Strictly banned — including rewrites or itineraries. Permanent ban.
+- **Advice norms**: Unsourced absolutes draw downvotes. Airline topics redirect to r/flights or r/awardtravel.
+
+Sources: [submission guidelines](https://www.reddit.com/r/travel/wiki/submission-guidelines/), [FAQ](https://www.reddit.com/r/travel/wiki/faq/)
+
+## r/flights — Lessons Learned (2026-03-08)
+
+**What happened:** marcantow reply got -11 for factually wrong claim ("cheap one-ways on Gulf carriers"), then -34 for snarky reply ("least unhinged r/flights commenter") to a Top 1% commenter who corrected us. Triggered "ai slop" accusation.
+
+**Rules added:**
+- When corrected, accept gracefully and clarify. Never snark.
+- Don't make factual claims you can't back up — r/flights regulars will catch it instantly.
+- If downvoted, stop replying in that sub-thread immediately.
+
+---
+
 ## Rules
 
 - Talk like you're in a hostel common area explaining this to someone

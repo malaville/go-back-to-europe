@@ -22,6 +22,10 @@ Same destination as the first case. Key routes apply:
 ## What we recommended (posted on Reddit)
 TODO — pending reply
 
+## CORRECTION (2026-03-08): EU261 claim was WRONG
+
+EU261 does NOT apply to Etihad on BKK→MUC route. See `20260308-1000-eu261-correction.md`.
+
 ## Notes
 - Only 2 passengers (1 adult + 1 infant) so total cost is much lower than the family of 4 case
 - Chengdu route is best for a toddler: fewer legs, shorter total travel

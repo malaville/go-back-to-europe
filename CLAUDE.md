@@ -48,3 +48,15 @@ wonder, reflect, advocate, contrarian, judge
 ## Project Notes
 
 - **No need to run `npm run build` before pushing** — it runs automatically via a pre-push git hook.
+
+## Community Communication Rules
+
+- **NEVER draft a public message (Reddit, forum, social) without first knowing the community's rules and tone.** Check subreddit rules/wiki, or ask the user for them before proposing any message.
+- Each community has different norms for self-promo, tone, AI content, and engagement. Violating them causes downvotes, bans, and credibility damage.
+- When corrected by a community member: accept gracefully, never snark. Snarky replies to corrections get pile-on downvotes.
+- If a comment is getting downvoted, stop replying in that sub-thread. Do not dig deeper.
+- **Extreme caution with humor.** Jokes, sarcasm, and memes land differently per community and can be read as dismissive or hostile by strangers. Default to sincere. If humor is included, explicitly warn the user: "this line could be read as snarky, here's a safer version: [alternative]".
+- **Flag anything on the fringe.** If a proposed message is close to breaking a tacit rule (self-promo that could be seen as spam, humor that could backfire, claims that might be wrong), ALWAYS: (1) warn the user explicitly, (2) explain what rule it's close to breaking, (3) propose a safer alternative, (4) estimate how much safer the alternative is (e.g., "80% less likely to trigger mod action").
+- **When in doubt, be boring.** A safe, helpful, factual comment beats a clever one that risks backlash. Cleverness is high-risk on communities where you're not a regular.
+- **Always verify legal claims before including them in a message.** If citing a regulation (EU261, visa rules, airline obligations, consumer rights), research it first and tell the user your certainty level (e.g., "90% sure EU261 applies here" or "50% sure, you should double-check"). Never state legal claims as fact without verification.
+- **When the user pastes a conversation or screenshot** (mod mail, Reddit thread, DM, comment chain), ALWAYS update the corresponding community file in `docs/acquisition/communities/` and any relevant real use case doc with what happened (outcome, lesson learned, status change). Do this before responding to the user.
