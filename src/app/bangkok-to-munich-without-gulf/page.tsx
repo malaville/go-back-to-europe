@@ -54,7 +54,6 @@ function dateStr(daysFromNow: number): string {
 }
 
 export default function BangkokToMunichPage() {
-  const today = dateStr(0);
   const inAWeek = dateStr(7);
 
   return (
