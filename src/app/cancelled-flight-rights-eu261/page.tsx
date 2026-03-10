@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Cancelled Flight Rights — EU261 & Gulf Airlines | Skip the Gulf",
@@ -403,15 +404,7 @@ export default function CancelledFlightRightsPage() {
         </p>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 bg-white py-4">
-        <div className="max-w-lg mx-auto px-4 text-center">
-          <p className="text-xs text-slate-400">
-            Skip the Gulf is a community tool. Always verify travel information
-            with official sources before booking.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

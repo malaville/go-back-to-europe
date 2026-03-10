@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { googleFlightsUrl } from "@/lib/google-flights-url";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title:
@@ -456,15 +457,7 @@ export default function BangkokToMunichPage() {
         </p>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 bg-white py-4">
-        <div className="max-w-lg mx-auto px-4 text-center">
-          <p className="text-xs text-slate-400">
-            Skip the Gulf is a community tool. Always verify travel information
-            with official sources before booking.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

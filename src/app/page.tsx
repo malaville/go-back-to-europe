@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import SearchForm, { type SearchFormData } from "@/components/SearchForm";
+import SiteFooter from "@/components/SiteFooter";
 
 function HomePage() {
   const router = useRouter();
@@ -87,15 +88,7 @@ function HomePage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 bg-white py-4">
-        <div className="max-w-lg mx-auto px-4 text-center">
-          <p className="text-xs text-slate-400">
-            Skip the Gulf is a community tool. Always verify travel information
-            with official sources before booking.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
