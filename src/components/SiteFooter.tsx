@@ -14,34 +14,34 @@ export default function SiteFooter() {
           <p className="text-xs font-semibold text-slate-500 mb-2">
             Route guides
           </p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-1">
+          <ul className="flex flex-wrap gap-x-4">
             {routes.map((r) => (
               <li key={r.href}>
                 <Link
                   href={r.href}
-                  className="text-xs text-blue-600 hover:text-blue-800"
+                  className="text-sm text-blue-600 hover:text-blue-800 py-2 inline-block"
                 >
                   {r.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+          <div className="flex flex-wrap gap-x-4">
             <Link
               href="/cancelled-flight-rights-eu261"
-              className="text-xs text-blue-600 hover:text-blue-800"
+              className="text-sm text-blue-600 hover:text-blue-800 py-2 inline-block"
             >
               Your rights (EU261)
             </Link>
             <Link
               href="/community"
-              className="text-xs text-blue-600 hover:text-blue-800"
+              className="text-sm text-blue-600 hover:text-blue-800 py-2 inline-block"
             >
               Community
             </Link>
             <Link
               href="/"
-              className="text-xs text-blue-600 hover:text-blue-800"
+              className="text-sm text-blue-600 hover:text-blue-800 py-2 inline-block"
             >
               Search routes
             </Link>
